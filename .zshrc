@@ -1,6 +1,8 @@
 export ZDOTDIR=$HOME/.config/zsh
 
-alias p="source $HOME/Programming/miniforge3/bin/activate"
+alias p="source $HOME/Programming/miniforge3/bin/activate;conda activate main"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/Users/bytewaiser/.local/share/solana/install/active_release/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -127,4 +129,3 @@ zsh_add_plugin "hlissner/zsh-autopair"
 
 # Environment variables set everywhere
 export EDITOR="nvim"
-export BROWSER="brave"
