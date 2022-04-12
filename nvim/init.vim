@@ -1,11 +1,15 @@
 call plug#begin(stdpath("data") . "/plugged")
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+Plug 'tomlion/vim-solidity'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'nvim-lualine/lualine.nvim'
@@ -40,10 +44,15 @@ let ayucolor="dark"
 colorscheme ayu
 
 nnoremap <leader>e :NvimTreeToggle<CR>
+autocmd BufWritePost *.tex silent! execute "!pdflatex % >/dev/null 2>&1" 
 
-source $HOME/.config/nvim/lsp.lua
+" source $HOME/.config/nvim/lsp.lua
+source $HOME/.config/nvim/lspinstaller.lua
 source $HOME/.config/nvim/tree.lua
 source $HOME/.config/nvim/cmp.lua
 source $HOME/.config/nvim/status.lua
 source $HOME/.config/nvim/pair.vim
 source $HOME/.config/nvim/find.vim
+
+autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType json setlocal shiftwidth=2 softtabstop=2 expandtab
