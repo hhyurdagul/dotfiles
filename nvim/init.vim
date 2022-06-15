@@ -19,6 +19,9 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'tmsvg/pear-tree'
 Plug 'ayu-theme/ayu-vim'
+Plug 'morhetz/gruvbox'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'vimwiki/vimwiki'
 call plug#end()
 
 let mapleader=" "
@@ -26,6 +29,7 @@ set ts=4
 set shiftwidth=4
 set ai sw=4
 set expandtab
+set smartindent
 set autoindent
 set relativenumber
 set nowrap
@@ -40,11 +44,17 @@ set undodir=~/.cache/nvim/undo
 set undofile
 set completeopt=menu,menuone,noselect
 set termguicolors
-let ayucolor="dark"
-colorscheme ayu
+
+set nocompatible
+filetype plugin on
+syntax on
+
+" let ayucolor="dark"
+" colorscheme ayu
+colorscheme tokyonight
 
 nnoremap <leader>e :NvimTreeToggle<CR>
-autocmd BufWritePost *.tex silent! execute "!pdflatex % >/dev/null 2>&1" 
+" autocmd BufWritePost *.tex silent! execute "!pdflatex % >/dev/null 2>&1" 
 
 " source $HOME/.config/nvim/lsp.lua
 source $HOME/.config/nvim/lspinstaller.lua
