@@ -8,6 +8,8 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     -- LSP
     use 'neovim/nvim-lspconfig'
+    -- Treesitter
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     -- Autocomplete
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-buffer'
@@ -17,6 +19,16 @@ return require('packer').startup(function(use)
     -- Snippets (vsnip) # Might change to luasnip
     use 'hrsh7th/cmp-vsnip'
     use 'hrsh7th/vim-vsnip'
+    -- Telescope
+    use 'nvim-lua/plenary.nvim'
+    use 'nvim-telescope/telescope.nvim'
+    -- Autopair
+    use 'tmsvg/pear-tree'
+    -- Explorer
+    use 'kyazdani42/nvim-tree.lua'
+    use 'kyazdani42/nvim-web-devicons'
+    -- Line
+    use 'nvim-lualine/lualine.nvim'
     -- Colorscheme
     use 'folke/tokyonight.nvim'
 end)
