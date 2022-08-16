@@ -38,6 +38,7 @@ PROMPT+="\$vcs_info_msg_0_ "
 
 PS1="%B%{$fg[blue]%}[%{$fg[white]%}%n%{$fg[red]%}@%{$fg[white]%}%m%{$fg[blue]%}] %(?:%{$fg_bold[green]%}? :%{$fg_bold[red]%}? )%{$fg[cyan]%}%c%{$reset_color%}"
 PS1+="\$vcs_info_msg_0_ "
+
 # TODO look into this for more colors
 # https://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/
 # also ascii escape codesow sizes in MB

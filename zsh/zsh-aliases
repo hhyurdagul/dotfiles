@@ -1,5 +1,7 @@
 #!/bin/sh
-alias p="source $HOME/Programming/miniforge3/bin/activate;conda activate main"
+#alias p="source $HOME/Programming/miniforge3/bin/activate;conda activate main"
+alias p="micromamba activate main"
+alias mm=micromamba
 
 alias ls=exa
 alias ll="ls -l"

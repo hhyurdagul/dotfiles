@@ -22,7 +22,12 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'morhetz/gruvbox'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'vimwiki/vimwiki'
+Plug 'windwp/nvim-ts-autotag'
 call plug#end()
+
+
+set exrc
+set secure
 
 let mapleader=" "
 set ts=4
@@ -45,6 +50,7 @@ set undofile
 set completeopt=menu,menuone,noselect
 set termguicolors
 
+
 set nocompatible
 filetype plugin on
 syntax on
@@ -65,4 +71,8 @@ source $HOME/.config/nvim/pair.vim
 source $HOME/.config/nvim/find.vim
 
 autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType javascriptreact setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType typescriptreact setlocal shiftwidth=2 softtabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType jsx setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType tsx setlocal shiftwidth=2 softtabstop=2 expandtab
