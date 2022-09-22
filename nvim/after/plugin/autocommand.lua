@@ -7,3 +7,4 @@ vim.cmd("autocmd FileType typescriptreact setlocal shiftwidth=2 softtabstop=2 ex
 vim.cmd("autocmd FileType jsx setlocal shiftwidth=2 softtabstop=2 expandtab")
 vim.cmd("autocmd FileType tsx setlocal shiftwidth=2 softtabstop=2 expandtab")
 vim.cmd("autocmd FileType json setlocal shiftwidth=2 softtabstop=2 expandtab")
+vim.cmd("autocmd BufWritePost *.tex silent! execute \"!xelatex % > /dev/null 2>&1\" ")

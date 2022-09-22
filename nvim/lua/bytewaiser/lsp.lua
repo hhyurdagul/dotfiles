@@ -10,6 +10,7 @@ local on_attach = function(_, bufnr)
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
+    vim.keymap.set('n', '<leader>ge', vim.diagnostic.open_float, bufopts)
     vim.keymap.set('n', '<leader>n', vim.diagnostic.goto_prev, bufopts)
     vim.keymap.set('n', '<leader>p', vim.diagnostic.goto_next, bufopts)
     vim.keymap.set('n', '<leader>gD', vim.lsp.buf.declaration, bufopts)
@@ -36,6 +37,7 @@ lspconfig["texlab"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["html"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["emmet_ls"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["jsonls"].setup { on_attach = on_attach, capabilities = capabilities }
 
 lspconfig["sumneko_lua"].setup {
     on_attach = on_attach,
