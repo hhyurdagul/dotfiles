@@ -11,8 +11,8 @@ local on_attach = function(_, bufnr)
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
     vim.keymap.set('n', '<leader>ge', vim.diagnostic.open_float, bufopts)
-    vim.keymap.set('n', '<leader>n', vim.diagnostic.goto_prev, bufopts)
-    vim.keymap.set('n', '<leader>p', vim.diagnostic.goto_next, bufopts)
+    vim.keymap.set('n', '<leader>p', vim.diagnostic.goto_prev, bufopts)
+    vim.keymap.set('n', '<leader>n', vim.diagnostic.goto_next, bufopts)
     vim.keymap.set('n', '<leader>gD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, bufopts)
     vim.keymap.set('n', '<leader>K', vim.lsp.buf.hover, bufopts)
@@ -34,7 +34,9 @@ lspconfig["clangd"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["rust_analyzer"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["julials"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["texlab"].setup { on_attach = on_attach, capabilities = capabilities }
-lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities, root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc") }
+lspconfig["astro"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["tsserver"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["html"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["emmet_ls"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["jsonls"].setup { on_attach = on_attach, capabilities = capabilities }

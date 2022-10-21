@@ -24,6 +24,7 @@ return require('packer').startup(function(use)
     use 'nvim-telescope/telescope.nvim'
     -- Autopair
     use 'tmsvg/pear-tree'
+    use {'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end}
     -- Explorer
     use 'kyazdani42/nvim-tree.lua'
     use 'kyazdani42/nvim-web-devicons'

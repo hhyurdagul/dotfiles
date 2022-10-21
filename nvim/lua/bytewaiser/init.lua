@@ -7,3 +7,4 @@ require("bytewaiser.treesitter")
 require 'nvim-web-devicons'.setup {}
 require("nvim-tree").setup {}
 require("lualine").setup {}
+require("nvim-surround").setup {}
