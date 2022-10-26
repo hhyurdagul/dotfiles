@@ -33,4 +33,6 @@ return require('packer').startup(function(use)
     -- Colorscheme
     use 'folke/tokyonight.nvim'
     use { 'catppuccin/nvim', as = "catppuccin" }
+    -- Markdown
+    use { "iamcco/markdown-preview.nvim", run = function() vim.fn["mkdp#util#install"]() end }
 end)
