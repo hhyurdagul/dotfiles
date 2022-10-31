@@ -1,4 +1,5 @@
 local nnoremap = require("bytewaiser.keymap").nnoremap
+local vnoremap = require("bytewaiser.keymap").vnoremap
 
 
 nnoremap("<leader>e", "<cmd>NvimTreeToggle<cr>")
