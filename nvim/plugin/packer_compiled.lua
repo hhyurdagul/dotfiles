@@ -109,6 +109,11 @@ _G.packer_plugins = {
     path = "/Users/bytewaiser/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["markdown-preview.nvim"] = {
+    loaded = true,
+    path = "/Users/bytewaiser/.local/share/nvim/site/pack/packer/start/markdown-preview.nvim",
+    url = "https://github.com/iamcco/markdown-preview.nvim"
+  },
   ["nvim-cmp"] = {
     loaded = true,
     path = "/Users/bytewaiser/.local/share/nvim/site/pack/packer/start/nvim-cmp",
