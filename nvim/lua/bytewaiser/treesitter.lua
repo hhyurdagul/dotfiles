@@ -1,5 +1,13 @@
 require 'nvim-treesitter.configs'.setup {
-    ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    ensure_installed = {
+        "astro", "bash", "c", "cmake", "commonlisp", "cpp", "css", "dockerfile",
+        "elixir", "elm", "fish", "fortran", "git_rebase", "gitattributes", "gitignore", "go",
+        "gomod", "gowork", "html", "http", "javascript", "jsdoc", "json", "json5", "jsonc",
+        "jsonnet", "julia", "latex", "llvm", "lua", "make", "markdown", "markdown_inline",
+        "python", "qmljs", "query", "r", "racket", "rasi", "regex", "rst", "ruby", "rust",
+        "scss", "solidity", "sql", "svelte", "swift", "sxhkdrc", "todotxt", "toml", "tsx",
+        "typescript", "vim", "vue", "yaml", "zig"
+    }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     ignore_install = {"phpdoc"}, -- List of parsers to ignore installing
     highlight = {
         enable = true, -- false will disable the whole extension
