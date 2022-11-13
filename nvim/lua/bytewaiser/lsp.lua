@@ -40,6 +40,7 @@ lspconfig["tsserver"].setup { on_attach = on_attach, capabilities = capabilities
 lspconfig["html"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["emmet_ls"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["jsonls"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["gopls"].setup { on_attach = on_attach, capabilities = capabilities, single_file_support = true }
 
 lspconfig["sumneko_lua"].setup {
     on_attach = on_attach,
