@@ -23,7 +23,7 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-    vim.keymap.set('n', '<leader>f', vim.lsp.buf.formatting, bufopts)
+    vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, bufopts)
 end
 
 -- Needs nvim-cmp installed
@@ -34,7 +34,8 @@ lspconfig["clangd"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["rust_analyzer"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["julials"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["texlab"].setup { on_attach = on_attach, capabilities = capabilities }
-lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities, root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc") }
+lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities,
+    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc") }
 lspconfig["astro"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["tsserver"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["html"].setup { on_attach = on_attach, capabilities = capabilities }
