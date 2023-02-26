@@ -29,7 +29,8 @@ end
 -- Needs nvim-cmp installed
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-lspconfig["pyright"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["pylsp"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["ruff_lsp"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["clangd"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["rust_analyzer"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["julials"].setup { on_attach = on_attach, capabilities = capabilities }
@@ -43,7 +44,7 @@ lspconfig["emmet_ls"].setup { on_attach = on_attach, capabilities = capabilities
 lspconfig["jsonls"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["gopls"].setup { on_attach = on_attach, capabilities = capabilities, single_file_support = true }
 
-lspconfig["sumneko_lua"].setup {
+lspconfig["lua_ls"].setup {
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
