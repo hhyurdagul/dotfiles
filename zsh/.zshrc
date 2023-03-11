@@ -4,6 +4,9 @@ alias sz="source ~/.zshrc"
 
 export ZDOTDIR=$HOME/.config/zsh
 setopt appendhistory
+export HISTFILE=$HOME/.config/zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
 
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
@@ -49,3 +52,5 @@ zsh_add_plugin "hlissner/zsh-autopair"
 
 # Environment variables set everywhere
 export EDITOR="nvim"
+
+
