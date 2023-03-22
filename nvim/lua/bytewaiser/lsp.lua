@@ -30,13 +30,14 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 lspconfig["pylsp"].setup { on_attach = on_attach, capabilities = capabilities }
-lspconfig["ruff_lsp"].setup { on_attach = on_attach, capabilities = capabilities }
+-- lspconfig["ruff_lsp"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["clangd"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["rust_analyzer"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["julials"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["texlab"].setup { on_attach = on_attach, capabilities = capabilities }
-lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities,
-    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc") }
+-- lspconfig["denols"].setup { on_attach = on_attach, capabilities = capabilities,
+--    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc") }
+lspconfig["svelte"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["astro"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["tsserver"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["html"].setup { on_attach = on_attach, capabilities = capabilities }
