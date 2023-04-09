@@ -33,6 +33,7 @@ lspconfig["pylsp"].setup { on_attach = on_attach, capabilities = capabilities }
 -- lspconfig["ruff_lsp"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["clangd"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["cmake"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["verible"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["rust_analyzer"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["julials"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["texlab"].setup { on_attach = on_attach, capabilities = capabilities }
