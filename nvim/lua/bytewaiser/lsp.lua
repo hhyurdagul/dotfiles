@@ -30,6 +30,7 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 lspconfig["pylsp"].setup { on_attach = on_attach, capabilities = capabilities }
+lspconfig["r_language_server"].setup { on_attach = on_attach, capabilities = capabilities }
 -- lspconfig["ruff_lsp"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["clangd"].setup { on_attach = on_attach, capabilities = capabilities }
 lspconfig["cmake"].setup { on_attach = on_attach, capabilities = capabilities }

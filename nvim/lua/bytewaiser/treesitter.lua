@@ -5,7 +5,7 @@ require 'nvim-treesitter.configs'.setup {
         "gomod", "gowork", "html", "http", "javascript", "jsdoc", "json", "json5", "jsonc",
         "jsonnet", "julia", "latex", "llvm", "lua", "make", "markdown", "markdown_inline",
         "python", "qmljs", "query", "r", "racket", "rasi", "regex", "rst", "ruby", "rust",
-        "scss", "solidity", "sql", "svelte", "swift", "sxhkdrc", "todotxt", "toml", "tsx",
+        "scss", "solidity", "sql", "svelte", "sxhkdrc", "todotxt", "toml", "tsx",
         "typescript", "vim", "vue", "yaml", "zig"
     }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     ignore_install = {"phpdoc"}, -- List of parsers to ignore installing
