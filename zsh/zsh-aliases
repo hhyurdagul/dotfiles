@@ -1,6 +1,11 @@
 #!/bin/sh
 alias p="source ~/Programming/Python/main/bin/activate"
 
+alias cdp="cd Programming/ProjectTeam"
+alias cdu="cd Programming/Universal"
+alias cds="cd Programming/Smartiks"
+alias cdm="cd Programming/MyProjects"
+
 alias ls=exa
 alias ll="ls -l"
 alias la="ls -a"

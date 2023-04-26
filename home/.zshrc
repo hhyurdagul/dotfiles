@@ -2,11 +2,11 @@
 precmd_functions=""
 alias sz="source ~/.zshrc"
 
-export ZDOTDIR=$HOME/.config/zsh
 setopt appendhistory
-export HISTFILE=$HOME/.config/zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
+export ZDOTDIR=$HOME/.config/zsh
+export HISTFILE=$HOME/.config/zsh_history
 
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
