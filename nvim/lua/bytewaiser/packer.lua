@@ -17,14 +17,22 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-cmdline'
     use 'hrsh7th/nvim-cmp'
     -- Snippets (vsnip) # Might change to luasnip
-    use 'hrsh7th/cmp-vsnip'
-    use 'hrsh7th/vim-vsnip'
+    use({
+        'L3MON4D3/LuaSnip',
+        -- follow latest release.
+        tag = 'v1.*',
+        -- install jsregexp (optional!:).
+        run = 'make install_jsregexp'
+    })
+    use { 'saadparwaiz1/cmp_luasnip' }
+    -- use 'hrsh7th/cmp-vsnip'
+    -- use 'hrsh7th/vim-vsnip'
     -- Telescope
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
     -- Autopair
     use 'tmsvg/pear-tree'
-    use {'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end}
+    use { 'kylechui/nvim-surround', config = function() require("nvim-surround").setup({}) end }
     -- Explorer
     use 'kyazdani42/nvim-tree.lua'
     use 'kyazdani42/nvim-web-devicons'
