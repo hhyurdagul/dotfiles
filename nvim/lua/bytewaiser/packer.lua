@@ -19,6 +19,7 @@ return require('packer').startup(function(use)
     use {
         'ray-x/lsp_signature.nvim',
     }
+    use 'Exafunction/codeium.vim'
     -- Snippets (vsnip) # Might change to luasnip
     use({
         'L3MON4D3/LuaSnip',
