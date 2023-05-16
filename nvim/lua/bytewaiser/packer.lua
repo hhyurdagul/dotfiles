@@ -19,7 +19,13 @@ return require('packer').startup(function(use)
     use {
         'ray-x/lsp_signature.nvim',
     }
-    use 'Exafunction/codeium.vim'
+use {
+  'Exafunction/codeium.vim',
+  config = function ()
+    -- Change '<C-g>' here to any keycode you like.
+    vim.keymap.set('i', '<M-a>', function () return vim.fn['codeium#Accept']() end, { expr = true })
+  end
+}
     -- Snippets (vsnip) # Might change to luasnip
     use({
         'L3MON4D3/LuaSnip',

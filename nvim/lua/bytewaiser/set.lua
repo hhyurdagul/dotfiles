@@ -1,4 +1,5 @@
 vim.g.mapleader = " "
+vim.g.codeium_disable_bindings = 1
 
 vim.opt.ts = 4
 vim.opt.shiftwidth = 4
@@ -25,4 +26,3 @@ vim.opt.compatible = false
 
 vim.opt.syntax = "on"
 vim.opt.filetype.plugin = "on"
-
