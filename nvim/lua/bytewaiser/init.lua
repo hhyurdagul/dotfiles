@@ -1,3 +1,4 @@
+require("bytewaiser.plugins")
 require("bytewaiser.set")
 require("bytewaiser.remap")
 require("bytewaiser.lsp")
