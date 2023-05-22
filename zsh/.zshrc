@@ -8,6 +8,9 @@ export HISTFILE=$HOME/.config/zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
 
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
 setopt interactive_comments
