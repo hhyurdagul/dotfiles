@@ -1,4 +1,5 @@
 #!/bin/sh
+alias todo="nvim ~/Programming/todo.md"
 alias p="source ~/Programming/Python/main/bin/activate"
 
 alias cdp="cd ~/Programming/ProjectTeam"
