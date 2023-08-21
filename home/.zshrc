@@ -1,4 +1,6 @@
 #!/bin/sh
+
+. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 precmd_functions=""
 alias sz="source ~/.zshrc"
 
