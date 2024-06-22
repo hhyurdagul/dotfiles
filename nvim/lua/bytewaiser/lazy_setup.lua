@@ -12,48 +12,45 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
+    -- Colorscheme
+    { "catppuccin/nvim",          name = "catppuccin", priority = 1000 },
+
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
-    -- Language server protocol
-    require 'bytewaiser.plugins.lsp',
-    -- Treesitter
-    { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
-
-    -- Fzf
-    'nvim-lua/plenary.nvim',
-    require 'bytewaiser.plugins.telescope',
-
-
-    -- Autocomplete
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    'hrsh7th/nvim-cmp',
-    'ray-x/lsp_signature.nvim',
+    -- Highlight todo, notes, etc in comments
+    { 'folke/todo-comments.nvim', event = 'VimEnter',  dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
     -- AI
     {
-        'Exafunction/codeium.vim',
+        "Exafunction/codeium.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "hrsh7th/nvim-cmp",
+        },
         config = function()
-            -- Change '<C-g>' here to any keycode you like.
-            vim.keymap.set('i', '<M-a>', function() return vim.fn['codeium#Accept']() end, { expr = true })
-            vim.keymap.set('i', '<M-Right>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true })
-            vim.keymap.set('i', '<M-Left>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true })
+            require("codeium").setup({
+            })
         end
     },
+    -- Language server protocol
+    require 'bytewaiser.plugins.lsp',
+    -- Treesitter
+    require 'bytewaiser.plugins.treesitter'
+
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl",       opts = {} },
+    -- Fzf
+    require 'bytewaiser.plugins.telescope',
+
+    -- Autocomplete & Snippets
+    require 'bytewaiser.plugins.autocomplete',
+    -- 'ray-x/lsp_signature.nvim',
+
 
     -- {
     --     'huggingface/llm.nvim'
     -- },
-    -- Snippets (luasnip)
-    {
-        'L3MON4D3/LuaSnip',
-        version = '1.*',
-        build = 'make install_jsregexp'
-    },
-    'saadparwaiz1/cmp_luasnip',
+
     -- Autopair
     'tmsvg/pear-tree',
     'kylechui/nvim-surround',
@@ -62,16 +59,13 @@ local plugins = {
     'kyazdani42/nvim-web-devicons',
     -- Line
     'nvim-lualine/lualine.nvim',
-    -- Colorscheme
-    'folke/tokyonight.nvim',
-    'catppuccin/nvim',
     -- Markdown
-    { "iamcco/markdown-preview.nvim",    build = function() vim.fn["mkdp#util#install"]() end },
+    { "iamcco/markdown-preview.nvim", build = function() vim.fn["mkdp#util#install"]() end },
 
     -- Auto Comment
-    { 'numToStr/Comment.nvim',           config = function() require('Comment').setup() end },
+    { 'numToStr/Comment.nvim',        config = function() require('Comment').setup() end },
 
-    {                   -- Useful plugin to show you pending keybinds.
+    {                       -- Useful plugin to show you pending keybinds.
         'folke/which-key.nvim',
         event = 'VimEnter', -- Sets the loading event to 'VimEnter'
         config = function() -- This is the function that runs, AFTER loading
@@ -95,25 +89,6 @@ local plugins = {
         end,
     },
 
-
-    -- Tmux
-    {
-        "christoomey/vim-tmux-navigator",
-        cmd = {
-            "TmuxNavigateLeft",
-            "TmuxNavigateDown",
-            "TmuxNavigateUp",
-            "TmuxNavigateRight",
-            "TmuxNavigatePrevious",
-        },
-        keys = {
-            { "<C-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
-            { "<C-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
-            { "<C-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
-            { "<C-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
-            { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-        },
-    }
 }
 
 local opts    = {}
