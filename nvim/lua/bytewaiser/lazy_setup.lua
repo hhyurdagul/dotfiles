@@ -36,7 +36,7 @@ local plugins = {
     -- Language server protocol
     require 'bytewaiser.plugins.lsp',
     -- Treesitter
-    require 'bytewaiser.plugins.treesitter'
+    require 'bytewaiser.plugins.treesitter',
 
     { "lukas-reineke/indent-blankline.nvim", main = "ibl",       opts = {} },
     -- Fzf
