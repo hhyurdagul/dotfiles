@@ -13,3 +13,8 @@ nnoremap("<leader>fh", "<cmd>Telescope help_tags<cr>")
 
 -- Paste without yanking
 vnoremap("p", '"_dP')
+
+-- Diagnostics
+nnoremap('<leader>ge', vim.diagnostic.open_float)
+nnoremap('<leader>p', vim.diagnostic.goto_prev)
+nnoremap('<leader>n', vim.diagnostic.goto_next)

@@ -4,8 +4,8 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "bytewaiser";
-  home.homeDirectory = "/home/bytewaiser";
-  xdg.configHome = "/home/bytewaiser/.config/";
+  home.homeDirectory = "/Users/bytewaiser";
+  xdg.configHome = "/Users/bytewaiser/.config/";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -15,13 +15,35 @@
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
   home.stateVersion = "23.05"; # Please read the comment before changing.
+  programs.neovim.enable = true;
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
-    # pkgs.hello
+    pkgs.eza
+    pkgs.ripgrep
+    pkgs.fd
+    pkgs.nodejs_20
+    pkgs.nodePackages.vscode-langservers-extracted
+    pkgs.nodePackages.typescript-language-server
+    pkgs.nodePackages.svelte-language-server
+    pkgs.nodePackages.svelte-language-server
+    pkgs.nodePackages.yarn
+    pkgs.postgresql
+    pkgs.zoxide
+    pkgs.tmux
+    pkgs.cmake
+    pkgs.pyenv
+    pkgs.ffmpeg
+    pkgs.jq
+    pkgs.glow
+    pkgs.go
+    pkgs.hugo
+    pkgs.fzf
+    pkgs.lua-language-server
+    
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
