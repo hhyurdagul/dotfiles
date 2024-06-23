@@ -1,5 +1,6 @@
 -- Tab size for files
 vim.cmd("autocmd BufRead,BufEnter *.astro set filetype=astro")
+vim.cmd("autocmd FileType lua setlocal shiftwidth=2 softtabstop=2 expandtab")
 vim.cmd("autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab")
 vim.cmd("autocmd FileType typescript setlocal shiftwidth=2 softtabstop=2 expandtab")
 vim.cmd("autocmd FileType javascriptreact setlocal shiftwidth=2 softtabstop=2 expandtab")

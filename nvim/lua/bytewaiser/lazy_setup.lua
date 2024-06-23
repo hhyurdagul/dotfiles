@@ -23,14 +23,15 @@ local plugins = {
 
     -- AI
     {
-        "Exafunction/codeium.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "hrsh7th/nvim-cmp",
-        },
+        'Exafunction/codeium.vim',
         config = function()
-            require("codeium").setup({
-            })
+            -- Change '<C-g>' here to any keycode you like.
+            vim.keymap.set('i', '<M-a>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
+            vim.keymap.set('i', '<M-Right>', function() return vim.fn['codeium#CycleCompletions'](1) end,
+                { expr = true, silent = true })
+            vim.keymap.set('i', '<M-Left>', function() return vim.fn['codeium#CycleCompletions'](-1) end,
+                { expr = true, silent = true })
+            vim.keymap.set('i', '<M-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true })
         end
     },
     -- Language server protocol
@@ -38,7 +39,7 @@ local plugins = {
     -- Treesitter
     require 'bytewaiser.plugins.treesitter',
 
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl",       opts = {} },
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl",                                        opts = {} },
     -- Fzf
     require 'bytewaiser.plugins.telescope',
 
@@ -60,10 +61,10 @@ local plugins = {
     -- Line
     'nvim-lualine/lualine.nvim',
     -- Markdown
-    { "iamcco/markdown-preview.nvim", build = function() vim.fn["mkdp#util#install"]() end },
+    { "iamcco/markdown-preview.nvim",        build = function() vim.fn["mkdp#util#install"]() end },
 
     -- Auto Comment
-    { 'numToStr/Comment.nvim',        config = function() require('Comment').setup() end },
+    { 'numToStr/Comment.nvim',               config = function() require('Comment').setup() end },
 
     {                       -- Useful plugin to show you pending keybinds.
         'folke/which-key.nvim',
