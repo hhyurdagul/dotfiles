@@ -7,4 +7,3 @@ case `uname` in
   FreeBSD)
   ;;
 esac
-
