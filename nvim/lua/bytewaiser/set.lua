@@ -26,3 +26,5 @@ vim.opt.compatible = false
 
 vim.opt.syntax = "on"
 vim.opt.filetype.plugin = "on"
+
+vim.cmd("colorscheme catppuccin")

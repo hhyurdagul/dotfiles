@@ -166,11 +166,19 @@ return { -- LSP Configuration & Plugins
       -- But for many setups, the LSP (`tsserver`) will work just fine
       -- tsserver = {},
       --
-      pylsp = {},
-      r_language_server = {},
+      -- r_language_server = {},
       -- julia_ls = {},
       -- ruff_lsp = {},
+      -- pyright = {},
+      -- basedpyright = {
+      --   settings = {
+      --     basedpyright = {
+      --       reportMissingTypeStubs = false,
+      --     },
+      --   },
+      -- },
 
+      pylsp = {},
       cmake = {},
       clangd = {},
       verible = {},
@@ -180,7 +188,7 @@ return { -- LSP Configuration & Plugins
       html = {},
       astro = {},
       jsonls = {},
-      tsserver = {},
+      ts_ls = {},
       -- svelte = {}
 
       gopls = {},

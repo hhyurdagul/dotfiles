@@ -35,12 +35,10 @@
     pkgs.zoxide
     pkgs.tmux
     pkgs.cmake
-    pkgs.pyenv
     pkgs.ffmpeg
     pkgs.jq
     pkgs.glow
     pkgs.go
-    pkgs.hugo
     pkgs.fzf
     pkgs.lua-language-server
     

@@ -64,7 +64,7 @@ autoload -U compinit && compinit
 
 bindkey -v
 
-KEYTIMEOUT=0
+KEYTIMEOUT=1
 
 
 eval "$(uv generate-shell-completion zsh)"
