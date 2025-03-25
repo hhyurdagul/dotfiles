@@ -46,18 +46,12 @@ local plugins = {
         'Exafunction/codeium.vim',
         config = function()
             -- Change '<C-g>' here to any keycode you like.
-            vim.keymap.set('i', '<M-a>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
-            vim.keymap.set('i', '<M-Right>', function() return vim.fn['codeium#CycleCompletions'](1) end,
+            vim.keymap.set('i', '<C-a>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
+            vim.keymap.set('i', '<C-l>', function() return vim.fn['codeium#CycleCompletions'](1) end,
                 { expr = true, silent = true })
-            vim.keymap.set('i', '<M-Left>', function() return vim.fn['codeium#CycleCompletions'](-1) end,
+            vim.keymap.set('i', '<C-h>', function() return vim.fn['codeium#CycleCompletions'](-1) end,
                 { expr = true, silent = true })
-            vim.keymap.set('i', '<M-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true })
-            vim.keymap.set('i', '<D-a>', function() return vim.fn['codeium#Accept']() end, { expr = true, silent = true })
-            vim.keymap.set('i', '<D-L>', function() return vim.fn['codeium#CycleCompletions'](1) end,
-                { expr = true, silent = true })
-            vim.keymap.set('i', '<D-H>', function() return vim.fn['codeium#CycleCompletions'](-1) end,
-                { expr = true, silent = true })
-            vim.keymap.set('i', '<D-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true })
+            vim.keymap.set('i', '<C-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, silent = true })
         end
     },
 
