@@ -28,3 +28,7 @@ vim.opt.syntax = "on"
 vim.opt.filetype.plugin = "on"
 
 vim.cmd("colorscheme catppuccin")
+vim.cmd[[
+    highlight Normal guibg=NONE ctermbg=NONE
+    highlight NonText guibg=NONE ctermbg=NONE
+]]
