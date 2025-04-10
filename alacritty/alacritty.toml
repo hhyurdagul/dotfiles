@@ -6,4 +6,9 @@ import = [
 [window]
 opacity = 0.7
 decorations = "Buttonless"
+padding = {x=5, y=10}
+
+[font]
+normal = { family = "DroidSansM Nerd Font", style = "Regular" }
+size = 14
 
