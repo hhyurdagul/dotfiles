@@ -14,10 +14,10 @@ return {
 		opts = { signs = false },
 	},
 
-	{
-		"ahmedkhalf/project.nvim",
-		init = function()
-			require("project_nvim").setup({})
-		end,
-	},
+	-- {
+	-- 	"ahmedkhalf/project.nvim",
+	-- 	init = function()
+	-- 		require("project_nvim").setup({})
+	-- 	end,
+	-- },
 }

@@ -92,8 +92,8 @@ return {
 
 				-- Diagnostic stuff
 				map("<leader>ge", vim.diagnostic.open_float, "Open Diagnostics")
-				map("<leader>p", vim.diagnostic.goto_next, "Go to Next Diagnostics")
-				map("<leader>n", vim.diagnostic.goto_prev, "Go to Previous Diagnostics")
+				map("<leader>n", vim.diagnostic.goto_next, "Go to Next Diagnostics")
+				map("<leader>p", vim.diagnostic.goto_prev, "Go to Previous Diagnostics")
 
 				-- Jump to the type of the word under your cursor.
 				--  Useful when you're not sure what type a variable is and you want to see

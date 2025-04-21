@@ -67,5 +67,16 @@ vim.opt.completeopt = "menu,menuone,noselect"
 vim.opt.termguicolors = true
 vim.opt.compatible = false
 
--- vim.opt.syntax = "on"
+vim.opt.syntax = "on"
 vim.opt.filetype.plugin = "on"
+
+vim.g.vimwiki_list = {
+	{
+		path = "~/Documents/vimwiki",
+		path_html = "~/Documents/vimwiki_html",
+		syntax = "markdown",
+		ext = ".md",
+	},
+}
+
+vim.g.vimwiki_global_ext = 0

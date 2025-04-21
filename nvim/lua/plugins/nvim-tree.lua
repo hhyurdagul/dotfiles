@@ -7,5 +7,8 @@ return {
 	keys = {
 		{ "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Opens Nvim Tree" },
 	},
-	opts = {},
+	opts = {
+		disable_netrw = true,
+		hijack_netrw = true,
+	},
 }
