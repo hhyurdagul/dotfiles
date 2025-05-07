@@ -21,6 +21,7 @@ return { -- Highlight, edit, and navigate code
 				"make",
 				"markdown",
 				"markdown_inline",
+				"latex",
 				"python",
 				"rust",
 				"svelte",
@@ -54,5 +55,7 @@ return { -- Highlight, edit, and navigate code
 				},
 			},
 		})
+
+		vim.treesitter.language.register("markdown", { "vimwiki" })
 	end,
 }
