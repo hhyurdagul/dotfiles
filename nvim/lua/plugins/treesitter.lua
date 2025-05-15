@@ -29,6 +29,8 @@ return { -- Highlight, edit, and navigate code
 				"tsx",
 				"typescript",
 				"vim",
+				"typst",
+				"norg"
 			},
 			sync_install = false,
 			highlight = {
