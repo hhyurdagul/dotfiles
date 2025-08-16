@@ -1,6 +1,10 @@
 vim.lsp.enable("pyright")
+-- vim.lsp.enable("ty")
 vim.lsp.enable("ruff")
 vim.lsp.enable("lua_ls")
+vim.lsp.enable("html")
+vim.lsp.enable("tinymist")
+vim.lsp.enable("jsonls")
 
 vim.diagnostic.config({
 	severity_sort = true,
@@ -142,4 +146,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 			end, "[T]oggle Inlay [H]ints")
 		end
-	end})
+	end
+})

@@ -9,7 +9,7 @@
 return {
   cmd = { 'ruff', 'server' },
   filetypes = { 'python' },
-  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
+  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git', 'requirements.txt' },
   settings = {},
   on_attach = function(client, bufnr)
     vim.api.nvim_buf_create_user_command(bufnr, 'LspRuffOrganizeImports', function()

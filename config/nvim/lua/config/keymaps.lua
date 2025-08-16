@@ -7,4 +7,4 @@ vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ timeout_ms = 500, lsp_format = "fallback" })
 end, { desc = "Format current file" })
 
-vim.keymap.set("n", "<leader>ww", "<cmd>cd ~/Documents/vimwiki/<cr><Plug>VimwikiIndex", { remap = true })
+vim.keymap.set("n", "<leader>ww", "<CMD>cd ~/Documents/neorg/<CR><CMD>Neorg index<CR>", { remap = true })
