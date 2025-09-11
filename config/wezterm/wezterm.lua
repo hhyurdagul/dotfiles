@@ -28,7 +28,10 @@ config.default_cursor_style = 'SteadyBlock'
 config.enable_scroll_bar = false
 config.audible_bell = "Disabled"
 
-
+wezterm.on('gui-startup', function(cmd)
+    local _, _, window = wezterm.mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
+end)
 
 -- Keybindings
 config.keys = {
@@ -41,14 +44,14 @@ config.keys = {
 
     -- ToggleFullScreen
     {
-        key = 'f',
+        key = 'n',
         mods = 'CMD|SHIFT',
         action = wezterm.action.ToggleFullScreen,
     },
 
     -- Pane management
     {
-        key = 'Enter',
+        key = '"',
         mods = 'CMD',
         action = wezterm.action_callback(function(window, _)
             local panes = window:active_tab():panes()
@@ -57,6 +60,11 @@ config.keys = {
             last_pane:split { direction = direction }
         end
         )
+    },
+    {
+        key = 'f',
+        mods = 'CMD|SHIFT',
+        action = wezterm.action.TogglePaneZoomState,
     },
     {
         key = 'h',

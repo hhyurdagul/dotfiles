@@ -31,6 +31,8 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 export PATH="$HOME/.scripts:$PATH"
+export PATH="$HOME/Programming/Flutter/flutter/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
@@ -39,7 +41,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 alias sz="source ~/.zshrc"
 
-alias p="source ~/Programming/Python/main/bin/activate"
+alias p="source ~/Programming/Python/main/.venv/bin/activate"
 
 alias ls=eza
 alias ll="ls -l"
@@ -81,4 +83,14 @@ zinit light romkatv/powerlevel10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+# Yazi
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+

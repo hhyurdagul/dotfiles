@@ -5,6 +5,7 @@ vim.lsp.enable("lua_ls")
 vim.lsp.enable("html")
 vim.lsp.enable("tinymist")
 vim.lsp.enable("jsonls")
+vim.lsp.enable('marksman')
 
 vim.diagnostic.config({
 	severity_sort = true,
