@@ -7,15 +7,10 @@ vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ timeout_ms = 500, lsp_format = "fallback" })
 end, { desc = "Format current file" })
 
-vim.keymap.set("n", "<leader>ww", "<CMD>cd ~/Documents/neorg/<CR><CMD>Neorg index<CR>", { remap = true })
-
 
 -- Markdown Task Toggler Configuration
 -- Define a function to toggle the markdown task list item
 local function toggle_task()
-	-- Get the current cursor position (row, col)
-	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-
 	-- Get the line at the current cursor position
 	local line = vim.api.nvim_get_current_line()
 

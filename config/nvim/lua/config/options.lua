@@ -14,7 +14,7 @@ vim.opt.number = true -- Line numbers
 -- Relative line numbers
 -- vim.opt.relativenumber = true
 
-vim.opt.mouse = "a" -- Mouse mode
+vim.opt.mouse = "a"      -- Mouse mode
 
 vim.opt.showmode = false -- Dont show the mode since it is already in the statusline
 
@@ -34,7 +34,7 @@ vim.opt.smartcase = true
 
 vim.opt.signcolumn = "number" -- Keep signcolumn on by default
 
-vim.opt.updatetime = 250 -- Decrease update time
+vim.opt.updatetime = 250      -- Decrease update time
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -42,14 +42,14 @@ vim.opt.splitbelow = true
 
 vim.opt.inccommand = "split" -- Preview substitutions live, as you type!
 
-vim.opt.cursorline = true -- Show which line your cursor is on
+vim.opt.cursorline = true    -- Show which line your cursor is on
 
 -- vim.opt.scrolloff = 5 -- Minimal number of screen lines to keep above and below the cursor.
 
-vim.opt.expandtab = true -- Convert tabs to spaces
-vim.opt.tabstop = 4 -- How many spaces are shown per Tab
-vim.opt.softtabstop = 4 -- How many spaces are shown per Tab
-vim.opt.shiftwidth = 4 -- Amount to indent with > or <
+vim.opt.expandtab = true   -- Convert tabs to spaces
+vim.opt.tabstop = 4        -- How many spaces are shown per Tab
+vim.opt.softtabstop = 4    -- How many spaces are shown per Tab
+vim.opt.shiftwidth = 4     -- Amount to indent with > or <
 
 vim.opt.breakindent = true -- Enable break indent
 vim.opt.smarttab = true
@@ -69,14 +69,3 @@ vim.opt.compatible = false
 
 vim.opt.syntax = "on"
 vim.opt.filetype.plugin = "on"
-
-vim.g.vimwiki_list = {
-	{
-		path = "~/Documents/vimwiki",
-		path_html = "~/Documents/vimwiki_html",
-		syntax = "markdown",
-		ext = ".md",
-	},
-}
-
-vim.g.vimwiki_global_ext = 0
