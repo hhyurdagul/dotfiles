@@ -5,23 +5,24 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Option + Arrow Keys
-bindkey '^[[1;3C' forward-word
-bindkey '^[[1;3D' backward-word
-
-# Control + Arrow Keys
-bindkey '^[[1;5C' forward-word
-bindkey '^[[1;5D' backward-word
-
-# Cmd + Arrow Keys
-bindkey '^[[C'  end-of-line
-bindkey '^[[D'  beginning-of-line
-
+# # Option + Arrow Keys
+# bindkey '^[[1;3C' forward-word
+# bindkey '^[[1;3D' backward-word
+#
+# # Control + Arrow Keys
+# bindkey '^[[1;5C' forward-word
+# bindkey '^[[1;5D' backward-word
+#
+# # Cmd + Arrow Keys
+# bindkey '^[[C'  end-of-line
+# bindkey '^[[D'  beginning-of-line
+#
 setopt appendhistory
 export HISTSIZE=10000
 export SAVEHIST=10000
 export HISTFILE="$HOME/.zsh_history"
 
+export TERM=kitty
 export EDITOR=nvim
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"

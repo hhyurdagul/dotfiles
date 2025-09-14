@@ -62,8 +62,8 @@ mkdir -p "$DEST_CONFIG_DIR"
 
 # --- Configuration Setup ---
 # Define configurations for different platforms
-COMMON_CONFIGS=("nvim" "wezterm")
-LINUX_ONLY_CONFIGS=("hypr" "waybar")
+COMMON_CONFIGS=("nvim" "wezterm", "kitty")
+LINUX_ONLY_CONFIGS=("hypr" "waybar", "wofi")
 MAC_ONLY_CONFIGS=("yabai" "karabiner")
 
 # Determine which configs to link based on the OS
