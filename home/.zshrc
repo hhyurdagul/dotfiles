@@ -5,6 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+eval "$(mise activate zsh)"
+
 # # Option + Arrow Keys
 # bindkey '^[[1;3C' forward-word
 # bindkey '^[[1;3D' backward-word
