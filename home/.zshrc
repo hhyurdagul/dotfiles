@@ -11,9 +11,9 @@ eval "$(mise activate zsh)"
 # bindkey '^[[1;3C' forward-word
 # bindkey '^[[1;3D' backward-word
 #
-# # Control + Arrow Keys
-# bindkey '^[[1;5C' forward-word
-# bindkey '^[[1;5D' backward-word
+# Control + Arrow Keys
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
 #
 # # Cmd + Arrow Keys
 # bindkey '^[[C'  end-of-line
@@ -44,7 +44,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 alias sz="source ~/.zshrc"
 
-alias p="source ~/Programming/Python/main/.venv/bin/activate"
+alias jg="just -g"
 
 alias ls=eza
 alias ll="ls -l"

@@ -1,4 +1,5 @@
 vim.lsp.enable("pyright")
+-- vim.lsp.enable("pyrefly")
 -- vim.lsp.enable("ty")
 vim.lsp.enable("ruff")
 vim.lsp.enable("lua_ls")
@@ -6,6 +7,7 @@ vim.lsp.enable("html")
 vim.lsp.enable("tinymist")
 vim.lsp.enable("jsonls")
 vim.lsp.enable('marksman')
+vim.lsp.enable('rust_analyzer')
 
 vim.diagnostic.config({
 	severity_sort = true,
