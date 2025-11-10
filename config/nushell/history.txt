@@ -1,0 +1,922 @@
+ls
+ll
+ls -l
+ls
+cd Downloads/
+ls
+ls | order by size
+ls | sort size
+ls | sort 
+ls | sort "size"
+ls | sort size
+ls | ^sort 
+ls | sort-by size
+ls | sort-by size decreasing=False
+ls | sort-by 
+ls | sort-by --h
+ls | sort-by --help
+ls | sort-by size -r
+ls | sort-by size 
+csvlens temp.tsv
+open temp.tsv
+open --help
+open "temp.tsv" | first 
+open "temp.tsv" | first --help
+open "temp.tsv" | first 10
+ls
+rm temp.tsv temp_metadata.tsv
+ls
+nvim game.wasm
+open predictions.csv
+open `predictions(1).csv`
+rm -rf predi*
+ls
+rm game.wasm
+ls
+clear
+ls
+y
+yazi
+ls
+open 3-3394794-w9qWAwd1.txt
+nvim 3-3394794-w9qWAwd1.txt
+rm 3-3394794-w9qWAwd1.txt
+open Fish_data.xlsx
+rm Fish_data.xlsx
+ls
+rm S_*
+open file.txt
+rm file.txt
+open data.csv
+rm data.csv data-tahin.csv
+open teydeb_destek_programlari_ve_cagrilari_ust_limitleri.xlsx
+open teydeb_destek_programlari_ve_cagrilari_ust_limitleri.xlsx | to csv
+ls
+cd Spreadsheets/
+ls
+open Reading.xlsx
+open Reading.xlsx | first 1
+open Reading.xlsx | first 2
+open Reading.xlsx | to csv
+Reading.xlsx | from xlsx 
+from xlsx Reading.xlsx
+open Reading.xlsx | from xlsx
+open Reading.xlsx | from xlsx | to csv
+open Reading.xlsx | first 10
+ls
+nvim Reading.xlsx
+xdg-open Reading.xlsx
+ls
+cd ..
+ls
+{"1": 2} | to csv
+ls
+{"a": [1, 2, 3], "b": [7,7,7]} | to csv
+{"a": [1, 2, 3], "b": [7,7,7]} | from json
+{"a": [1, 2, 3], "b": [7,7,7]}
+from json {"a": [1, 2, 3], "b": [7,7,7]}
+{"a": [1, 2, 3], "b": [7,7,7]} | to json
+{"a": [1, 2, 3], "b": [7,7,7]} | to json | from json
+{"a": [1, 2, 3], "b": [7,7,7]} | to json | to csv 
+{"a": [1, 2, 3], "b": [7,7,7]} | to csv
+{"a": [1, 2, 3], "b": [7,7,7]} | to yaml
+{"a": [1, 2, 3], "b": [7,7,7]} | to yaml | to csv
+{"a": [1, 2, 3], "b": [7,7,7]} | to yaml | from yaml
+"1,2,3" | to yaml | from yaml
+"1,2,3" | to yaml 
+"1,2,3" 
+"1,2,3" | from csv
+"1, 2, 3" 
+"1,2,3" | from csv
+1,2,3 | from csv
+ls
+nvim a.csv
+open a.csv
+open a.csv | to json
+open a.csv | to yaml
+open a.csv | to md 
+open a.csv | to nuon 
+open a.csv | to tsv 
+open a.csv | to yml 
+open a.csv | to yaml 
+ls
+clear
+ls
+rm -rf a.csv _Sıralanmış GG
+ls
+exit
+cd .config/
+ls
+clear
+ls
+clear
+cd Dev
+cd
+cd Dev/
+ls
+cd Work/
+cd ..
+cd Personal/hhyurdagul.com/
+ls
+clear
+ls
+git status
+$nu.config-path
+cd .config/nushell/
+ls
+nvim config.nu
+starship
+starship init nu
+clear
+ls
+cd .config/nushell/
+ls
+which nu
+nu --help
+nu --version
+ls
+nvim config.nu
+source config.nu
+ls
+exit
+curl -sS https://starship.rs/install.sh | sh
+ls
+cd .config/nushell/
+ls
+nvim env.nu
+nvim .config/nushell/config.nu
+nvim .config/nushell/env.nu
+ls
+^ls
+ls
+^ls
+clear
+ls
+$nu.data-dir
+cd .local/share/nushell/
+ls
+cd vendor/
+ls
+cd autoload/
+ls
+nvim starship.nu
+ls
+clear
+ls
+sharship
+starship
+starship init
+starship init nu
+export-env 
+ls
+nvim starship.nu
+config nu
+config nu --doc
+config nu
+config nu | nu-highlight 
+config nu | nu-highlight | less -R
+config nu --doc | nu-highlight | less -R
+config nu --doc | nu-highlight
+nvim .config/nushell/env.nu
+ls
+nvim .config/starship.toml
+starship 
+starship toggle
+starship toggle git
+starship preset
+curl -s https://ohmyposh.dev/install.sh | bash -s
+ls
+nvim starship.nu
+ls
+cd .config/nushell/
+ls
+oh-my-posh init nu
+ls
+nvim config.nu
+oh-my-posh init nu
+ls
+clear
+ls
+cd ..
+ls
+which python
+oh-my-posh init nu --config 1_shell
+ls
+oh-my-posh init nu --config "1_shell"
+exit
+ls
+cd .config/nushell/
+ls
+nvim config.nu
+cd
+ls
+cd Dev/
+ls
+cd Personal/hhyurdagul.com/
+ls
+pwd
+clear
+ls
+oh-my-posh config export --config jandedobbeleer --output .
+oh-my-posh config export --config jandedobbeleer --output theme.json
+ls
+nvim theme.json
+oh-my-post init nu --config theme.json
+oh-my-posh init nu --config theme.json
+ls
+clear
+$env.POWERLINE_COMMAND
+$env.PROMPT_COMMAND
+config env --default
+$env
+$env | transpose
+$env | transpose name value
+$env | transpose name value | where name
+$env | transpose name value | where name has "PROMPT"
+$env.PROMPT_COMMAND
+ls
+$env.PROMPT_COMMAND
+cd .config/nushell/
+ls
+nvim config.nu
+cd
+cd .local/share/nushell/
+ls
+cd vendor/autoload/
+ls
+nvim oh-my-posh.nu
+nvim starship.nu
+cd ..
+ls
+cd ..
+ls
+cd ..
+ls
+cd nushell/
+ls
+la
+ls -a
+cd ..
+ls
+cd
+la
+ls
+ls -a
+clear
+ls
+la -a
+ls -a
+ll
+ls -l
+ls -al
+ls -al | where type "symlink"
+ls -al | where type==symlink
+ls -al | where type=symlink
+ls -al | where type is symlink
+ls -al | where type = symlink
+ls -al | where "typ"e = symlink
+ls -al | where "type" = symlink
+ls -al | where type = symlink
+ls -l
+ls
+ls | filter type=dir
+ls | where 
+ls | where 0
+ls | where type==int
+ls | where type==dir
+ls | where type =dri
+ls | where type =dir
+ls | where type --help
+ls | where type 
+ls | where type > 
+ls | where type = dir
+ls | where type = "dir"
+şs
+ls
+nvim config.nu
+ls
+exit
+rm theme.json
+ls
+oh-my-posh init nu --config 1_shell
+ls
+source config.nu
+ls
+nvim config.nu
+nvim env.nu
+ls
+exit
+exit
+ls
+clear
+ls
+cd .config/nushell/
+ls
+oh-my-posh init nu --export 1_shell --o a.nu
+oh-my-posh init nu
+ls
+cd 
+cd .local/share/nushell/
+ls
+cd vendor/autoload/
+ls
+rm -rf starship.nu
+ls
+clear
+ls
+oh-my-posh init nu --config 1_shell
+ls
+cd Desktop/
+cd ..
+ls
+clear
+ls
+oh-my-posh init nu --config amro
+ls
+cd Dev/Personal/
+ls
+cd hhyurdagul.com/
+ls
+clear
+ls
+oh-my-posh init nu --config catppuccin_mocha
+ls
+cd Dev/Personal/
+ls
+clear
+ls
+cd hhyurdagul.com/
+ls
+config
+oh-my-posh init nu --config powerlevel10k_lean
+ls
+cd .config/nushell/
+ls
+cd
+cd Dev/dotfiles/
+ls
+oh-my-posh init nu --config honukai
+ls
+oh-my-posh init nu --config json
+ls
+cd Dev/dotfiles/
+ls
+cd ..
+ls
+cd School/
+ls
+cd ..
+cd Personal/hhyurdagul.com/
+ls
+cd ..
+cd
+cd .config/nushell/
+ls
+oh-my-post config export --config powerlevel10k_lean
+oh-my-posh config export --config powerlevel10k_lean
+ls
+oh-my-posh config export --config powerlevel10k_lean mytheme.omp.json
+oh-my-posh config export --config powerlevel10k_lean -o mytheme.omp.json
+ls
+nvim mytheme.omp.json
+ls
+oh-my-posh init nu --config ./mytheme.omp.json
+ls
+oh-my-posh init nu --config ./mytheme.omp.json
+oh-my-posh enable reload
+ls
+oh-my-posh init nu --config 1_shell
+oh-my-posh init nu --config ./mytheme.omp.json
+oh-my-posh init nu --config mytheme.omp.json
+ls
+oh-my-posh init nu --config ~/.config/nushell/mytheme.omp.json
+ls
+oh-my-posh enable reload
+ls
+clear
+ls
+cd Dev/
+ls
+cd
+ls
+cd Dev/
+ls
+clear
+ls
+cd
+ls
+clear
+ls
+clear
+ls
+cd
+ls
+cd .config/
+ls
+cd
+ls
+clear
+cd
+ls
+cd .config/
+ls
+clear
+ls
+clear
+echo hgi
+ls
+clear
+ls
+cd
+ls
+cd .config/
+ls
+cd nushell/
+l
+ls
+cd 
+ls
+cd Dev/
+ls
+cd
+clear
+ls
+clear
+ls
+nvim mytheme.omp.json
+ls
+cd .config/nushell/
+ls
+clear
+ls
+cd
+ls
+cd Dev/Personal/hhyurdagul.com/
+ls
+clear
+ls
+clear
+ls
+clear
+ls
+clear
+ls
+cd
+ls
+cd Dev/Personal/hhyurdagul.com/
+ls
+cd
+ls
+cd Dev/Personal/hhyurdagul.com/
+ls
+cd ..
+ls
+cd ..
+cd dotfiles/
+ls
+clear
+ls
+lsls
+ls
+git
+git remote
+git remote upstream
+git status
+ls
+clear
+ls
+git add home/.zshrc
+ls
+clear
+ls
+cd ..
+ls
+clear
+ls
+git status
+cd Personal/
+cd Personal/hhyurdagul.com/
+ls
+cd hhyurdagul.com/
+ls
+clear
+ls
+ls
+clear
+ls
+cd ..
+ls
+cd ..
+ls
+clear
+ls
+cd Work/
+source venv/bin/activate
+source venv/bin/activate.csh
+source venv/bin/activate.fish
+ls
+sh venv/bin/activate
+ls
+which python
+ls
+cd a/
+ls
+uv run main.py
+ls
+uv venv
+ls
+source .venv/bin/activate.nu
+overlay use .venv/bin/activate.nu
+ls
+clear
+ls
+cd ..
+ls
+cd a/
+ls
+which python
+python --venv
+python --version
+ls
+cd ..
+ls
+cd Dev/
+overlay 
+overlay hide
+ls
+which python
+ls
+overlay use .venv/bin/activate.nu
+ls
+exit
+ls
+cd ..
+ls
+cd Dev/Work/
+cd a/
+ls
+source .venv/bin/activate.nu
+overlay use .venv/bin/activate.nu
+exit
+cd Dev/Work/
+ls
+cd a/
+overlay use .venv/bin/activate.nu
+ls
+clear
+ls
+clear
+a
+ls
+clear
+ls
+clear
+ls
+a
+clear
+ls
+clear
+a
+echo hi
+ls
+c
+clear
+ls
+s
+ls
+clear
+ls
+clear
+ls
+clear
+ls
+exit
+nu
+exit
+ls
+clear
+ls
+$env.TRANSIENT_PROMPT_COMMAND=">"
+$env.TRANSIENT_PROMPT_COMMAND=>
+ls
+cd
+cd .config/nushell/
+l
+ls
+nvim env.nu
+ls
+clear
+ls
+exit
+ls
+nu
+nu
+ls
+nu
+ls
+nu
+nu
+ls
+nu
+ls
+cd ..
+ls
+clear
+ls
+cd ..
+cd dotfiles/
+ls
+exit
+nu
+ls
+exit
+nu
+ls
+clear
+ls
+clear
+ls
+nvim mytheme.omp.json
+ls
+open history.txt
+open history.txt | from tsv
+open history.txt | from tsv | filter ls = ls
+open history.txt | from tsv | where ls = ls
+open history.txt | from tsv | where ls = "ls"
+open history.txt | from tsv | where ls == "ls"
+clear
+open history.txt | from tsv | where ls == "clear"
+clear
+ls
+exit
+nvim mytheme.omp.json
+oh-my-posh disable reload
+ls
+clear
+$env.NU_LIB_DIRS
+usage
+usage zsh
+mise list
+mise
+mise activate nu
+^mise activate nu
+ls
+nvim config.nu
+'<\n>'
+ls
+mise
+which mise
+exit
+nu
+exit
+ls
+cd .config/alacritty/
+ls
+cd .config/alacritty/
+ls
+cd
+exit
+ls
+cd .config/alacritty/
+ls
+cd .config/alacritty/
+oh-my-posh enable reload
+ls
+.
+ls
+cd ..
+cd hypr
+ls
+cd scripts/
+ls
+zsh
+cd ls
+ls
+clear
+ls
+ls
+zsh
+nu
+oh-my-posh disable reload
+ls
+mise
+which python
+python
+ls
+clear
+ls
+cd
+ls
+cd .config/
+cd ..
+ls
+cd .config/nushell/
+ls
+nvim mytheme.omp.json
+oh-my-posh enable reload
+ls
+cd
+ls
+nvim mytheme.omp.json
+cd $env.OLDPWD
+ls
+nvim mytheme.omp.json
+ls
+cd
+ls
+cd .config/
+ls
+cd ..
+cd Dev/
+ls
+cd ..
+ls
+cd Desktop/
+cd ..
+cd Dev/dotfiles/
+ls
+clear
+ls
+cd ..
+ls
+oh-my-posh disable reload
+clear
+$env.path
+ls
+nvim .profile
+la
+ls -a
+nvim .zshenv
+ls
+cd .
+cd ..
+ls
+cd .config/nushell/
+ls
+$env.path
+ls /usr/bin/core_perl/
+perl
+perl --help
+clear
+$env.path
+cd .config/hypr
+ls
+zsh
+exit
+nvim envs.conf
+nvim input.conf
+exit
+nvim config.nu
+ls
+$env.path
+omarchy-battery-remaining 
+open omarchy-battery-remaining
+which omarchy-battery-remaining
+which omarchy-battery-remaining | open
+which omarchy-battery-remaining | open .
+which omarchy-battery-remaining | readlink 
+which omarchy-battery-remaining | .path
+which omarchy-battery-remaining | path
+which omarchy-battery-remaining | to text 
+which omarchy-battery-remaining | select path
+which omarchy-battery-remaining | select path | to csv
+which omarchy-battery-remaining | select path[0]
+which omarchy-battery-remaining | select path.0
+which omarchy-battery-remaining | select path [0]
+which omarchy-battery-remaining | select path .0
+which omarchy-battery-remaining | select path
+which omarchy-battery-remaining | select path | first
+which omarchy-battery-remaining | select path | first | open
+which omarchy-battery-remaining | select path | first | <\n>
+which omarchy-battery-remaining | select path | first<\n>
+which omarchy-battery-remaining | select path | first | to txt<\n>
+which omarchy-battery-remaining | select path | first | to text<\n>
+which omarchy-battery-remaining | select path | first | to text | open<\n>
+which omarchy-battery-remaining | select path | first | to text | nvim<\n>
+which omarchy-battery-remaining | select path | first | path <\n>
+which omarchy-battery-remaining | path
+path omarchy-battery-remaining
+ğath
+path
+2+2
+math 2+2
+math
+calc
+cal
+clear
+$env.XDG_DATA_DIRS
+$env.Path
+which starship 
+starship
+sudo pacman -Rns starship
+ls
+zsh
+ls
+nvim aim.sh
+open aim.sh
+open aim.sh | to 
+open aim.sh | to csv
+open aim.sh | to yaml
+open aim.sh | to json
+clear
+ls
+config nu
+env nu
+config env
+config nu
+cd .config/nushell/
+ls
+nvim mise.nu
+ls
+$nu
+$nu.env-path
+'<\n>let mise_path = $nu.default-config-dir | path join mise.nu<\n>^mise activate nu | save $mise_path --force<\n>' | save $nu.env-path --append<\n>"\nuse ($nu.default-config-dir | path join mise.nu)" | save $nu.config-path --append
+nvim config.nu
+ls
+nvim config.nu
+ls
+nvim env.nu
+ls
+$env.config
+$nu.config-path
+$nu.default-config-dir
+exit
+nvim config.nu
+nvim env.nu
+exit
+exit
+ls
+config nu
+nvim env.nu
+config nu
+path
+path "~"
+path ~
+path --help
+exit
+config nu
+nvim env.nu
+config nu
+mise
+which mise
+mise
+clear
+ls
+mise
+which mise
+mise --version
+mise list
+python
+config nu
+exit
+ssh linux@193.255.198.173 -p 443
+ls
+$env.config
+ls
+$env.Path
+cd .local/share/
+ls
+..
+cd bin/
+ls
+nvim oh-my-posh
+nvim uv
+nvim uvx
+nvim env
+ls
+$env.Path
+source
+ls
+cd .local/
+ls
+external-monitor-brightness 50
+external-monitor-brightness 30
+external-monitor-brightness 50
+external-monitor-brightness 30
+$env.config
+$env.config | table -e
+$env.config | less -R
+$env.config | bat -P
+lsl
+config nu
+ls
+cd .config/nushell/
+ls
+cd ..
+rm -rf nushell ; ln -s ~/Dev/dotfiles/config/nushell/ nushell
+ls
+ls nushell
+ls -l nushell
+ls -l
+ls -l | where name == "nu"
+ls -l | where name == "nushell"
+ls nushell
+readlink nushell
+cd ..
+ls
+exit
+cd Dev/dotfiles/
+ls
+git status
+nvim link.sh
+git status
