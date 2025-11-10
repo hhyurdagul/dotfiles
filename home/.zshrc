@@ -97,3 +97,4 @@ function y() {
 
 
 . "$HOME/.local/share/../bin/env"
+[[ ! -r '/home/hhyurdagul/.opam/opam-init/init.zsh' ]] || source '/home/hhyurdagul/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null

@@ -13,6 +13,7 @@ return {
 			bash = { "shfmt", "shellcheck" },
 			sh = { "shfmt", "shellcheck" },
 			zsh = { "shfmt", "shellcheck" },
+			ocaml = { "ocamlformat" },
 		},
 		format_on_save = {
 			-- These options will be passed to conform.format()

@@ -9,6 +9,17 @@ vim.lsp.enable("jsonls")
 vim.lsp.enable("marksman")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("bashls")
+vim.lsp.enable("astro")
+vim.lsp.enable("ts_ls")
+vim.lsp.enable("ocamllsp")
+
+vim.lsp.config("ts_ls", {
+	init_options = {
+		typescript = {
+			tsdk = "/home/hhyurdagul/.local/share/mise/installs/node/22.20.0/lib/node_modules/typescript/lib",
+		},
+	},
+})
 
 vim.diagnostic.config({
 	severity_sort = true,
