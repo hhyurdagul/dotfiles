@@ -51,7 +51,7 @@
     "on-click": "omarchy-launch-floating-terminal-with-presentation omarchy-update",
     "tooltip-format": "Omarchy update available",
     "signal": 7,
-    "interval": 21600
+    "interval": 3600
   },
 
   "cpu": {
@@ -100,6 +100,7 @@
   "bluetooth": {
     "format": "",
     "format-disabled": "󰂲",
+    "format-off": "󰂲",
     "format-connected": "󰂱",
     "format-no-controller": "",
     "tooltip-format": "Devices connected: {num_connections}",
@@ -125,7 +126,7 @@
     "modules": ["custom/expand-icon", "tray"]
   },
   "custom/expand-icon": {
-    "format": "",
+    "format": " ",
     "tooltip": false
   },
   "custom/screenrecording-indicator": {
@@ -136,6 +137,6 @@
   },
   "tray": {
     "icon-size": 12,
-    "spacing": 17
+    "spacing": 12
   }
 }

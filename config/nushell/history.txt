@@ -920,3 +920,1576 @@ ls
 git status
 nvim link.sh
 git status
+git add .
+git commit -m "A lot of changes"
+git push
+ls
+clear
+ls
+cd
+ls
+cd Downloads/
+ls
+cd Spreadsheets/
+ls
+dfr
+polars
+open Reading.xlsx | polars
+cargo install nu_plugin_polars --locked
+polars
+plugin add polars
+plugin add nu_plugin_polars
+config nu
+config nu
+polars
+cd Downloads/
+cd Spreadsheets/
+ls
+open Reading.xlsx
+open Reading.xlsx | polars
+polars open Reading.xlsx
+open Reading.xlsx | to csv
+open Reading.xlsx
+ls
+open `iptal iade yeni data.xlsx` | to csv
+open Reading.xlsx
+open Reading.xlsx | to json
+open Reading.xlsx | to json | to csv
+open Reading.xlsx | to json | from json
+open Reading.xlsx | to json
+open Reading.xlsx | to yaml
+open Reading.xlsx | to yaml | less
+open Reading.xlsx | get Beginner
+open Reading.xlsx | get Beginner | to csv
+clear
+ls
+open Vocabulary.xlsx | get Beginner | to csv | save a.csv
+open Vocabulary.xlsx | get Beginner
+open Vocabulary.xlsx 
+open Reading.xlsx | get Beginner | to csv | save a.csv
+ls
+nvim a.csv
+open a.csv
+open a.csv | to xlsx
+open a.csv | to excel
+open a.csv | to json
+open a.csv | to 
+open a.csv | to xml
+nvim a.csv
+open a.csv | to xml
+external-monitor-brightness 100
+cd Dev/Work/ProjectTeam/
+ls
+cd WebApps/
+ls
+clear
+ls
+rm -rf *.zip
+ls
+cd KrikoNetworkWebApp/
+ls
+uv run app/Anasayfa.py
+python -m streamlit app/Anasayfa.py
+python -m streamlit ru  app/Anasayfa.py
+python -m streamlit run app/Anasayfa.py
+ls
+cd ..
+ls
+cp -r RobokopiFinancialWebApp/ MUFinancialWebApp
+ls
+cd MUFinancialWebApp/
+ls
+cd app/
+ls
+cd ..
+ls
+cd .config/alacritty/
+ls
+nvim alacritty.toml
+exit
+pwd 
+pwd | wl-copy 
+cd /home/hhyurdagul/Dev/Work/ProjectTeam/WebApps/MUFinancialWebApp
+ls
+cd /home/hhyurdagul/Dev/Work/ProjectTeam/WebApps/MUFinancialWebApp
+clear
+ls
+ls
+mv ~/Downloads/convlstm-7.36-20251111T115126Z-1-001.zip models/
+cd models/
+ls
+rm -rf Eur/ KrediKart/ Usd/
+unzip *
+ls
+rm -rf *.zip
+mv convlstm-7.36/ model
+ls
+cd ..
+ls
+ls data/
+cd data/
+ls
+rm -rf *
+mv `~/Downloads/Finansal tahminleme eylül aylık - test.xlsx` .
+mv `~/Downloads/Finansal tahminleme eylül aylık - train.xlsx` .
+ls
+mv `Finansal tahminleme eylül aylık - test.xlsx` test.xlsx
+mv `Finansal tahminleme eylül aylık - train.xlsx` train.xslx
+open test.xlsx
+open test.xlsx sheet=1
+open test.xlsx --sheet=1
+open test.xlsx --help
+from xlsx test.xslx
+from xlsx --sheet 1 test.xslx
+from xlsx --sheets 1 test.xslx
+from xlsx --sheets [0]
+open test.xlsx | from xlsx --sheets [0]
+open test.xlsx | from xlsx --sheets
+open test.xlsx | from xlsx 
+open test.xlsx | from xlsx
+open test.xlsx
+open test.xlsx | get Sayfa1
+open test.xlsx | get Sayfa1 | detect columns 
+open test.xlsx | get Sayfa1 | columns 
+open --raw test.xlsx | from xlsx | get Sayfa1 | detect columns 
+open --raw test.xlsx | from xlsx | get Sayfa1
+open --raw test.xlsx | from xlsx --sheets 1 | get Sayfa1
+open --raw test.xlsx | from xlsx --sheets [Sayfa1]
+open --raw test.xlsx | from xlsx 
+open --raw test.xlsx | from xlsx | get Sayfa1
+open --raw test.xlsx | from xlsx | get Sayfa1 | to cv
+open --raw test.xlsx | from xlsx | get Sayfa1 | to csv
+open --raw test.xlsx | from xlsx | get Sayfa1 | to csv | from csv
+open --raw test.xlsx | from xlsx | get Sayfa1 | col 
+open --raw test.xlsx | from xlsx | get Sayfa1 | column 
+open --raw test.xlsx | from xlsx | get Sayfa1 | column 1
+open --raw test.xlsx | from xlsx | get Sayfa1 | column column0
+open --raw test.xlsx | from xlsx | get Sayfa1 | col 1
+open --raw test.xlsx | from xlsx | get Sayfa1 | col --help
+open --raw test.xlsx | from xlsx | get Sayfa1 | col --tabs
+open --raw test.xlsx | from xlsx | get Sayfa1 | set
+open --raw test.xlsx | from xlsx | get Sayfa1 | headers 
+open --raw test.xlsx | from xlsx | get Sayfa1 | headers | columns
+ls
+nvim app/backend/config.py
+ls
+cd ..
+ls
+cp KrikoNetworkWebApp/app/backend/config.py MUFinancialWebApp/app/backend/config.py
+cd MUFinancialWebApp/
+ls
+cd Dev/
+ls
+cd Personal/
+ls
+mkdir Temp
+cd Temp/
+ls
+clear
+ls
+cd .config/hypr
+ls
+nvim bindings.conf
+cd
+cd .local/share/omarchy/
+ls
+cd bin/
+ls
+cd ..
+ls
+cd config/
+ls
+cd omarchy/
+ls
+cd ..
+ls
+cd hypr/
+ls
+nvim bindings.conf
+ls
+cd ..
+ls
+playerctl
+playerctl volume +5
+playerctl volume -5
+playerctl volume +5
+playerctl volume + +5
+playerctl volume - 45
+playerctl volume - 4
+playerctl volume -4
+playerctl volume -5
+playerctl volume 24
+playerctl volume 25
+nvim
+nvim a.py
+python -m streamlit run app/Anasayfa.py
+python a.py
+cd .config/hypr
+ls
+ös
+ls
+nvim bindings.conf
+lazygit
+lazygit bindings.conf
+ls
+lazygit bindings.conf
+lazygit 
+sudo restart now
+cd Dev/Work/ProjectTeam/
+ls
+cd WebApps/
+ls
+cd MUFinancialWebApp/
+ls
+cd app/
+ls
+cd Dev/Personal/Temp/
+ls
+cd Dev/Work/ProjectTeam/
+ls
+z
+cd
+zoxide
+z Dev
+zoxide Dev/Work/ProjectTeam/WebApps/
+cd Dev/Work/ProjectTeam/WebApps/
+ls
+cd MUFinancialWebApp/
+ls
+cd app/
+ls
+clear
+ls
+cd ..
+ls
+cd data/
+ls
+open test.xlsx
+open test.xlsx | get Sayfa1 | columns 
+open test.xlsx | get Sayfa1 | headers | columns
+open test.xlsx | get Sayfa1 | headers | columns | transpose
+open test.xlsx | get Sayfa1 | headers | columns | transpose 
+open test.xlsx | get Sayfa1 | headers | transpose 
+ls
+cd ..
+ls
+python -m streamlit run app/Anasayfa.py
+cd .config/hypr
+ls
+hyprctl shortcuts
+ls
+hyprctl --help
+hyprctl binds
+hyprctl binds | parse
+hyprctl binds | from text 
+hyprctl binds | from
+hyprctl binds | from tsv
+hyprctl binds -h 
+hyprctl binds -j
+hyprctl binds -j | from json
+hyprctl binds -j | from json | where dispatcher == exec
+hyprctl binds -j | from json | where dispatcher == exec | where == False
+hyprctl binds -j | from json | where dispatcher == exec | where == false
+hyprctl binds -j | from json | where dispatcher == exec | where mouse == false
+hyprctl binds -j | from json | where dispatcher == exec | select key 
+hyprctl binds -j | from json | where dispatcher == exec | select key keykode
+hyprctl binds -j | from json | where dispatcher == exec | select key keycode
+hyprctl binds -j | from json | where dispatcher == exec 
+hyprctl binds -j | from json | where dispatcher == exec | select key keycode description arg
+swayosd-client 
+swayosd-client --monitor
+swayosd-client
+swayosd
+swayosd-server 
+swayosd
+cd .config/uwsm/
+ls
+nvim default
+uwsm
+uwsm -h
+uwsm check
+uwsm app
+ls
+cd ..
+ls
+cd omarchy/
+ls
+cd current/
+ls
+cd ..
+cd hypr
+ls
+clear
+ls
+nvim autostart.conf
+uwsm app -- swayosd-server
+uwsm app -- swayosd-server &
+uwsm app -- swayosd-server
+exec
+nohup swayosd-server > /dev/null 2>&1 &
+nohup swayosd-server > /dev/null 2>&1
+nohup swayosd-server > /dev/null
+nohup swayosd-server > /dev/null &
+zsh
+nohup swayosd > /dev/null 2>&1 &
+zsh
+uwsm --help
+nvim backend/config.py
+nvim a.py
+exit
+cd ..
+ls
+just -g cleancaches MUFinancialWebApp/
+just -g zipdir MUFinancialWebApp/
+ls
+ls MUFinancialWebApp/
+zipdir 
+zip -r MUFinancialWebApp.zip MUFinancialWebApp/
+zip
+zip --help
+^zip MUFinancialWebApp.zip MUFinancialWebApp/
+^zip MUFinancialWebApp.zip MUFinancialWebApp -r
+ls
+clear
+rm -rf MUFinancialWebApp.zip
+^zip MUFinancialWebApp.zip MUFinancialWebApp -r
+ls
+cd MUFinancialWebApp/
+ls
+la
+ls -a
+rm -rf .zip
+cd ..
+ls
+rm -rf MUFinancialWebApp.zip
+zip
+zip --help
+zip [1 2]
+^zip MUFinancialWebApp.zip MUFinancialWebApp -r
+ls
+open MUFinancialWebApp.zip
+clear
+ls
+nautilus .
+cd ..
+cd Archive/
+ls
+cd BOS
+ls
+cd Churn/
+ls
+cd data/
+ls
+open churn.xlsx
+open churn.xlsx | get 0
+open churn.xlsx | columns
+open churn.xlsx | get Sheet 1
+open churn.xlsx | get Sheet1
+open churn.xlsx | get Sheet1 | headers
+open churn.xlsx | get Sheet1 | headers | columns
+ls
+nvim nohup.out
+rm -rf nohup.out
+ls
+rm HORIZON-CL3-2026-2027_18_06_2025.pdf
+ls
+sh aim.sh
+nvim a.sh
+sh a.sh
+rm a.sh
+pwd
+url pwd
+pwd | url
+pwd | path
+path pwd
+path .
+path parse
+pwd | path parse
+pwd | path parse | url
+pwd | path parse | url parse
+url
+pwd | url parse
+payh
+path
+path self
+path self > a
+dir
+pwd | path parse
+pwd | path parse | get parent
+pwd | path parse | get parent | url
+pwd | path parse | get parent | url parse
+pwd | path parse | get parent | url join
+pwd | path parse | get parent | url encode
+pwd | path parse | get parent | url decode
+path
+localsearch 
+clear
+ls
+pwd | wl-copy 
+cd /home/hhyurdagul/Dev/Work/ProjectTeam/Archive/BOS/Churn/data
+ls
+clear
+ls
+open churn.xlsx | get Sheet1 | headers | columns
+open Churn.json
+clear
+ls
+open Churn-2.csv
+open Churn-2.csv | columns
+external-monitor-brightness 60
+external-monitor-brightness 30
+ls
+cd Documents/
+ls
+cd Personal/
+ls
+open `Hasan Hüseyin Yurdagül - CV.pdf`
+xdg-open `Hasan Hüseyin Yurdagül - CV.pdf`
+ls
+cd Dev/Personal/
+ls
+cd cv-typst/
+ls
+nvim cv.typ
+exit
+external-monitor-brightness 100
+external-monitor-brightness 0
+external-monitor-brightness 100
+uv tool install crewai<\n>
+crewai
+cd Dev/Personal/
+ls
+mkdir cv-ai
+rm -rf cv-ai/
+mkdir resume-ai
+cd resume-ai/
+ls
+cd ..
+rm -rf resume-ai/
+crewai create crew resume-ai
+ls
+ls resume_ai/
+rm -rf resume_ai/
+crewai create crew resume-ai
+rm -rf resume_ai/
+crewai create crew resume-ai
+ls
+cd resume_ai/
+ls
+la
+ls -a
+nvim .env
+ls
+clear
+ls
+nvim .
+ls
+nvim src/
+ls
+la
+ls -a
+uv sync
+ls
+source .venv/bin/activate.nu
+overlay use .venv/bin/activate.nu
+ls
+nvim src/
+ls
+nvim src/resume_ai/main.py
+ls
+nvim src/resume_ai/main.py
+ls
+crewai install
+crewai run
+ls
+nvim src/resume_ai/config/agents.yaml
+ls
+cd src/resume_ai/config/
+ls
+mv agents.yaml a
+mv tasks.yaml agents.yaml
+mv a tasks.yaml
+nvim agents.yaml
+nvim tasks.yaml
+nvim agents.yaml
+cd ..
+ls
+cd Dev/Personal/
+ls
+cd ..
+ls
+cd Personal/
+ls
+git clone https://github.com/langfuse/langfuse.git
+cd langfuse/
+cd Dev/Personal/
+ls
+cd resume_ai/
+ls
+ls knowledge/
+ls
+cd src/resume_ai/config/
+ls
+nvim agents.yaml
+cd ..
+ls
+cd ..
+ls
+crewai run
+cd ..
+ls
+nvim cv_output.md
+docker compose up
+clear
+ls
+external-monitor-brightness 50
+external-monitor-brightness 30
+external-monitor-brightness 100
+killall waybar
+waybar 
+waybar &
+waybar %
+uwsm app -- waybar &
+job spawn
+job spawn {uwsm app --waybar}
+job spawn {uwsm app -- waybar}
+ls
+open `Hasan Hüseyin Yurdagül - CV.pdf`
+clear
+ls
+external-monitor-brightness 50
+external-monitor-brightness 30
+exit
+cd Dev/Personal/gizemyurdagul.com/
+ls
+git pull 
+ls
+clear
+ls
+pnpm run dev
+pnpm install
+pnpm add -g @pnpm/exe
+pnpm run dev
+npm install -g pnpm
+pnpm dlx @astrojs/upgrade
+cd Dev/Personal/gizemyurdagul.com/
+ls
+cd Dev/Personal/gizemyurdagul.com/
+ls
+cd src/pages/
+ls
+nvim index.astro
+cd ..
+la
+ls
+cd pages/
+ls
+nvim blog.astro
+ls
+nvim ..
+ls
+cd ..
+ls
+nvim content/config.ts
+ls
+cd content/
+ls
+cd blog/
+ls
+cd Dev/Personal/gizemyurdagul.com/
+ls
+cd src/
+ls
+nvim deneme-blog.md
+ls
+cd layouts/
+ls
+cd ..
+cd pages/
+ls
+nvim aim.sh
+vi
+nvim aim.sh
+ww
+ls
+zsh
+ls
+cd .config/
+ls
+cd nushell
+ls
+nvim config.nu
+todo
+ls
+config nu
+todo
+cd Dev/
+ls
+nvim todo.md
+rm todo.md
+ls
+amp .
+nvim blog.astro
+cd ..
+ls
+nvim learn-unlearn-relearn/
+git pull
+git pull --force
+git stach
+git stash
+pnpm run dev
+ls
+git status
+nvim pages/blog.astro
+git pull
+ls
+cd ..
+ls
+rm -rf *
+git pull
+ls
+cd ..
+rm -rf gizemyurdagul.com/
+ls
+git clone git@github.com:gizemyurdagul/gizemyurdagul.com.git
+pnpm run dev
+pnpm install
+cd ..
+ls
+cd ..
+ls
+cd layouts/
+ls
+cd ..
+ls
+cd components/
+ls
+cd ..
+ls
+ls scripts/
+cd scripts/
+ls
+mv navigation.js navigation.ts
+cd ..
+ls
+nvim layouts/Layout.astro
+opencode
+cd gizemyurdagul.com/
+ls
+cd ..
+ls
+pnpm run dev
+nvim scripts/navigation.ts
+rm -rf gizemyurdagul.com/
+ls
+git clone git@github.com:gizemyurdagul/gizemyurdagul.com.git
+ls
+ls
+pnpm install
+ls
+cd gizemyurdagul.com/src/
+ls
+cd pages/
+ls
+nvim blog.astro
+nvim pages/
+cp blog.astro projects.astro
+nvim index.astro
+pnpm install --dev prettier
+pnpm ad --dev prettier
+pnpm add --dev prettier
+nvim layouts/Layout.astro
+pnpm add --group dev
+pnpm add -D prettier prettier-plugin-astro
+ls
+clear
+ls
+cd ..
+ls
+nvim components/Navigation.astro
+pnpm run dev
+ls
+cd. .
+ls
+clear
+ls
+cd layouts/ls
+cd layouts/
+ls
+clear
+ls
+cd ..
+ls
+git status
+git add .
+git commit -m "A bit refactoring around navbar"
+git push
+nvim PostLayout.astro
+ls
+gemini-cli
+s
+ls
+cd ..
+ls
+amp
+opencode
+clear
+ls
+cd components/
+ls
+gemini
+gemini 
+nvim BackButton.astro
+ls
+cd ..
+ls
+nvim layouts/Layout.astro
+git status
+gemini
+git commit -m "feat: Refactor Navigation and add Theme Toggle                                    │<\n>│                                                                                                  │<\n>│ This commit refactors the navigation component to be more modular and reusable.                  │<\n>│                                                                                                  │<\n>│ - A new \`IconButton\` component has been created to be used for the back button and the theme   │<\n>│ toggle button.                                                                                   │<\n>│ - A new \`BackButton\` component has been created to be used in the navigation bar on sub-pages. │<\n>│ - A new \`ThemeToggleButton\` component has been created to encapsulate the theme toggle         │<\n>│ functionality.                                                                                   │<\n>│ - The \`PostLayout\` has been updated to use the new \`Navigation\` component.                   │<\n>│ - The \`global.css\` has been updated to remove the old theme toggle button styles and add a new │<\n>│ class for the active indicator transition."
+git commit -m "Refactor Nav and IconButtons"
+clear
+ls
+cd layouts/
+ls
+nvim Layout.astro
+git diff ../styles/global.css
+git diff ../styles/global.css | nvim
+ls
+nvim ../styles/global.css
+git revert 
+git revert HEAD
+ls
+git status
+ls
+git reset HEAD
+ls
+git status
+git reset
+ls
+git push
+git pull
+git reset --hard
+ls
+clear
+ls
+cd ..
+ls
+nvim components/Navigation.astro
+gemini
+nvim ~/.gemini/settings.json
+nvim layouts/Layout.astro
+git status
+git reset --hard
+ls
+ls styles/
+ls
+cd Dev/Personal/gizemyurdagul.com/
+ls
+cd src/
+ls
+cd styles/
+ls
+exit
+nvim layouts/Layout.astro
+git status
+git diff layouts/Layout.astro
+git reset styles/global.css --hard
+git reset styles/global.css
+ls
+nvim layouts/Layout.astro
+ls
+cd layouts/
+ls
+cd ..
+ls
+cd components/
+ls
+nvim Welcome.astro
+rm Welcome.astro
+ls
+cd ..
+ls
+cd assets/
+ls
+rm -rf *
+ls
+cd ..
+ls
+clear
+ls
+ls styles/
+nvim global.css
+cd ..
+ls
+cd Dev/Personal/hhyurdagul.com/
+ls
+git status
+git log
+git push
+ls
+nvim index.astro
+gemini
+nvim pages/index.astro
+cd ..
+ls
+git status
+git add .
+git commit -m "Removed Welcome.astro, created home components and refactored main layout a bit"
+pnpm run dev
+git push
+nvim styles/global.css
+ls
+external-monitor-brightness 100
+cd Dev/Personal/gizemyurdagul.com/
+ls
+gemini
+ls
+cd src/
+ls
+cd ..
+ls
+pnpm run dev
+cd Dev/Personal/gizemyurdagul.com/
+cd Dev/Personal/gizemyurdagul.com/
+ls
+cd .config/hypr
+ls
+which xdg-terminal-exec | nvim
+which xdg-terminal-exec
+which xdg-terminal-exec | get path
+which xdg-terminal-exec | get path[0]
+which xdg-terminal-exec | get path | get 0
+which xdg-terminal-exec | get path | get 0 | nvim
+which xdg-terminal-exec | get path | get 0 | path
+which xdg-terminal-exec | get path | get 0 | path basename
+which xdg-terminal-exec | get path | get 0 | path parse
+which xdg-terminal-exec | get path | get 0 | to html 
+which xdg-terminal-exec | get path | get 0 | path self
+which xdg-terminal-exec | get path | get 0 | path parse
+which xdg-terminal-exec | get path | get 0 | path parse | path self
+which xdg-terminal-exec | get path | get 0 | decode
+which xdg-terminal-exec | get path | get 0 | e>
+which xdg-terminal-exec | get path | get 0 | e> | nvim
+which xdg-terminal-exec | get path | get 0 e>| nvim
+which xdg-terminal-exec | get path | get 0 o>| nvim
+ls
+cd src/
+ls
+cd components/
+ls
+nvim bindings.conf
+exit
+nvim (which xdg-terminal-exec | get path.0)
+exit
+cd ..
+ls
+cd layouts/
+ls
+gemini
+ls
+cd ..
+ls
+opencode
+gemini
+clear
+ls
+nvim Layout.astro
+npm i -g @openai/codex
+ls
+cd ..
+ls
+cd ..
+ls
+git status
+git add . 
+git commit -m "Some refactoring around styling"
+git status
+lazygit
+pnpm run dev
+ls
+pnpm run build
+la
+ls -a
+rm -rf .astro/
+pnpm run build
+ls
+git status
+ls
+cd src/
+ls
+cd pages/blog/
+pnpm run build
+ls
+rm -rf dist/
+codex
+nvim '[slug].astro'
+git status sb
+git status 
+cd
+ls
+cd Dev/Personal/gizemyurdagul.com/
+ls
+git status -sb
+git status
+ls
+pnpm run dev
+nvim src/styles/global.css
+ls
+cd src/
+ls
+cd pages/
+ls
+nvim index.astro
+cd ..
+ls
+cd ..
+ls
+nvim .
+git status
+git add .
+git commit -m "Turned to ssr for dark-mode, made hammered changes"
+git pushh
+git push
+ls
+nvim astro.config.mjs
+ls
+nvim src/styles/global.css
+ls
+pnpm run dev
+ls
+git status
+git add .
+ls
+nvim astro.config.mjs
+git status
+git commit -m "Removed ssr, fixed unnecessary theme-toggle options"
+git push
+nvim .
+ls
+rm rf node_modules/.vite
+rm -rf node_modules/.vite
+pnpm run build
+ls
+cd dist/
+ls
+xdg-open index.html
+ls
+python -m http.server
+ls
+ls _astro/
+cd _astro/
+ls
+cd ..
+ls
+clear
+ls
+cd ..
+ls
+rm -rf dist/
+ls
+git status
+nvim src/pages/blog.astro
+git add .
+git commit -m "Image path resolving issues fixed"
+git push
+gemini
+ls
+nvim twitter.md
+rm twitter.md
+clear
+ls
+^rö
+^rm
+rm
+rm --help
+rm -i
+rm -i a
+ls
+rm -i README.md
+ls
+cd .config/nushell
+ls
+ll
+nvim config.nu
+exit
+ls src/pages/
+ls
+ls src/
+ls src/src/
+ls src/src/utils/
+ls
+nvim src/layouts/
+ls
+nvim src/content/blog/
+ls
+cd ..
+ls
+cd gizemyurdagul.com/
+ls
+cd src/
+ls
+nvim utils/images.ts
+ls
+cd pages/
+ls
+cd blog/
+ls
+nvim '[slug].astro'
+ls
+cd ..
+ls
+cd ..
+ls
+cd components/
+ls
+cd cards/
+ls
+cd ..
+nvim styles/global.css
+exit
+pnpm run dev
+nvim IndexCard.astro
+pnpm install install masonry-layout
+pnpm add masonary-layout
+pnpm add masonry-layout
+ls
+cd ..
+ls
+cd ..
+ls
+nvim layouts/Layout.astro
+exit
+ls
+nvim layouts/Layout.astro
+ls
+cd components/
+ls
+cd cards/
+ls
+rm IndexCard.astro
+ls
+nvim BlogCard.astro
+ls
+clear
+ls
+pnpm add masonry-layout
+pnpm remove masonry-layout
+nvim ProjectCard.astro
+ls
+cd ..
+ls
+clear
+ls
+nvim ..
+pnpm run dev
+codex
+ls
+git status
+git add .
+git commit -m "Refactored card components for home, blog, and project page; Created newly designed post layouts for blog and project with TOC and Skill section as well."
+git push
+external-monitor-brightness 30
+external-monitor-brightness 50
+external-monitor-brightness 40
+external-monitor-brightness 100
+ssh linux@193.255.198.173 -p 443
+external-monitor-brightness 30
+external-monitor-brightness 0
+external-monitor-brightness 100
+ssh linux@193.255.198.173 -p 443
+ls
+cd Dev/Work/ProjectTeam/Arayüzler/
+ls
+cd bos-finansal-tahminleme-arayüz/
+ls
+clear
+ls
+cd gui/
+ls
+nvim components.py
+cd .
+cd ..
+ls
+python main.py
+ls
+cd gui/
+ls
+external-monitor-brightness 50
+nvim components.py
+cd ..
+ls
+python main.py
+nvim gui/components.py
+python main.py
+ls
+cd ..
+ls
+just
+just -g cleancaches bos-finansal-tahminleme-arayüz/
+just -g zipdir bos-finansal-tahminleme-arayüz/
+ls
+clear
+cd bos-finansal-tahminleme-arayüz/
+ls
+la
+ls -a
+rm -rf .zip
+cd
+cd .config/just/
+ls
+nvim justfile
+just -g zipdir justfile
+ls
+rm justfile.zip
+nvim justfile
+cd ..
+ls
+just -g zipdir just/
+ls
+ls just/.zip
+cd just/
+ls
+la
+ls -a
+rm -rf .zip
+nvim justfile
+ls
+cd ..
+ls
+zip -r bos-finansal-tahminleme-arayüz.zip bos-finansal-tahminleme-arayüz/
+^zip -r bos-finansal-tahminleme-arayüz.zip bos-finansal-tahminleme-arayüz/
+ls
+clear
+ls
+e;
+clear
+ls
+zip
+zip --help 
+zip --help  4..5
+zip 1..3
+zip 1..3 1..3
+1..3
+1..3 | zip 4..5
+1..3 | zip 4..9
+1..3 | zip 12..200
+1..32 | zip 12..200
+1..32 | zip 1..32
+1..32 | zip 1..32 | zip 1..32
+zip --help
+1..32 | zip 1..32 | each 
+1..32 | zip 1..32 | each {{ || zip 1..32}<\n>}
+1..32 | zip 1..32 | each {{ || x | zip 1..32}<\n>}
+clear
+ls
+external-monitor-brightness 0
+yay -S antigravity-bin
+cd Dev/Work/ProjectTeam/Arayüzler/
+cd ..
+cd WebApps/
+ls
+cd MUFinancialWebApp/
+ls
+cd app/
+ls
+nvim backend/config.py
+nvim temp.py
+clear
+ls
+nvim temp.py
+rm temp.py
+ls
+cd ..
+ls
+codex .
+open AGENTS.md
+ls
+cd models/
+ls
+cd ..
+ls
+cd ..
+ls
+cd MUFinancialWebApp/
+ls
+open app/pages/1_Tahminleme_Sayfası.py
+open app/pages/1_Tahminleme_Sayfası.py | cat
+open app/pages/1_Tahminleme_Sayfası.py | bat
+ls
+cd ..
+cd MUFinancialWebApp/models/
+ls
+ls `POS İşlemleri - 2024.11.25/`
+ls `Finansal Tahminleme - 2024.11.25/`
+clear
+ls
+ls `Cüzdan - 2025.04.28/`
+cd `POS İşlemleri - 2024.11.25/`
+ls
+mv cnn-6.76/* .
+ls
+rm cnn-6.76/
+ls
+clear
+ls
+nvim app/pages/
+ls
+cd app/
+ls
+nvim backend/config.py
+ls
+codex
+clear
+ls
+la
+ls -a
+tree
+ls -a *
+ls -a app/
+ls -a app/backend/
+just -g cleancaches .
+ls
+cd ..
+nvim pages/2_Raporlama_Sayfası.py
+exit
+cd MUFinancialWebApp/
+ls
+nvim AGENTS.md
+rm AGENTS.md
+cd ..
+python -m streamlit run app/Anasayfa.py
+ls
+clear
+ls
+^zip -r MUFinancialWebApp.zio MUFinancialWebApp/
+clear
+ls
+^zip -r MUFinancialWebApp.zip MUFinancialWebApp/
+external-monitor-brightness 100
+cd Dev/Work/Universal/Archive/Mds/
+ls
+uv run marimo run topic_modeling.py
+marimo run topic_modeling.py
+cd ..
+cd FlexAI/
+ls
+nvim main.py
+marimo run main.py
+external-monitor-brightness 50
+external-monitor-brightness 30
+external-monitor-brightness 40
+external-monitor-brightness 100
+cd Dev/Work/Universal/Archive/Mds/
+ls
+marimo run topic_modeling.py
+cd Dev/Work/ProjectTeam/WebApps/
+ls
+cd MUFinancialWebApp/
+ls
+cd ..
+rm *.zip
+ls
+cd MUFinancialWebApp/
+ls
+cd app/
+ls
+nvim backend/config.py
+cd ..
+ls
+nvim .
+ls
+external-monitor-brightness 30
+nvim app/backend/config.py
+python -m streamlit run app/Anasayfa.py
+codex 
+ls
+cd ..
+just -g cleancaches .
+^zip -r MUFinancialWebApp.zip MUFinancialWebApp/
+nautilus .
+nvcc
+^nvcc
+sudo pacman -S nvcc
+sudo pacman -S gcc
+nvcc
+cuda
+ls /etc/profile.d/cud
+ls /etc/profile.d/
+sudo pacman -S cuda
+external-monitor-brightness 100
+killall waybar
+waybar %
+cd Dev/Work/ProjectTeam/WebApps/
+ls
+ls MUFinancialWebApp/
+cd MUFinancialWebApp/
+ls
+cd app/
+ls
+ls pages/
+cd ..
+ls
+ls models/
+ls
+cd ..
+ls
+cd ..
+ls
+mkdir API
+cd API
+ls
+clear
+ls
+mkdir MUFinancialAPI
+cd MUFinancialAPI/
+ls
+clear
+ls
+cp -r models/ ../../API/MUFinancialAPI/
+ls
+ls app/
+cp -r * ../../API/MUFinancialAPI/
+ls
+nvim app.py
+ls
+mv app/backend/ .
+ls
+nvim app/
+ls
+ls app/
+rm -rf app/
+ls
+nvim app/Anasayfa.py
+rm -rf app/
+ls
+ls
+ls backend/
+codex
+open backend/utils.py
+open backend/utils.py | csv
+open backend/utils.py | read csv
+ls
+open backend/utils.py | to md
+open backend/utils.py | bat
+open --raw backend/utils.py | bat
+bat backend/utils.py
+ls
+codex
+ls
+ls models/
+ls
+clear
+ls
+nvim pyproject.toml
+uv init .
+ls
+python main.py
+uv add fastapi
+rm pyproject.toml
+uv init .
+uv add fastapi
+ls
+uv run main.py
+uv add polars
+uv run main.py
+uv add scikit-learn
+uv add tensorflow
+ls
+la
+ls -a
+rm -rf .git .gitignore .python-version .venv/ uv.lock
+nvim pyproject.toml
+pip install uvicorn fastapi
+python main.py
+uvicorn main:app --reload
+clear
+ls
+rm -rf __pycache__/
+nvim README.md
+rm README.md
+ls
+mv main.py app.py
+ls
+clear
+ls
+cd Dev/Work/ProjectTeam/Archive/BOS/
+ls
+ls APIWork/
+ls APIWork/api/
+nvim APIWork/api/app.py
+clear
+ls
+cd ..
+ls
+ls UnitedPayment/
+cd BOS/
+ls
+ls `Müşteri Teklif Tahmin Projesi/`
+ls
+ls OLD/
+clear
+ls
+cd Churn/
+ls
+clear
+ls
+cd ..
+ls
+cd Churn-APIWork/
+ls
+nvim main.py
+ls
+cd data/
+ls
+open churn-1.xlsx
+open churn-1.xlsx | get 1
+open churn-1.xlsx | columns
+open churn-1.xlsx | get Sheet1 | columns
+open churn-1.xlsx --header | get Sheet1 | columns
+open churn-1.xlsx | get Sheet1 | columns
+open -h
+open churn-1.xlsx | get Sheet1 --help | columns
+open churn-1.xlsx | get Sheet1 --help
+open churn-1.xlsx | get Sheet1 --header
+ls
+cd ..
+ls
+cd Churn-APIWork/
+ls
+xdg-open churn-2.xlsx
+xdg-open lifetime-2.xlsx
+jupyter-lab
+nvim main.py
+ls
+mkdir models
+ls
+ls models/
+nvim main.py
+ls
+nvim models/features.json
+python main.py
+ls
+nvim models/features.json
+ls
+nvim models/features.json
+ls
+clear
+ls
+cp models/ ~/Dev/Work/ProjectTeam/API/MUFinancialAPI/
+cp models/ ~/Dev/Work/ProjectTeam/API/MUFinancialAPI/ -r
+ls
+codex
+clear
+ls
+ls models/
+cd ..
+ls
+cd MUFinancialAPI/
+ls
+cd ..
+mkdir MUChurnAPI
+cd MUChurnAPI/
+ls
+ls
+cd models/
+ls
+mkdir models
+cp *.pkl *.json ../../MUChurnAPI/models/
+ls
+mv *.pkl *.json ../../MUChurnAPI/models/
+ls
+exit
+ls
+ls models/
+ls
+ls models/
+ls
+nvim requirements.txt
+cd Dev/Work/ProjectTeam/Archive/BOS/
+ls
+cd Churn-APIWork/
+ls
+uvicorn main:app --reload
+ls
+nvim main.py
+nvim main.py
+ls
+nvim main.py
+ls
+codex
+nvim models/features.json
+ls
+uvicorn main:app --reload
+rm -rf __pycache__/
+ls
+rm -rf __pycache__/
+ls
+nb
+yay -Syu
+sudo pacman -S nb
+yay -S nb
+nb
+nb help
+nb todo list
+todo
+nb todo add "Learn NB"
+ls
+ls .nb
+nvim .nbrc
+clear
+ls
+ls .nb/
+ls .nb/home/
+nvim .nb/.current
+nvim .nb/.cache/
+ls
+clear
+ls
+nb todo add "Test todo"
+ls
+nb todo list
+nb todo check 2
+nb todo check "Test todo"
+nb todo uncheck "Test todo"
+nb todo check "Test todo"
+ls
+mise 
+mise shell nu
+node
+mise list
+mise install node 24.11.1
+exit
+cd .config/nushell
+cd .config/nushell
+ls
+nvim mise.nu
+ls
+mise
+mise shell nu
+ls
+mise shell
+mise shell --help
+mise shell --raw nu
+nvim config.nu
+şs
+ls
+clear
+ls
+nb-bookmark 
+nb 
+clear
+ls
+mise activate nu 
+ls
+mise activate nu | save mise.nu
+mise activate nu | save mise.nu -f
+ls
+zsh
+exit
+exit
+cd
+cd .config/alacritty/
+ls
+nvim alacritty.toml
+exit
