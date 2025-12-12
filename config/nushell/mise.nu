@@ -1,3 +1,7 @@
+set,PATH,/home/hhyurdagul/.scripts/:/home/hhyurdagul/.local/share/omarchy/bin/:/home/hhyurdagul/.cargo/bin:/home/hhyurdagul/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+hide,MISE_SHELL,
+hide,__MISE_DIFF,
+hide,__MISE_DIFF,
 export-env {
   
   $env.MISE_SHELL = "nu"
