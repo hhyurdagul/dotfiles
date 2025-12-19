@@ -35,6 +35,7 @@ path=(
     "$HOME/go/bin"
     "$HOME/.cargo/bin"
     "$HOME/.npm-global/bin"
+    "$HOME/Dev/Tools/flutter/bin"
     $path
 )
 export PATH
@@ -89,6 +90,9 @@ bindkey "^[[B" history-substring-search-down
 bindkey -M vicmd "k" history-substring-search-up
 bindkey -M vicmd "j" history-substring-search-down
 
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+
 # Edit current command in $EDITOR (Ctrl+e)
 autoload -z edit-command-line
 zle -N edit-command-line
@@ -136,7 +140,7 @@ fi
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
-alias grep="grep --color=auto"
+alias grep="rg --color=auto"
 
 # Utils
 alias df="df -h"
@@ -161,6 +165,4 @@ zinit ice depth=1
 zinit light romkatv/powerlevel10k
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Opam (OCaml)
-[[ ! -r "$HOME/.opam/opam-init/init.zsh" ]] || source "$HOME/.opam/opam-init/init.zsh" > /dev/null 2> /dev/null
 
