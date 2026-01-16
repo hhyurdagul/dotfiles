@@ -66,13 +66,12 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	spec = {
 		{
-			"catppuccin/nvim",
-			name = "catppuccin",
-			lazy = false,
-			priority = 1000,
-			opts = { auto_integrations = true },
+			"folke/tokyonight.nvim",
+			lazy = false, -- make sure we load this during startup if it is your main colorscheme
+			priority = 1000, -- make sure to load this before all the other start plugins
 			config = function()
-				vim.cmd.colorscheme("catppuccin-mocha")
+				-- load the colorscheme here
+				vim.cmd.colorscheme("tokyonight-night")
 			end,
 		},
 		"neovim/nvim-lspconfig",
@@ -112,10 +111,10 @@ require("lazy").setup({
 					javascript = { "prettierd", "prettier", stop_after_first = true },
 					typescript = { "prettierd", "prettier", stop_after_first = true },
 					json = { "prettierd", "prettier", stop_after_first = true },
-				bash = { "shfmt", "shellcheck" },
-				sh = { "shfmt", "shellcheck" },
-				zsh = { "shfmt", "shellcheck" },
-				ocaml = { "ocamlformat" },
+					bash = { "shfmt", "shellcheck" },
+					sh = { "shfmt", "shellcheck" },
+					zsh = { "shfmt", "shellcheck" },
+					ocaml = { "ocamlformat" },
 				},
 			},
 		},
@@ -227,12 +226,12 @@ vim.keymap.set("i", "<S-Tab>", "<C-d>", { noremap = true })
 -- vim.keymap.set("n", ",", function()
 --   vim.lsp.buf.selection_range("outer")
 -- end, { desc = "LSP: Init selection" })
--- 
+--
 -- -- Visual Mode: Expand (Direction = 1)
 -- vim.keymap.set("x", ",", function()
 --   vim.lsp.buf.selection_range("outer")
 -- end, { desc = "LSP: Expand selection" })
--- 
+--
 -- -- Visual Mode: Shrink (Direction = -1)
 -- vim.keymap.set("x", "<BS>", function()
 --   vim.lsp.buf.selection_range("inner")
@@ -299,33 +298,32 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("<leader>n", vim.diagnostic.goto_next, "Go to Next Diagnostics")
 		map("<leader>p", vim.diagnostic.goto_prev, "Go to Previous Diagnostics")
 
-
 		local client = vim.lsp.get_client_by_id(event.data.client_id)
 		if
 			client
 			and client.supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
 		then
-		local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
-		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-			buffer = event.buf,
-			group = highlight_augroup,
-			callback = vim.lsp.buf.document_highlight,
-		})
+			local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.document_highlight,
+			})
 
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-			buffer = event.buf,
-			group = highlight_augroup,
-			callback = vim.lsp.buf.clear_references,
-		})
+			vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.clear_references,
+			})
 
-		vim.api.nvim_create_autocmd("LspDetach", {
-			group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
-			callback = function(event2)
-				vim.lsp.buf.clear_references()
-				vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
-			end,
-		})
-        end
+			vim.api.nvim_create_autocmd("LspDetach", {
+				group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
+				callback = function(event2)
+					vim.lsp.buf.clear_references()
+					vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
+				end,
+			})
+		end
 		map("<leader>th", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 		end, "[T]oggle Inlay [H]ints")
@@ -336,8 +334,9 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
         -- stylua: ignore
 		vim.lsp.enable({
-			"lua_ls", "pyrefly", "html", "tinymist", "jsonls",
+			"lua_ls", "ty", "html", "tinymist", "jsonls", "clangd",
             "rust_analyzer", "bashls", "astro", "ts_ls", "ocamllsp",
+            "zls"
         })
 	end,
 })

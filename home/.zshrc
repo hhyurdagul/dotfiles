@@ -36,6 +36,7 @@ path=(
     "$HOME/.cargo/bin"
     "$HOME/.npm-global/bin"
     "$HOME/Dev/Tools/flutter/bin"
+    "/opt/cuda/bin"
     $path
 )
 export PATH
@@ -50,6 +51,9 @@ export FZF_CTRL_T_OPTS="
 --bind 'ctrl-/:change-preview-window(down|hidden|)'
 "
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+export CUDA_HOME=/opt/cuda
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cuda/lib64
 
 # =============================================================================
 # 4. PLUGINS (Order Matters!)
@@ -166,3 +170,14 @@ zinit light romkatv/powerlevel10k
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
+
+. "$HOME/.local/share/../bin/env"
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+path=('/home/hhyurdagul/.juliaup/bin' $path)
+export PATH
+
+# <<< juliaup initialize <<<
