@@ -196,12 +196,26 @@ require("lazy").setup({
 			opts = {
 				dashboard = { enabled = true },
 				indent = { enabled = true },
-				input = { enabled = true },
-				notifier = { enabled = true },
 				scroll = { enabled = true },
 				statuscolumn = { enabled = true },
 			},
 		},
+		{
+			"folke/noice.nvim",
+			event = "VeryLazy",
+			opts = {
+				-- add any options here
+			},
+			dependencies = {
+				-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+				"MunifTanjim/nui.nvim",
+				-- OPTIONAL:
+				--   `nvim-notify` is only needed, if you want to use the notification view.
+				--   If not available, we use `mini` as the fallback
+				"rcarriga/nvim-notify",
+			},
+		},
+		{ "sindrets/diffview.nvim" },
 		{
 			"folke/todo-comments.nvim",
 			opts = {},
@@ -336,7 +350,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 		vim.lsp.enable({
 			"lua_ls", "ty", "html", "tinymist", "jsonls", "clangd",
             "rust_analyzer", "bashls", "astro", "ts_ls", "ocamllsp",
-            "zls"
+            "zls", "cssls", "ols"
         })
 	end,
 })
@@ -347,4 +361,13 @@ vim.lsp.config("ts_ls", {
 			tsdk = "~/.local/share/mise/installs/node/22.20.0/lib/node_modules/typescript/lib",
 		},
 	},
+})
+
+-- Append css
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "html", "css", "lua", "toml", "yaml", "json" },
+	callback = function()
+		vim.opt.shiftwidth = 2
+	end,
 })
