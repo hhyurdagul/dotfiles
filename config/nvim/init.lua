@@ -86,7 +86,7 @@ require("lazy").setup({
                     "bash", "zsh", "make", "cmake", "vim", "gitignore", "dockerfile",
                     "json", "toml", "yaml", "markdown", "markdown_inline", "typst",
                     "html", "css", "javascript", "typescript", "tsx", "astro", "svelte",
-                    "lua", "python", "c", "cpp", "rust", "zig", "go", "ocaml",
+                    "lua", "python", "c", "cpp", "rust", "zig", "go", "ocaml", "csv"
                 })
 				vim.api.nvim_create_autocmd("FileType", {
 					callback = function(args)
@@ -201,21 +201,24 @@ require("lazy").setup({
 			},
 		},
 		{
-			"folke/noice.nvim",
-			event = "VeryLazy",
-			opts = {
-				-- add any options here
-			},
-			dependencies = {
-				-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-				"MunifTanjim/nui.nvim",
-				-- OPTIONAL:
-				--   `nvim-notify` is only needed, if you want to use the notification view.
-				--   If not available, we use `mini` as the fallback
-				"rcarriga/nvim-notify",
-			},
+			"lewis6991/gitsigns.nvim",
+			opts = {},
 		},
-		{ "sindrets/diffview.nvim" },
+		-- {
+		-- 	"folke/noice.nvim",
+		-- 	event = "VeryLazy",
+		-- 	opts = {
+		-- 		-- add any options here
+		-- 	},
+		-- 	dependencies = {
+		-- 		-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+		-- 		"MunifTanjim/nui.nvim",
+		-- 		-- OPTIONAL:
+		-- 		--   `nvim-notify` is only needed, if you want to use the notification view.
+		-- 		--   If not available, we use `mini` as the fallback
+		-- 		"rcarriga/nvim-notify",
+		-- 	},
+		-- },
 		{
 			"folke/todo-comments.nvim",
 			opts = {},
@@ -223,6 +226,13 @@ require("lazy").setup({
 		{
 			"MeanderingProgrammer/render-markdown.nvim",
 			opts = {},
+		},
+		{
+			"quarto-dev/quarto-nvim",
+			dependencies = {
+				"jmbuhr/otter.nvim",
+				"nvim-treesitter/nvim-treesitter",
+			},
 		},
 	},
 	checker = { enabled = true },

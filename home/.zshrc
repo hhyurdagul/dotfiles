@@ -36,6 +36,7 @@ path=(
     "$HOME/.cargo/bin"
     "$HOME/.npm-global/bin"
     "$HOME/Dev/Tools/flutter/bin"
+    "$HOME/Dev/Tools/odin"
     "/opt/cuda/bin"
     $path
 )
@@ -168,8 +169,6 @@ function y() {
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-
 
 . "$HOME/.local/share/../bin/env"
 

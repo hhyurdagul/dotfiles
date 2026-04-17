@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # TARGET DATE - Format: YYYY-MM-DD HH:MM:SS
-TARGET="2026-01-01 00:00:00"
+TARGET="2027-01-01 00:00:00"
 
 # Convert target to seconds since epoch
 TARGET_S=$(date -d "$TARGET" +%s)
@@ -23,4 +23,5 @@ MINS=$(((DIFF % 3600) / 60))
 SECS=$((DIFF % 60))
 
 # Format the output (Edit this to change how it looks)
-printf "%dd %02dh %02dm %02ds\n" $DAYS $HOURS $MINS $SECS
+# printf "%dd %02dh %02dm %02ds\n" $DAYS $HOURS $MINS $SECS
+printf "%dd %02dh %02dm\n" $DAYS $HOURS $MINS
