@@ -16,8 +16,8 @@ source "${ZINIT_HOME}/zinit.zsh"
 # =============================================================================
 # 3. ENVIRONMENT & PATH
 # =============================================================================
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="helix"
+export VISUAL="helix"
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=50000
 export SAVEHIST=50000
@@ -150,7 +150,9 @@ alias grep="rg --color=auto"
 # Utils
 alias df="df -h"
 alias free="free -m"
-alias vim="nvim"
+alias vim=helix
+alias nvim=helix
+alias hx=helix
 
 # Yazi Function (Shell wrapper)
 function y() {
