@@ -2493,3 +2493,51 @@ cd .config/alacritty/
 ls
 nvim alacritty.toml
 exit
+ls
+clear
+exit
+pacman -Sg kde-games
+pacman -Sg kde-games | read
+pacman -Sg kde-games | table 
+pacman -Sg kde-games | to 
+pacman -Sg kde-games | to table
+pacman -Sg kde-games | to csv
+pacman -Sg kde-games | to xlsx
+pacman -Sg kde-games | to md 
+pacman -Sg kde-games | to 
+pacman -Sg kdg-games > cat
+pacman -Sg kdg-games
+pacman -Sg kde-games | to 
+pacman -Sg kde-games | xargs
+pacman -Sg kde-games | xargs | split
+pacman -Sg kde-games | xargs | split words
+pacman -Sg kde-games | xargs | split
+pacman -Sg kde-games |  split
+pacman -Sg kde-games | split
+pacman -Sg kde-games | split words
+pacman -Sg kde-games | split row
+pacman -Sg kde-games | split rows
+pacman -Sg kde-games | split list
+pacman -Sg kde-games | split
+pacman -Sg kde-games | split cell-path
+pacman -Sg kde-games | split column
+pacman -Sg kde-games | split row
+pacman -Sg kde-games | split row 
+pacman -Sg kde-games | split row "\n"
+pacman -Sg kde-games | split row "\n" | split column
+pacman -Sg kde-games | split row "\n" | split column " "
+pacman -Sg kde-games | split row "\n" | split column " " | get column1
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text 
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text | sudo pacman -Rns 
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text | write pkg.a 
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text | write pkg.txt
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text | write 
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text | write --help
+pacman -Sg kde-games | split row "\n" | split column " " | get column1 | to text | save pkg.txt
+hx pkg.txt
+helix pkg.txt
+sudo pacman -Rns $"(cat pkg.txt)"
+pacman -Qg
+pacman -Qg kde-games
+pacman -Rns kde-games
+sudo pacman -Rns kde-games

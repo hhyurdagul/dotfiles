@@ -36,8 +36,9 @@ path=(
     "$HOME/.cargo/bin"
     "$HOME/.npm-global/bin"
     "$HOME/Dev/Tools/flutter/bin"
-    "$HOME/Dev/Tools/odin"
+    "$HOME/Dev/Tools/zig"
     "/opt/cuda/bin"
+    "$HOME/.pixi/bin"
     $path
 )
 export PATH
@@ -145,7 +146,6 @@ fi
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
-alias grep="rg --color=auto"
 
 # Utils
 alias df="df -h"
@@ -153,6 +153,7 @@ alias free="free -m"
 alias vim=helix
 alias nvim=helix
 alias hx=helix
+alias todo="helix ~/Dev/todo.md"
 
 # Yazi Function (Shell wrapper)
 function y() {
@@ -182,3 +183,10 @@ path=('/home/hhyurdagul/.juliaup/bin' $path)
 export PATH
 
 # <<< juliaup initialize <<<
+
+
+[[ ! -r '/home/hhyurdagul/.opam/opam-init/init.zsh' ]] || source '/home/hhyurdagul/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/hhyurdagul/.local/bin:$PATH"
