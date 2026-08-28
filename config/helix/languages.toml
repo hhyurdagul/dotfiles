@@ -1,0 +1,3 @@
+[[language]]
+name = "html"
+file-types = ["html", "vto"]
