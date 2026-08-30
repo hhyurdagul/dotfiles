@@ -1,0 +1,5 @@
+# Darkman configuration for automatic sunrise/sunset light & dark mode
+# Coordinates: Istanbul, Turkey (Europe/Istanbul)
+lat: 41.0082
+lng: 28.9784
+usegeoclue: false

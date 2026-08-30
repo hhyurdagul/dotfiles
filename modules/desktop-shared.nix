@@ -56,6 +56,12 @@
     brightnessctl
     ddcutil
 
+    # Theming & Color Scheme Daemon
+    darkman
+    glib
+    gsettings-desktop-schemas
+    adw-gtk3
+
     # Clipboard & Screenshots
     wl-clipboard
     cliphist

@@ -1,32 +1,65 @@
 pragma Singleton
 import QtQuick
+import Quickshell
+import Quickshell.Io
 
 QtObject {
-    // -------------------------------------------------------------
-    // Base Surface & Text Colors (Catppuccin Mocha)
-    // -------------------------------------------------------------
-    readonly property color colBg: "#1e1e2e"           // Base background
-    readonly property color colBgSurface: "#313244"    // Elevated surface (hover, cards)
-    readonly property color colBgCrust: "#11111b"      // Darkest background
-    readonly property color colFg: "#cdd6f4"           // Primary text (Text)
-    readonly property color colFgDim: "#a6adc8"        // Secondary text (Subtext0)
-    readonly property color colMuted: "#6c7086"        // Muted / Overlay0 / Separators
-    readonly property color colBorder: "#45475a"       // Surface2 border
+    id: themeRoot
 
     // -------------------------------------------------------------
-    // Unified Accent Palette (Catppuccin Mocha)
+    // Dynamic Dark/Light Mode State
     // -------------------------------------------------------------
-    readonly property color colGreen: "#a6e3a1"        // Unified clean Green
-    readonly property color colRed: "#f38ba8"          // Red (Critical, Recording, Shutdown, Error)
-    readonly property color colYellow: "#f9e2af"       // Yellow / Gold (Warning, Notifs)
-    readonly property color colOrange: "#fab387"       // Orange (Clock, Reboot)
-    readonly property color colPeach: "#fe640b"        // Peach
-    readonly property color colBlue: "#89b4fa"         // Blue (CPU, Bluetooth, Info)
-    readonly property color colLavender: "#b4befe"     // Lavender
-    readonly property color colSapphire: "#74c7ec"     // Sapphire (Cold Weather)
-    readonly property color colMauve: "#cba6f7"        // Mauve / Purple (Window title)
-    readonly property color colPink: "#f5c2e7"         // Pink / Flamingo (Network, Wifi)
-    readonly property color colTeal: "#94e2d5"         // Teal (Memory)
+    property bool isDark: true
+
+    property var _themeChecker: Process {
+        command: ["sh", "-c", "cat ~/.config/theme/mode 2>/dev/null || echo dark"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data) {
+                    var m = data.trim();
+                    themeRoot.isDark = (m !== "light");
+                }
+            }
+        }
+        Component.onCompleted: running = true
+    }
+
+    property var _themeTimer: Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            if (themeRoot._themeChecker) {
+                themeRoot._themeChecker.running = true;
+            }
+        }
+    }
+
+    // -------------------------------------------------------------
+    // Base Surface & Text Colors (Catppuccin Mocha vs Latte)
+    // -------------------------------------------------------------
+    readonly property color colBg: isDark ? "#1e1e2e" : "#eff1f5"
+    readonly property color colBgSurface: isDark ? "#313244" : "#e6e9ef"
+    readonly property color colBgCrust: isDark ? "#11111b" : "#dce0e8"
+    readonly property color colFg: isDark ? "#cdd6f4" : "#4c4f69"
+    readonly property color colFgDim: isDark ? "#a6adc8" : "#6c6f85"
+    readonly property color colMuted: isDark ? "#6c7086" : "#9ca0b0"
+    readonly property color colBorder: isDark ? "#45475a" : "#bcc0cc"
+
+    // -------------------------------------------------------------
+    // Unified Accent Palette (Catppuccin Mocha vs Latte)
+    // -------------------------------------------------------------
+    readonly property color colGreen: isDark ? "#a6e3a1" : "#40a02b"
+    readonly property color colRed: isDark ? "#f38ba8" : "#d20f39"
+    readonly property color colYellow: isDark ? "#f9e2af" : "#df8e1d"
+    readonly property color colOrange: isDark ? "#fab387" : "#fe640b"
+    readonly property color colPeach: isDark ? "#fe640b" : "#fe640b"
+    readonly property color colBlue: isDark ? "#89b4fa" : "#1e66f5"
+    readonly property color colLavender: isDark ? "#b4befe" : "#7287fd"
+    readonly property color colSapphire: isDark ? "#74c7ec" : "#209fb5"
+    readonly property color colMauve: isDark ? "#cba6f7" : "#8839ef"
+    readonly property color colPink: isDark ? "#f5c2e7" : "#ea76cb"
+    readonly property color colTeal: isDark ? "#94e2d5" : "#179299"
 
     // -------------------------------------------------------------
     // Semantic Component Color Bindings
@@ -43,7 +76,7 @@ QtObject {
     readonly property color colBluetooth: colBlue
     readonly property color colBluetoothConnected: colGreen
     readonly property color colWindow: colMauve
-    readonly property color colWorkspaceActive: "#cdd6f4"
+    readonly property color colWorkspaceActive: isDark ? "#cdd6f4" : "#4c4f69"
     readonly property color colWorkspaceInactive: colMuted
     readonly property color colCamera: colRed
     readonly property color colIdle: colYellow
@@ -53,7 +86,7 @@ QtObject {
     // -------------------------------------------------------------
     readonly property int popupTopMargin: 8            // Gap between top bar and all floating menus
     readonly property int cardRadius: 12               // Corner radius for all popups
-    readonly property color cardBorderColor: Qt.rgba(255, 255, 255, 0.1)
+    readonly property color cardBorderColor: isDark ? Qt.rgba(255, 255, 255, 0.1) : Qt.rgba(0, 0, 0, 0.12)
     readonly property int cardBorderWidth: 1
 
     // -------------------------------------------------------------

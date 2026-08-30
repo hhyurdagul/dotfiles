@@ -37,7 +37,9 @@
 
     herdr.url = "github:herdrdev/herdr";
     herdr.inputs.nixpkgs.follows = "nixpkgs";
-  };
+
+    zen-browser.url = "github:youwen5/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";  };
 
   outputs =
     inputs@{ nixpkgs, ... }:
@@ -50,6 +52,7 @@
         omp = inputs.omp.packages.${system}.default;
         hermes = inputs.hermes.packages.${system}.default;
         herdr = inputs.herdr.packages.${system}.default;
+        zen-browser = inputs.zen-browser.packages.${system}.default;
       };
     in
     {

@@ -92,6 +92,8 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("hyprpaper")
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("wl-paste --watch cliphist store")
+    hl.exec_cmd("command -v darkman >/dev/null 2>&1 && darkman run")
+    hl.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh init")
 end)
 
 
@@ -305,6 +307,7 @@ hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
 hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind(mainMod .. " + ALT + K", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
+hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh toggle"))
 hl.bind(mainMod .. " + ALT + C", function()
     setInternalMonitor(not internalMonitorEnabled)
 end)
