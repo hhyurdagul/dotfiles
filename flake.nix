@@ -1,5 +1,17 @@
 {
   description = "My NixOS flake configuration";
+
+  nixConfig = {
+    extra-substituters = [
+      "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
@@ -42,12 +54,28 @@
     in
     {
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
-
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs; };
+
         modules = [
-          { nixpkgs.overlays = [ overlay ]; }
+          {
+            nixpkgs.overlays = [ overlay ];
+            nix.settings = {
+              extra-substituters = [
+                "https://hyprland.cachix.org"
+                "https://nix-community.cachix.org"
+              ];
+              extra-trusted-public-keys = [
+                "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+                "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+              ];
+              trusted-users = [
+                "root"
+                "@wheel"
+              ];
+            };
+          }
 
           # Host Configuration (Hardware, Boot, Locale, Users, Nix Settings)
           ./hosts/nixos
