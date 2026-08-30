@@ -1,10 +1,11 @@
 {
   description = "My NixOS flake configuration";
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-26.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # Development Hyprland with its matching portal and NixOS module.
     hyprland.url = "github:hyprwm/Hyprland";
+
     # Helium Browser
     helium.url = "github:oxcl/nix-flake-helium-browser";
     helium.inputs.nixpkgs.follows = "nixpkgs";
@@ -17,17 +18,27 @@
     codex.inputs.nixpkgs.follows = "nixpkgs";
 
     omp.url = "github:can1357/oh-my-pi";
+    omp.inputs.nixpkgs.follows = "nixpkgs";
+
     hermes.url = "github:NousResearch/hermes-agent";
-    herdr = {
-      url = "github:herdrdev/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hermes.inputs.nixpkgs.follows = "nixpkgs";
+
+    herdr.url = "github:herdrdev/herdr";
+    herdr.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
     inputs@{ nixpkgs, ... }:
     let
       system = "x86_64-linux";
+      overlay = final: prev: {
+        helium = inputs.helium.packages.${system}.default;
+        antigravity = inputs.antigravity.packages.${system}.google-antigravity-cli;
+        codex = inputs.codex.packages.${system}.default;
+        omp = inputs.omp.packages.${system}.default;
+        hermes = inputs.hermes.packages.${system}.default;
+        herdr = inputs.herdr.packages.${system}.default;
+      };
     in
     {
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
@@ -36,10 +47,23 @@
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [
-          ./configuration.nix
-          ./config-links.nix
-          ./desktop.nix
-          ./ai.nix
+          { nixpkgs.overlays = [ overlay ]; }
+
+          # Host Configuration (Hardware, Boot, Locale, Users, Nix Settings)
+          ./hosts/nixos
+
+          # Desktop & Compositors
+          ./modules/desktop-shared.nix
+          ./modules/hyprland.nix
+          ./modules/niri.nix
+
+          # Applications & Tools
+          ./modules/browsers.nix
+          ./modules/ai.nix
+          ./modules/cli.nix
+
+          # Dotfiles Activation
+          ./modules/config-links.nix
         ];
       };
     };

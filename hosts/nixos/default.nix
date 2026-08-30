@@ -1,11 +1,14 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 
-let
-  system = pkgs.stdenv.hostPlatform.system;
-in
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
+  networking.hostName = "nixos";
+  system.stateVersion = "26.05";
+
+  # Bootloader
   boot.loader = {
     systemd-boot = {
       enable = true;
@@ -14,11 +17,10 @@ in
     efi.canTouchEfiVariables = true;
   };
 
-  networking = {
-    hostName = "nixos";
-    networkmanager.enable = true;
-  };
+  # Network
+  networking.networkmanager.enable = true;
 
+  # Time & Locale
   time.timeZone = "Europe/Istanbul";
 
   i18n = {
@@ -36,6 +38,9 @@ in
     };
   };
 
+  console.keyMap = "trq";
+
+  # Base system services
   services = {
     xserver.xkb = {
       layout = "tr";
@@ -48,13 +53,7 @@ in
     };
   };
 
-  console.keyMap = "trq";
-
-  programs = {
-    git.enable = true;
-    zsh.enable = true;
-  };
-
+  # Users
   users = {
     defaultUserShell = pkgs.zsh;
     users.hhyurdagul = {
@@ -67,6 +66,13 @@ in
     };
   };
 
+  # Hardware
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
+  # Nix daemon & Package manager configuration
   nixpkgs.config.allowUnfree = true;
 
   nix = {
@@ -83,19 +89,4 @@ in
       options = "--delete-older-than 30d";
     };
   };
-
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-  };
-
-  environment.systemPackages = with pkgs; [
-    wget
-    helix
-    fzf
-    ripgrep
-    inputs.helium.packages.${system}.default
-  ];
-
-  system.stateVersion = "26.05";
 }
