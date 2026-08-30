@@ -13,7 +13,7 @@ DropdownWidget {
     // Power actions
     Process {
         id: lockProc
-        command: ["loginctl", "lock-session"]
+        command: ["hyprlock"]
     }
 
     Process {
@@ -33,7 +33,7 @@ DropdownWidget {
 
     // Icon with spacing
     Item {
-        width: powerIcon.width + 16
+        width: powerIcon.width
         height: parent.height
 
         Text {
@@ -143,7 +143,7 @@ DropdownWidget {
 
                     Text {
                         text: "󰜉"
-                        color: "#ffb86c"
+                        color: Theme.colOrange
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
                     }
@@ -182,7 +182,7 @@ DropdownWidget {
 
                     Text {
                         text: "󰐥"
-                        color: "#ff5555"
+                        color: Theme.colRed
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
                     }

@@ -1,0 +1,110 @@
+# Quickshell Status Bar & Notification Center
+
+A modern, native Wayland status bar, notification center, and system widget suite built using **[Quickshell](https://quickshell.outfoxxed.me/)** (Qt Quick / QML) for **Hyprland** on NixOS.
+
+Designed around the **Catppuccin Mocha** color palette with a 3-section layout, native floating popups, and full hardware & notification integration.
+
+---
+
+## 🌟 Key Features
+
+### 1. True 3-Section Layout
+- **Left**: Hyprland Workspaces with debounced mouse-wheel switching and active window title.
+- **Center (Mathematically Centered)**: Notification center pill (with unread count & DND status), clickable Date pill (opens monthly Calendar), and Weather forecast pill.
+- **Right**: System status indicators and interactive dropdown menus separated by symmetrical dividers.
+
+### 2. Native Dropdown Popup Engine
+- Every widget popup floats **8px below the bar** with clean rounded cards (`cardRadius: 12px`, subtle 1px border).
+- Powered natively by Quickshell's `PopupAnchor` (`anchor.item: iconContainer`), providing instant, lag-free anchoring without manual coordinate mapping.
+- Automatic Hyprland window focus grabbing (`HyprlandFocusGrab`) with click-outside dismissal.
+
+### 3. Native Desktop Notification System
+- **Built-in Notification Server (`NotifManager.qml`)**: Replaces external daemons like SwayNC or Dunst.
+- **Floating Toasts (`NotificationToasts.qml`)**: Real-time notification banners in the top-right corner with 5-second auto-dismiss.
+- **Do Not Disturb (DND)**:
+  - **Left Click** on center bell: Opens notification history dropdown with 1-click dismissal.
+  - **Right Click** on center bell: Toggles Do Not Disturb. When DND is active, toasts are suppressed while notifications silently accumulate in history.
+
+### 4. Interactive Hardware & System Dropdowns
+- **CPU (`CpuWidget.qml`)**: Live top 10 CPU-consuming processes (PID, Name, CPU%) with instant refresh and `btop` terminal shortcut.
+- **Memory (`MemoryWidget.qml`)**: Live RAM usage summary (Used / Total GB) and top memory-consuming processes.
+- **Volume (`VolumeWidget.qml`)**:
+  - Scroll wheel: **±5% volume step**.
+  - `Shift` + Scroll: **±1% fine-tuning**.
+  - Dynamic audio glyphs (Headphones `󰋋`, Bluetooth `󰂰`, Speaker `󰕾`, Mute `󰖁`).
+  - Right-click launcher for `pavucontrol` / audio mixer.
+- **Battery & Power Profile (`BatteryWidget.qml`)**:
+  - Unified battery indicator reading directly from kernel sysfs (`/sys/class/power_supply/`).
+  - Integrated 1-click power profile switcher (`Performance`, `Balanced`, `Power Saver` via `powerprofilesctl`).
+- **Network & Wi-Fi (`WifiWidget.qml`)**: Live upload/download throughput speed and interactive network list.
+- **Bluetooth (`BluetoothWidget.qml`)**: Toggle power, scan devices, and 1-click connect.
+- **System Indicators**:
+  - **Camera (`CameraIndicatorWidget.qml`)**: Red pill with `REC` badge when `/dev/video*` is actively recording.
+  - **Idle Inhibitor (`IdleIndicatorWidget.qml`)**: Toggle `hypridle` inhibition on/off.
+  - **Power Menu (`PowerWidget.qml`)**: Fast access to Lock, Suspend, Reboot, and Shutdown.
+
+---
+
+## 🎨 Theme & Customization
+
+All visual styles, colors, margins, radiuses, and fonts are centralized in **[`Theme.qml`](./Theme.qml)**.
+
+```qml
+// Theme.qml highlights
+property color colBg: "#1e1e2e"           // Mocha base background
+property color colGreen: "#a6e3a1"        // Unified green (Battery, Volume, BT, RAM)
+property color colRed: "#f38ba8"          // Red (Recording, Critical, Poweroff)
+property color colYellow: "#f9e2af"       // Yellow (Notifications, Idle)
+property color colBlue: "#89b4fa"         // Blue (CPU, Bluetooth)
+property color colPink: "#f5c2e7"         // Pink (Network)
+property int popupTopMargin: 8            // Floating gap between top bar and menus
+property int cardRadius: 12               // Corner radius for all popups and toasts
+property string fontFamily: "JetBrainsMono Nerd Font"
+```
+
+To tweak any aspect of the UI, simply edit `Theme.qml` — Quickshell hot-reloads the changes immediately.
+
+---
+
+## 📁 Directory Structure
+
+```
+config/quickshell/
+├── shell.qml                         # Root panel window & 3-section layout
+├── Theme.qml                         # Global Catppuccin Mocha theme singleton
+├── NotifManager.qml                  # NotificationServer singleton & history
+├── qmldir                            # QML module & singleton registration
+├── components/
+│   ├── DropdownWidget.qml            # Base component for right-side dropdowns
+│   ├── NotificationToasts.qml        # Floating notification banners (top-right)
+│   ├── CenterInfo.qml                # Center Notifications, Calendar & Weather
+│   ├── WorkspaceBar.qml              # Hyprland workspace switcher with debounced scroll
+│   ├── WindowInfo.qml                # Active window title
+│   ├── CpuWidget.qml                 # Top CPU processes dropdown
+│   ├── MemoryWidget.qml              # Top RAM processes dropdown
+│   ├── VolumeWidget.qml              # WirePlumber volume & sink manager
+│   ├── BatteryWidget.qml             # Battery status & power profile switcher
+│   ├── WifiWidget.qml                # Network speed & Wi-Fi dropdown
+│   ├── BluetoothWidget.qml           # Bluetooth device manager
+│   ├── CameraIndicatorWidget.qml     # Active camera / recording indicator
+│   ├── IdleIndicatorWidget.qml       # Hypridle inhibitor toggle
+│   ├── Clock.qml                     # Clock widget
+│   ├── PowerWidget.qml               # Lock / Suspend / Reboot / Poweroff menu
+│   └── Separator.qml                 # Symmetrical vertical divider
+└── scripts/
+    └── weather.py                    # Standalone weather fetcher (wttr.in)
+```
+
+---
+
+## 🔧 System Requirements
+
+- **Compositor**: Hyprland
+- **Shell**: Quickshell (`quickshell`)
+- **Tools**:
+  - `wireplumber` / `wpctl` (Audio)
+  - `power-profiles-daemon` / `powerprofilesctl` (Power management)
+  - `bluez` / `bluetoothctl` (Bluetooth)
+  - `networkmanager` / `nmcli` (Wi-Fi)
+  - `python3` with `urllib` (Weather)
+  - `jq` (JSON parsing)

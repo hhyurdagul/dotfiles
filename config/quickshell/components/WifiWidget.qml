@@ -6,14 +6,15 @@ import ".."
 
 DropdownWidget {
     id: wifiWidget
-    popupWidth: 240
-    popupHeight: Math.min(wifiNetworks.length * 40 + 50, 350)
+    popupWidth: 260
+    popupHeight: Math.min(wifiNetworks.length * 40 + 70, 360)
     popupXOffset: 250
 
     property string wifiSSID: ""
     property int wifiSignal: 0
     property bool wifiConnected: false
     property var wifiNetworks: []
+    property bool wifiEnabled: true
 
     // Network speed tracking
     property real downloadSpeed: 0  // bytes per second
@@ -29,10 +30,10 @@ DropdownWidget {
 
     onOpened: wifiScanProc.running = true
 
-    // WiFi current connection
+    // WiFi current connection via nmcli
     Process {
         id: wifiCurrentProc
-        command: ["sh", "-c", "dev=\"$(iwctl station list 2>/dev/null | sed 's/\\x1b\\[[0-9;]*m//g' | awk '$2 ~ /^(connected|disconnected|connecting|roaming)$/ { print $1; exit }')\"; [ -n \"$dev\" ] || exit 0; iwctl station \"$dev\" show 2>/dev/null | sed 's/\\x1b\\[[0-9;]*m//g' | awk '/^[[:space:]]*Connected network[[:space:]]/ { ssid = $0; sub(/^[[:space:]]*Connected network[[:space:]]+/, \"\", ssid) } /^[[:space:]]*RSSI[[:space:]]/ { rssi = $2 } END { if (ssid != \"\") { signal = 2 * (rssi + 100); if (signal < 0) signal = 0; if (signal > 100) signal = 100; printf \"%s\\t%d\\n\", ssid, signal } }'"]
+        command: ["sh", "-c", "nmcli -t -f ACTIVE,SSID,SIGNAL,SECURITY dev wifi 2>/dev/null | awk -F: '$1==\"yes\" { print $2 \"\\t\" $3 \"\\t\" $4; exit }'"]
         stdout: SplitParser {
             onRead: data => {
                 if (!data || !data.trim()) {
@@ -52,11 +53,25 @@ DropdownWidget {
         Component.onCompleted: running = true
     }
 
-    // WiFi network scan
+    // WiFi radio state check
+    Process {
+        id: wifiRadioProc
+        command: ["sh", "-c", "nmcli radio wifi 2>/dev/null"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data) {
+                    wifiWidget.wifiEnabled = data.trim() === "enabled"
+                }
+            }
+        }
+        Component.onCompleted: running = true
+    }
+
+    // WiFi network scan via nmcli
     Process {
         id: wifiScanProc
         property string output: ""
-        command: ["sh", "-c", "dev=\"$(iwctl station list 2>/dev/null | sed 's/\\x1b\\[[0-9;]*m//g' | awk '$2 ~ /^(connected|disconnected|connecting|roaming)$/ { print $1; exit }')\"; [ -n \"$dev\" ] || exit 0; iwctl station \"$dev\" scan >/dev/null 2>&1; sleep 1; iwctl station \"$dev\" get-networks 2>/dev/null | sed 's/\\x1b\\[[0-9;]*m//g' | sed -nE 's/^[[:space:]]*(>  *)?(.+[^ ])  +(open|owe|psk|sae|8021x)  +([*]+)[[:space:]]*$/\\2\\t\\3\\t\\4/p' | awk -F '\\t' '{ signal = length($3) * 25; if (signal > 100) signal = 100; print $1 \"\\t\" signal \"\\t\" $2 }' | sort -t \"$(printf '\\t')\" -k2,2nr | head -15"]
+        command: ["sh", "-c", "nmcli -t -f SSID,SIGNAL,SECURITY dev wifi list --rescan auto 2>/dev/null | awk -F: '$1!=\"\" { print $1 \"\\t\" $2 \"\\t\" $3 }' | sort -u -k1,1 | sort -t \"$(printf '\\t')\" -k2,2nr | head -15"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) wifiScanProc.output += data + "\n"
@@ -89,7 +104,20 @@ DropdownWidget {
     Process {
         id: wifiConnectProc
         property string targetSSID: ""
-        command: ["sh", "-c", "dev=\"$(iwctl station list 2>/dev/null | sed 's/\\x1b\\[[0-9;]*m//g' | awk '$2 ~ /^(connected|disconnected|connecting|roaming)$/ { print $1; exit }')\"; [ -n \"$dev\" ] || exit 1; exec iwctl --dont-ask station \"$dev\" connect \"$1\"", "iwctl-connect", targetSSID]
+        command: ["sh", "-c", "nmcli dev wifi connect \"$1\"", "nmcli-connect", targetSSID]
+        onExited: {
+            wifiScanDelay.restart()
+        }
+    }
+
+    Timer {
+        id: wifiScanDelay
+        interval: 1500
+        repeat: false
+        onTriggered: {
+            wifiCurrentProc.running = true
+            wifiScanProc.running = true
+        }
     }
 
     // Network speed process
@@ -116,18 +144,19 @@ DropdownWidget {
         Component.onCompleted: running = true
     }
 
-    // Update timer
+    // Periodic Update timer
     Timer {
-        interval: 1000
+        interval: 2000
         running: true
         repeat: true
         onTriggered: {
             wifiCurrentProc.running = true
             netSpeedProc.running = true
+            wifiRadioProc.running = true
         }
     }
 
-    // Icon content
+    // Icon content in top bar
     Row {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 4
@@ -135,12 +164,13 @@ DropdownWidget {
         Text {
             id: wifiText
             anchors.verticalCenter: parent.verticalCenter
-            text: !wifiConnected ? "󰤭" :
-                  wifiSignal >= 80 ? "󰤨" :
-                  wifiSignal >= 60 ? "󰤥" :
-                  wifiSignal >= 40 ? "󰤢" :
-                  wifiSignal >= 20 ? "󰤟" : "󰤯"
-            color: wifiConnected ? Theme.colNetwork : Theme.colMuted
+            text: !wifiWidget.wifiEnabled ? "󰤮" :
+                  !wifiWidget.wifiConnected ? "󰤭" :
+                  wifiWidget.wifiSignal >= 80 ? "󰤨" :
+                  wifiWidget.wifiSignal >= 60 ? "󰤥" :
+                  wifiWidget.wifiSignal >= 40 ? "󰤢" :
+                  wifiWidget.wifiSignal >= 20 ? "󰤟" : "󰤯"
+            color: wifiWidget.wifiConnected ? Theme.colNetwork : Theme.colMuted
             font.pixelSize: Theme.fontSize + 4
             font.family: Theme.fontFamily
             font.bold: true
@@ -148,37 +178,44 @@ DropdownWidget {
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            visible: wifiConnected
+            visible: wifiWidget.wifiConnected
             text: " " + formatSpeed(downloadSpeed) + "  " + formatSpeed(uploadSpeed)
             color: Theme.colNetwork
             font.pixelSize: Theme.fontSize - 2
             font.family: Theme.fontFamily
-            width: 120
-            horizontalAlignment: Text.AlignLeft
-        }
-
-        Rectangle {
-            width: 1
-            height: 16
-            anchors.verticalCenter: parent.verticalCenter
-            color: Theme.colMuted
         }
     }
 
     // Popup content
     popupContent: Component {
         Column {
-            spacing: 4
+            spacing: 8
 
-            // Header
-            Text {
-                text: wifiWidget.wifiConnected ? "󰤨 " + wifiWidget.wifiSSID : "󰤭 Not Connected"
-                color: Theme.colFg
-                font.pixelSize: Theme.fontSize
-                font.family: Theme.fontFamily
-                font.bold: true
+            // Header with status & refresh
+            RowLayout {
                 width: parent.width
-                horizontalAlignment: Text.AlignLeft
+
+                Text {
+                    text: wifiWidget.wifiConnected ? "󰤨 " + wifiWidget.wifiSSID : "󰤭 Not Connected"
+                    color: Theme.colFg
+                    font.pixelSize: Theme.fontSize
+                    font.family: Theme.fontFamily
+                    font.bold: true
+                    Layout.fillWidth: true
+                    elide: Text.ElideRight
+                }
+
+                Text {
+                    text: wifiScanProc.running ? "󰑐" : "󰑓"
+                    color: Theme.colNetwork
+                    font.pixelSize: Theme.fontSize
+                    font.family: Theme.fontFamily
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: wifiScanProc.running = true
+                    }
+                }
             }
 
             Rectangle {
@@ -191,7 +228,7 @@ DropdownWidget {
             ListView {
                 id: networkListView
                 width: parent.width
-                height: parent.height - 40
+                height: parent.height - 48
                 clip: true
                 model: wifiWidget.wifiNetworks
                 spacing: 2

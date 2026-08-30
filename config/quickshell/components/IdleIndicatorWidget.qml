@@ -15,7 +15,7 @@ Item {
     Text {
         anchors.centerIn: parent
         text: "󱫖"
-        color: idleMouse.containsMouse ? Theme.colNetwork : Theme.colFg
+        color: idleMouse.containsMouse ? Theme.colIdle : Theme.colFg
         font.pixelSize: Theme.fontSize
         font.family: Theme.fontFamily
         font.bold: true
@@ -40,7 +40,7 @@ Item {
 
     Process {
         id: toggleProc
-        command: ["omarchy-toggle-idle"]
+        command: ["sh", "-c", "pkill -x hypridle || hypridle &"]
         onExited: {
             statusDelay.restart()
         }

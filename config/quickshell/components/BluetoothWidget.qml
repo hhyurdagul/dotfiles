@@ -135,7 +135,7 @@ DropdownWidget {
         text: !btPowered ? "󰂲" :
               btConnected ? "󰂱" : "󰂯"
         color: !btPowered ? Theme.colMuted :
-               btConnected ? "#50fa7b" : Theme.colBluetooth
+               btConnected ? Theme.colBluetoothConnected : Theme.colBluetooth
         font.pixelSize: Theme.fontSize + 4
         font.family: Theme.fontFamily
         font.bold: true

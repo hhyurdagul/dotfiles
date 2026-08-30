@@ -12,6 +12,7 @@ import "components"
 ShellRoot {
     id: root
 
+    // Top Bar across all screens
     Variants {
         model: Quickshell.screens
 
@@ -53,134 +54,108 @@ ShellRoot {
                 anchors.fill: parent
                 color: Theme.colBg
 
+                // ==========================================
+                // LEFT SECTION: Workspaces & Window Title
+                // ==========================================
                 RowLayout {
-                    anchors.fill: parent
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: parent.height
                     spacing: 0
 
-                    // Left padding
-                    Item {
-                        width: 12
-                    }
-
-                    OmarchyWidget {}
-                    // Workspaces
                     WorkspaceBar {
                         Layout.preferredHeight: parent.height
                     }
 
-                    // Separator
-                    Rectangle {
-                        Layout.preferredWidth: 1
-                        Layout.preferredHeight: 16
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.leftMargin: 8
-                        Layout.rightMargin: 8
-                        color: Theme.colMuted
-                    }
+                    Separator {}
 
-                    // Window info (layout + title)
                     WindowInfo {
                         Layout.preferredHeight: parent.height
                         Layout.preferredWidth: 300
                     }
+                }
 
-                    // Left spacer
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                // ==========================================
+                // CENTER SECTION: True Screen Center!
+                // ==========================================
+                RowLayout {
+                    anchors.centerIn: parent
+                    height: parent.height
+                    spacing: 6
 
-                    // Center: Date and Weather
                     CenterInfo {
                         barWindow: rootBarWindow
+                        Layout.preferredHeight: parent.height
                     }
 
-                    UpdateOmarchyWidget {
-                        Layout.leftMargin: 8
+                    CameraIndicatorWidget {
+                        Layout.preferredHeight: parent.height
                     }
 
                     IdleIndicatorWidget {
-                        Layout.leftMargin: 8
+                        Layout.preferredHeight: parent.height
                     }
+                }
 
-                    // Right spacer
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    // // Slack indicator
-                    // SlackWidget {}
-
-                    // // WhatsApp indicator
-                    // WhatsAppWidget {}
-
-                    // Separator {}
+                // ==========================================
+                // RIGHT SECTION: Status, Media, Clock, Power
+                // ==========================================
+                RowLayout {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: parent.height
+                    spacing: 0
 
                     SystemTrayWidget {
                         barWindow: rootBarWindow
                     }
 
                     Separator {}
-                    // System stats
+
                     CpuWidget {
-                        Layout.rightMargin: 8
+                        barWindow: rootBarWindow
                     }
 
                     Separator {}
 
                     MemoryWidget {
-                        Layout.rightMargin: 8
+                        barWindow: rootBarWindow
                     }
 
                     Separator {}
 
-                    //DiskWidget {
-                    //    Layout.rightMargin: 8
-                    //}
-
-                    //Separator {}
-
                     VolumeWidget {
-                        Layout.rightMargin: 8
+                        barWindow: rootBarWindow
                     }
 
                     Separator {}
 
                     BatteryWidget {
-                        Layout.rightMargin: 8
+                        barWindow: rootBarWindow
                     }
 
                     Separator {}
 
-                    // WiFi indicator
                     WifiWidget {
                         barWindow: rootBarWindow
                     }
 
-                    // Bluetooth indicator
+                    Separator {}
+
                     BluetoothWidget {
                         barWindow: rootBarWindow
                     }
 
-                    // Power profile
-                    PowerProfileWidget {
-                        barWindow: rootBarWindow
-                    }
-
                     Separator {}
 
-                    // Clock
                     Clock {}
 
                     Separator {}
 
-                    // Power menu
                     PowerWidget {
                         barWindow: rootBarWindow
-                    }
-
-                    // Right padding
-                    Item {
-                        width: 8
                     }
                 }
 
@@ -196,4 +171,7 @@ ShellRoot {
             }
         }
     }
+
+    // System-wide floating notification toasts
+    NotificationToasts {}
 }

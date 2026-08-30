@@ -209,6 +209,18 @@ RowLayout {
     property int activeWorkspaceId: Hyprland.focusedWorkspace?.id ?? 1
     property int workspacesToShow: Math.max(5, maxWorkspaceWithWindows, activeWorkspaceId)
 
+    property real lastWheelTime: 0
+    function switchWorkspaceByWheel(deltaY) {
+        var now = Date.now()
+        if (now - lastWheelTime < 220) return
+        lastWheelTime = now
+        if (deltaY > 0) {
+            Hyprland.dispatch("hl.dsp.focus({ workspace = 'e-1' })")
+        } else if (deltaY < 0) {
+            Hyprland.dispatch("hl.dsp.focus({ workspace = 'e+1' })")
+        }
+    }
+
     Repeater {
         model: workspaceBar.workspacesToShow
 
@@ -287,8 +299,11 @@ RowLayout {
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
                     if (workspaceBar.activeWorkspaceId !== wsRect.wsId) {
-                        Hyprland.dispatch("workspace " + wsRect.wsId)
+                        Hyprland.dispatch("hl.dsp.focus({ workspace = " + wsRect.wsId + " })")
                     }
+                }
+                onWheel: wheel => {
+                    workspaceBar.switchWorkspaceByWheel(wheel.angleDelta.y)
                 }
             }
         }

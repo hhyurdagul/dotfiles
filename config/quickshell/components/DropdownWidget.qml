@@ -9,7 +9,6 @@ Item {
     id: root
     Layout.preferredWidth: iconContainer.width
     Layout.preferredHeight: parent.height
-    Layout.rightMargin: 8
 
     required property var barWindow
     property int popupWidth: 200
@@ -20,6 +19,7 @@ Item {
     property alias popupContent: popupLoader.sourceComponent
 
     signal opened()
+    signal wheelScrolled(var wheel)
 
     default property alias iconContent: iconContainer.data
 
@@ -46,6 +46,9 @@ Item {
                 root.opened()
             }
         }
+        onWheel: wheel => {
+            root.wheelScrolled(wheel)
+        }
     }
 
     HyprlandFocusGrab {
@@ -59,80 +62,23 @@ Item {
         id: popup
         visible: dropdownOpen
         anchor.window: barWindow
-        anchor.rect.x: {
-            var iconCenter = root.x + iconContainer.x + iconContainer.width/2
-            if (stemAlignment === "right") {
-                return iconCenter - popupWidth + cardRect.stemWidth/2 + 10
-            } else if (stemAlignment === "left") {
-                return iconCenter - cardRect.stemWidth/2 - 10
-            } else {
-                return iconCenter - popupWidth/2
-            }
-        }
-        anchor.rect.y: 32
+        anchor.item: root
+        anchor.edges: Edges.Bottom
+        anchor.gravity: root.stemAlignment === "right" ? (Edges.Bottom | Edges.Left) :
+                        (root.stemAlignment === "left" ? (Edges.Bottom | Edges.Right) : Edges.Bottom)
         implicitWidth: popupWidth
-        implicitHeight: popupHeight
+        implicitHeight: popupHeight + Theme.popupTopMargin
         color: "transparent"
 
-        // Main card with notch corners
-        Canvas {
+        // Floating rounded card with top margin from bar
+        Rectangle {
             id: cardRect
             anchors.fill: parent
-
-            property int rawStemWidth: iconContainer.width + 16
-            property int stemWidth: Math.min(rawStemWidth, width - 60)  // ensure room for notch corners
-            property int stemHeight: 12
-            property int notchRadius: 10
-            property int cardRadius: 12
-
-            onStemWidthChanged: requestPaint()
-
-            onPaint: {
-                var ctx = getContext("2d")
-                ctx.reset()
-                ctx.fillStyle = Theme.colBg
-
-                var sw = stemWidth
-                var sh = stemHeight
-                var nr = notchRadius
-                var r = cardRadius
-                var w = width
-                var h = height
-
-                // Calculate stem center based on alignment
-                var cx
-                if (root.stemAlignment === "right") {
-                    cx = w - sw/2 - 10
-                } else if (root.stemAlignment === "left") {
-                    cx = sw/2 + 10
-                } else {
-                    cx = w / 2
-                }
-
-                var stemLeft = cx - sw/2
-                var stemRight = cx + sw/2
-
-                ctx.beginPath()
-                ctx.moveTo(stemLeft + r, 0)
-                ctx.lineTo(stemRight - r, 0)
-                ctx.arcTo(stemRight, 0, stemRight, r, r)
-                ctx.lineTo(stemRight, sh - nr)
-                ctx.arcTo(stemRight, sh, stemRight + nr, sh, nr)
-                ctx.lineTo(w - r, sh)
-                ctx.arcTo(w, sh, w, sh + r, r)
-                ctx.lineTo(w, h - r)
-                ctx.arcTo(w, h, w - r, h, r)
-                ctx.lineTo(r, h)
-                ctx.arcTo(0, h, 0, h - r, r)
-                ctx.lineTo(0, sh + r)
-                ctx.arcTo(0, sh, r, sh, r)
-                ctx.lineTo(stemLeft - nr, sh)
-                ctx.arcTo(stemLeft, sh, stemLeft, sh - nr, nr)
-                ctx.lineTo(stemLeft, r)
-                ctx.arcTo(stemLeft, 0, stemLeft + r, 0, r)
-                ctx.closePath()
-                ctx.fill()
-            }
+            anchors.topMargin: Theme.popupTopMargin
+            color: Theme.colBg
+            radius: Theme.cardRadius
+            border.color: Theme.cardBorderColor
+            border.width: Theme.cardBorderWidth
         }
 
         MouseArea {
@@ -141,11 +87,8 @@ Item {
 
         Loader {
             id: popupLoader
-            anchors.fill: parent
-            anchors.topMargin: cardRect.stemHeight + 8
-            anchors.leftMargin: 8
-            anchors.rightMargin: 8
-            anchors.bottomMargin: 8
+            anchors.fill: cardRect
+            anchors.margins: 12
         }
 
         onVisibleChanged: {
