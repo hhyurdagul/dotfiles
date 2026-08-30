@@ -92,6 +92,7 @@
           ./modules/browsers.nix
           ./modules/ai.nix
           ./modules/cli.nix
+          ./modules/obsidian.nix
 
           # Dotfiles Activation
           ./modules/config-links.nix

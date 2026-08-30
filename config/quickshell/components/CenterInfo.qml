@@ -594,6 +594,17 @@ Item {
                         radius: 8
                         color: notifItemMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.08) : Qt.rgba(255, 255, 255, 0.04)
 
+                        MouseArea {
+                            id: notifItemMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                NotifManager.interactHistory(index)
+                                centerInfo.notifVisible = false
+                            }
+                        }
+
                         Column {
                             id: notifCol
                             anchors.fill: parent
@@ -655,12 +666,6 @@ Item {
                                 maximumLineCount: 2
                                 elide: Text.ElideRight
                             }
-                        }
-
-                        MouseArea {
-                            id: notifItemMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
                         }
                     }
                 }

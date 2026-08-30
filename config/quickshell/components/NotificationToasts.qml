@@ -51,10 +51,21 @@ Variants {
                     Timer {
                         id: autoCloseTimer
                         interval: 5000
-                        running: !cardMouse.containsMouse
+                        running: !cardMouse.containsMouse && !closeBtnMouse.containsMouse
                         repeat: false
                         onTriggered: {
-                            NotifManager.removeToast(modelData.id)
+                            NotifManager.expireToast(modelData.id)
+                        }
+                    }
+
+                    // Background card click area (Interacts with notification)
+                    MouseArea {
+                        id: cardMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            NotifManager.interactToast(modelData.id)
                         }
                     }
 
@@ -104,7 +115,7 @@ Variants {
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        NotifManager.removeToast(modelData.id)
+                                        NotifManager.dismissToast(modelData.id)
                                     }
                                 }
                             }
@@ -132,15 +143,6 @@ Variants {
                             wrapMode: Text.Wrap
                             maximumLineCount: 3
                             elide: Text.ElideRight
-                        }
-                    }
-
-                    MouseArea {
-                        id: cardMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            NotifManager.removeToast(modelData.id)
                         }
                     }
                 }

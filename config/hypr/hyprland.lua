@@ -80,6 +80,8 @@ end)
 local terminal    = "kitty"
 local fileManager = "GSK_RENDERER=ngl nautilus --new-window"
 local menu        = "fuzzel"
+local browser     = "zen"
+local notes       = "obsidian"
 
 
 -------------------
@@ -297,10 +299,12 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(notes))
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + S", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
@@ -334,8 +338,8 @@ for i = 1, 10 do
 end
 
 -- Example special workspace (scratchpad)
-hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + X",         hl.dsp.workspace.toggle_special("magic"))
+hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Cycle workspaces with the MX Master 3S thumb button reported by wev.
 hl.bind(mainMod .. " + mouse:277",         hl.dsp.focus({ workspace = "e+1" }))
