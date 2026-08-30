@@ -12,5 +12,6 @@
     fzf
     ripgrep
     nixd
+    yazi
   ];
 }

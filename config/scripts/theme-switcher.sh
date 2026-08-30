@@ -166,21 +166,6 @@ if [ -f "$HELIX_CONFIG" ]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Herdr Workspace & Terminal Manager
-# ------------------------------------------------------------------------------
-HERDR_CONFIG="$HOME/.config/herdr/config.toml"
-if [ -f "$HERDR_CONFIG" ]; then
-    if [ "$TARGET_MODE" = "light" ]; then
-        sed -i 's/^name = .*/name = "catppuccin-latte"/' "$HERDR_CONFIG"
-    else
-        sed -i 's/^name = .*/name = "catppuccin"/' "$HERDR_CONFIG"
-    fi
-    if command -v herdr >/dev/null 2>&1; then
-        timeout 1s herdr server reload-config >/dev/null 2>&1 || true
-    fi
-fi
-
-# ------------------------------------------------------------------------------
 # 6. Sync Darkman Daemon (if triggered manually)
 # ------------------------------------------------------------------------------
 if [ "$FROM_DARKMAN" -eq 0 ] && command -v darkman >/dev/null 2>&1; then
