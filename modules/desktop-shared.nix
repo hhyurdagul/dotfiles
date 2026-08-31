@@ -53,9 +53,11 @@
     pavucontrol
     playerctl
 
-    # Display & Brightness
+    # Display, Brightness & Blue Light Filter
     brightnessctl
     ddcutil
+    wlsunset
+    hyprsunset
 
     # Theming & Color Scheme Daemon
     darkman

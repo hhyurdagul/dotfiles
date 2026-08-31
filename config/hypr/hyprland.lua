@@ -96,6 +96,7 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("wl-paste --watch cliphist store")
     hl.exec_cmd("command -v darkman >/dev/null 2>&1 && darkman run")
     hl.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh init")
+    hl.exec_cmd(os.getenv("HOME") .. "/.config/scripts/nightlight-toggle.sh on")
 end)
 
 
@@ -312,6 +313,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", actio
 hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind(mainMod .. " + ALT + K", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh toggle"))
+hl.bind(mainMod .. " + ALT + N", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/nightlight-toggle.sh toggle"))
 hl.bind(mainMod .. " + ALT + C", function()
     setInternalMonitor(not internalMonitorEnabled)
 end)
