@@ -42,7 +42,7 @@
     swaynotificationcenter
     libnotify
     networkmanagerapplet
-    onlyoffice-bin
+    onlyoffice-desktopeditors
 
     # Bar helper utilities (JSON parsing, process listing, Python)
     jq
