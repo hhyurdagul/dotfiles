@@ -86,6 +86,9 @@ RowLayout {
         "virt-manager": "",
 
         // Office
+        "onlyoffice-desktopeditors": "󰏆",
+        "DesktopEditors": "󰏆",
+        "onlyoffice": "󰏆",
         "libreoffice-writer": "",
         "libreoffice-calc": "",
         "libreoffice-startcenter": "󰏆",

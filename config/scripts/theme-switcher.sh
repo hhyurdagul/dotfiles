@@ -166,7 +166,7 @@ if [ -f "$HELIX_CONFIG" ]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 6. Sync Darkman Daemon (if triggered manually)
+# 5. Sync Darkman Daemon (if triggered manually)
 # ------------------------------------------------------------------------------
 if [ "$FROM_DARKMAN" -eq 0 ] && command -v darkman >/dev/null 2>&1; then
     darkman set "$TARGET_MODE" 2>/dev/null || true
