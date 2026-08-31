@@ -42,6 +42,7 @@
     swaynotificationcenter
     libnotify
     networkmanagerapplet
+    libreoffice-qt-fresh
 
     # Bar helper utilities (JSON parsing, process listing, Python)
     jq
