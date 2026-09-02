@@ -8,7 +8,6 @@
   # Hypr ecosystem utilities
   environment.systemPackages = with pkgs; [
     hypridle
-    hyprlock
     hyprpaper
   ];
 }

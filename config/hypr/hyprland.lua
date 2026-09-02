@@ -310,7 +310,7 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
-hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprlock"))
+hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mainMod .. " + ALT + K", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh toggle"))
 hl.bind(mainMod .. " + ALT + N", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/nightlight-toggle.sh toggle"))

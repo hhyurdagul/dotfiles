@@ -7,13 +7,18 @@ import ".."
 DropdownWidget {
     id: powerWidget
     popupWidth: 140
-    popupHeight: 165
+    popupHeight: 205
     stemAlignment: "right"
 
     // Power actions
     Process {
         id: lockProc
-        command: ["hyprlock"]
+        command: ["loginctl", "lock-session"]
+    }
+
+    Process {
+        id: sleepProc
+        command: ["systemctl", "suspend"]
     }
 
     Process {
@@ -85,6 +90,45 @@ DropdownWidget {
                     onClicked: {
                         powerWidget.dropdownOpen = false
                         lockProc.running = true
+                    }
+                }
+            }
+
+            // Sleep
+            Rectangle {
+                width: parent.width
+                height: 32
+                color: sleepMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+                radius: 6
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    spacing: 10
+
+                    Text {
+                        text: "󰤄"
+                        color: Theme.colFg
+                        font.pixelSize: Theme.fontSize
+                        font.family: Theme.fontFamily
+                    }
+                    Text {
+                        text: "Sleep"
+                        color: Theme.colFg
+                        font.pixelSize: Theme.fontSize
+                        font.family: Theme.fontFamily
+                    }
+                }
+
+                MouseArea {
+                    id: sleepMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        powerWidget.dropdownOpen = false
+                        sleepProc.running = true
                     }
                 }
             }

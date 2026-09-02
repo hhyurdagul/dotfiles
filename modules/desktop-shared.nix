@@ -12,7 +12,15 @@
     udisks2.enable = true;
     upower.enable = true;
     power-profiles-daemon.enable = true;
+    logind.settings.Login = {
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitchDocked = "ignore";
+    };
   };
+
+  # Screen locker with PAM authentication support
+  security.pam.services.swaylock = {};
 
   # PipeWire audio stack for sound & Quickshell VolumeWidget
   security.rtkit.enable = true;
@@ -36,6 +44,7 @@
     # Session & Shell essentials
     kitty
     quickshell
+    swaylock-effects
     fuzzel
     wlogout
     nautilus
