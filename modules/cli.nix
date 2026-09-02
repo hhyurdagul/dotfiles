@@ -13,5 +13,6 @@
     ripgrep
     nixd
     yazi
+    psmisc
   ];
 }

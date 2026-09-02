@@ -8,17 +8,19 @@ Item {
 
     property bool idleDisabled: false
 
-    visible: idleDisabled
-    Layout.preferredWidth: idleDisabled ? 24 : 0
+    visible: true
+    Layout.preferredWidth: 24
     Layout.preferredHeight: parent.height
 
     Text {
         anchors.centerIn: parent
-        text: "󱫖"
-        color: idleMouse.containsMouse ? Theme.colIdle : Theme.colFg
+        text: idleWidget.idleDisabled ? "󱫖" : "󰒲"
+        color: idleMouse.containsMouse 
+            ? (idleWidget.idleDisabled ? Theme.colIdle : Theme.colBlue) 
+            : (idleWidget.idleDisabled ? Theme.colIdle : Theme.colFgDim)
         font.pixelSize: Theme.fontSize
         font.family: Theme.fontFamily
-        font.bold: true
+        font.bold: idleWidget.idleDisabled
     }
 
     MouseArea {
@@ -40,7 +42,7 @@ Item {
 
     Process {
         id: toggleProc
-        command: ["sh", "-c", "pkill -x hypridle || hypridle &"]
+        command: ["sh", "-c", "$HOME/.config/scripts/idle-toggle.sh"]
         onExited: {
             statusDelay.restart()
         }
