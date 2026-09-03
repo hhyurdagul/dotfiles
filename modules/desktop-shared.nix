@@ -35,7 +35,7 @@
   # Fonts for Quickshell UI & Nerd Font glyphs
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
-    noto-noto-fonts
+    noto-fonts
     noto-fonts-color-emoji
     font-awesome
   ];
