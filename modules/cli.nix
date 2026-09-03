@@ -14,5 +14,7 @@
     nixd
     yazi
     psmisc
+    lazygit
+    typst
   ];
 }
