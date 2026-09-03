@@ -83,5 +83,6 @@
     swappy
     imagemagick
     poppler-utils
+    ghostscript
   ];
 }
