@@ -15,6 +15,7 @@
     yazi
     psmisc
     lazygit
+    lazydocker
     typst
   ];
 }
