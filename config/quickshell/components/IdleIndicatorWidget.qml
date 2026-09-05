@@ -33,7 +33,7 @@ Item {
 
     Process {
         id: statusProc
-        command: ["pgrep", "-x", "hypridle"]
+        command: ["systemctl", "--user", "is-active", "--quiet", "hypridle.service"]
         onExited: (exitCode, exitStatus) => {
             idleWidget.idleDisabled = exitCode !== 0
         }
@@ -42,7 +42,7 @@ Item {
 
     Process {
         id: toggleProc
-        command: ["sh", "-c", "$HOME/.config/scripts/idle-toggle.sh"]
+        command: ["idle-toggle"]
         onExited: {
             statusDelay.restart()
         }
@@ -56,7 +56,7 @@ Item {
     }
 
     Timer {
-        interval: 5000
+        interval: 10000
         running: true
         repeat: true
         onTriggered: statusProc.running = true

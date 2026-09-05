@@ -10,31 +10,42 @@ RowLayout {
 
     property string activeWindow: ""
 
-    // Active window title
     Process {
         id: windowProc
-        command: ["sh", "-c", "hyprctl activewindow -j | jq -r '.title // empty'"]
+        property string output: ""
+        command: ["hyprctl", "activewindow", "-j"]
         stdout: SplitParser {
             onRead: data => {
-                if (data && data.trim()) {
-                    windowInfo.activeWindow = data.trim()
+                if (data) windowProc.output += data
+            }
+        }
+        onRunningChanged: {
+            if (running) {
+                output = ""
+            } else {
+                try {
+                    var active = JSON.parse(output)
+                    windowInfo.activeWindow = active.title || ""
+                } catch (e) {
+                    windowInfo.activeWindow = ""
                 }
             }
         }
         Component.onCompleted: running = true
     }
 
-    // Event-based updates for window (instant)
     Connections {
         target: Hyprland
         function onRawEvent(event) {
-            windowProc.running = true
+            if (event.name === "activewindow" || event.name === "activewindowv2"
+                    || event.name === "openwindow" || event.name === "closewindow") {
+                windowProc.running = true
+            }
         }
     }
 
-    // Backup timer for window (catches edge cases)
     Timer {
-        interval: 200
+        interval: 5000
         running: true
         repeat: true
         onTriggered: windowProc.running = true
@@ -42,6 +53,7 @@ RowLayout {
 
     Text {
         text: activeWindow
+        textFormat: Text.PlainText
         color: Theme.colWindow
         font.pixelSize: Theme.fontSize
         font.family: Theme.fontFamily

@@ -13,7 +13,6 @@ Item {
     required property var barWindow
     property int popupWidth: 200
     property int popupHeight: 150
-    property int popupXOffset: 200
     property bool dropdownOpen: false
     property string stemAlignment: "center"  // "left", "center", or "right"
     property alias popupContent: popupLoader.sourceComponent
@@ -88,7 +87,7 @@ Item {
         Loader {
             id: popupLoader
             anchors.fill: cardRect
-            anchors.margins: 12
+            anchors.margins: Theme.popupPadding
         }
 
         onVisibleChanged: {

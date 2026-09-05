@@ -8,20 +8,27 @@ DropdownWidget {
     id: btWidget
     popupWidth: 240
     popupHeight: Math.max(btDevices.length * 40 + 100, 150)
-    popupXOffset: 280
 
     property bool btPowered: false
     property bool btConnected: false
     property string btConnectedDevice: ""
+    property string btConnectedMac: ""
     property var btDevices: []
 
-    onOpened: btDevicesProc.running = true
+    function refreshStatus() {
+        btStatusProc.running = true
+        btConnectedProc.running = true
+    }
 
-    // Bluetooth status check
+    onOpened: {
+        btDevicesProc.running = true
+        refreshStatus()
+    }
+
     Process {
         id: btStatusProc
         property string output: ""
-        command: ["sh", "-c", "bluetoothctl show | grep -E 'Powered|Name'"]
+        command: ["bluetoothctl", "show"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) btStatusProc.output += data + "\n"
@@ -30,18 +37,17 @@ DropdownWidget {
         onRunningChanged: {
             if (running) {
                 output = ""
-            } else if (output) {
+            } else {
                 btWidget.btPowered = output.includes("Powered: yes")
             }
         }
         Component.onCompleted: running = true
     }
 
-    // Bluetooth connected device check
     Process {
         id: btConnectedProc
         property string output: ""
-        command: ["sh", "-c", "bluetoothctl info 2>/dev/null | grep -E 'Name|Connected' | head -2"]
+        command: ["bluetoothctl", "devices", "Connected"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) btConnectedProc.output += data + "\n"
@@ -51,26 +57,19 @@ DropdownWidget {
             if (running) {
                 output = ""
             } else {
-                if (output.includes("Connected: yes")) {
-                    btWidget.btConnected = true
-                    var nameMatch = output.match(/Name:\s*(.+)/)
-                    if (nameMatch) {
-                        btWidget.btConnectedDevice = nameMatch[1].trim()
-                    }
-                } else {
-                    btWidget.btConnected = false
-                    btWidget.btConnectedDevice = ""
-                }
+                var match = output.match(/Device\s+([0-9A-F:]+)\s+(.+)/)
+                btWidget.btConnected = match !== null
+                btWidget.btConnectedMac = match ? match[1] : ""
+                btWidget.btConnectedDevice = match ? match[2].trim() : ""
             }
         }
         Component.onCompleted: running = true
     }
 
-    // Bluetooth paired devices list
     Process {
         id: btDevicesProc
         property string output: ""
-        command: ["sh", "-c", "bluetoothctl devices Paired"]
+        command: ["bluetoothctl", "devices", "Paired"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) btDevicesProc.output += data + "\n"
@@ -79,16 +78,13 @@ DropdownWidget {
         onRunningChanged: {
             if (running) {
                 output = ""
-            } else if (output) {
-                var lines = output.trim().split('\n')
+            } else {
+                var lines = output.trim().split("\n")
                 var devices = []
                 for (var i = 0; i < lines.length; i++) {
                     var match = lines[i].match(/Device\s+([0-9A-F:]+)\s+(.+)/)
                     if (match) {
-                        devices.push({
-                            mac: match[1],
-                            name: match[2]
-                        })
+                        devices.push({ mac: match[1], name: match[2] })
                     }
                 }
                 btWidget.btDevices = devices
@@ -97,35 +93,32 @@ DropdownWidget {
         Component.onCompleted: running = true
     }
 
-    // Bluetooth connect process
     Process {
         id: btConnectProc
         property string targetMAC: ""
         command: ["bluetoothctl", "connect", targetMAC]
+        onExited: btWidget.refreshStatus()
     }
 
-    // Bluetooth disconnect process
     Process {
         id: btDisconnectProc
-        command: ["bluetoothctl", "disconnect"]
+        property string targetMAC: ""
+        command: ["bluetoothctl", "disconnect", targetMAC]
+        onExited: btWidget.refreshStatus()
     }
 
-    // Bluetooth power toggle
     Process {
         id: btPowerProc
         property bool powerOn: true
         command: ["bluetoothctl", "power", powerOn ? "on" : "off"]
+        onExited: btWidget.refreshStatus()
     }
 
-    // Update timer
     Timer {
-        interval: 2000
+        interval: 10000
         running: true
         repeat: true
-        onTriggered: {
-            btStatusProc.running = true
-            btConnectedProc.running = true
-        }
+        onTriggered: btWidget.refreshStatus()
     }
 
     // Icon content
@@ -163,13 +156,13 @@ DropdownWidget {
                 Rectangle {
                     width: 40
                     height: 20
-                    radius: 10
+                    radius: height / 2
                     color: btWidget.btPowered ? Theme.colBluetooth : Theme.colMuted
 
                     Rectangle {
                         width: 16
                         height: 16
-                        radius: 8
+                        radius: height / 2
                         color: Theme.colFg
                         x: btWidget.btPowered ? parent.width - width - 2 : 2
                         anchors.verticalCenter: parent.verticalCenter
@@ -218,12 +211,12 @@ DropdownWidget {
                 delegate: Rectangle {
                     width: btDeviceListView.width
                     height: 36
-                    color: btMouseArea.containsMouse ? Qt.rgba(255, 255, 255, 0.1) : "transparent"
-                    radius: 6
+                    color: btMouseArea.containsMouse ? Theme.colHover : "transparent"
+                    radius: Theme.itemRadius
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.margins: 6
+                        anchors.margins: Theme.densePadding
                         spacing: 8
 
                         Text {
@@ -235,16 +228,16 @@ DropdownWidget {
 
                         Text {
                             text: modelData.name
-                            color: modelData.name === btWidget.btConnectedDevice ? Theme.colBluetooth : Theme.colFg
+                            color: modelData.mac === btWidget.btConnectedMac ? Theme.colBluetooth : Theme.colFg
                             font.pixelSize: Theme.fontSize - 1
                             font.family: Theme.fontFamily
-                            font.bold: modelData.name === btWidget.btConnectedDevice
+                            font.bold: modelData.mac === btWidget.btConnectedMac
                             Layout.fillWidth: true
                             elide: Text.ElideRight
                         }
 
                         Text {
-                            text: modelData.name === btWidget.btConnectedDevice ? "Connected" : ""
+                            text: modelData.mac === btWidget.btConnectedMac ? "Connected" : ""
                             color: Theme.colBluetooth
                             font.pixelSize: Theme.fontSize - 3
                             font.family: Theme.fontFamily
@@ -257,7 +250,8 @@ DropdownWidget {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            if (modelData.name === btWidget.btConnectedDevice) {
+                            if (modelData.mac === btWidget.btConnectedMac) {
+                                btDisconnectProc.targetMAC = modelData.mac
                                 btDisconnectProc.running = true
                             } else {
                                 btConnectProc.targetMAC = modelData.mac

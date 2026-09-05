@@ -84,20 +84,6 @@ local browser     = "zen"
 local notes       = "obsidian"
 
 
--------------------
----- AUTOSTART ----
--------------------
-
-hl.on("hyprland.start", function ()
-    hl.exec_cmd("quickshell")
-    hl.exec_cmd("hypridle")
-    hl.exec_cmd("hyprpaper")
-    hl.exec_cmd("nm-applet --indicator")
-    hl.exec_cmd("wl-paste --watch cliphist store")
-    hl.exec_cmd("command -v darkman >/dev/null 2>&1 && darkman run")
-    hl.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh init")
-    hl.exec_cmd(os.getenv("HOME") .. "/.config/scripts/nightlight-toggle.sh on")
-end)
 
 
 -------------------------------
@@ -303,18 +289,18 @@ hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(notes))
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
-hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("uwsm stop"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + S", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
-hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/lock.sh"))
-hl.bind(mainMod .. " + ALT + I", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/idle-toggle.sh"))
+hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("lock-screen"))
+hl.bind(mainMod .. " + ALT + I", hl.dsp.exec_cmd("idle-toggle"))
 hl.bind(mainMod .. " + ALT + K", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
-hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/theme-switcher.sh toggle"))
-hl.bind(mainMod .. " + ALT + N", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/scripts/nightlight-toggle.sh toggle"))
+hl.bind(mainMod .. " + ALT + T", hl.dsp.exec_cmd("theme-switcher toggle"))
+hl.bind(mainMod .. " + ALT + N", hl.dsp.exec_cmd("nightlight-toggle toggle"))
 hl.bind(mainMod .. " + ALT + C", function()
     setInternalMonitor(not internalMonitorEnabled)
 end)

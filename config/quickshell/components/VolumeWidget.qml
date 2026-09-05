@@ -10,7 +10,6 @@ DropdownWidget {
     id: volumeWidget
     popupWidth: 260
     popupHeight: 180
-    popupXOffset: 200
 
     property var sink: Pipewire.defaultAudioSink
     property var source: Pipewire.defaultAudioSource
@@ -69,7 +68,7 @@ DropdownWidget {
         anchors.verticalCenter: parent.verticalCenter
         text: `${volumeWidget.volumeIcon} ${volumeWidget.volumeLevel}%`
         color: volumeWidget.volumeMuted ? Theme.colMuted :
-               volumeWidget.audioSink === "headphone" ? "#f1fa8c" :
+               volumeWidget.audioSink === "headphone" ? Theme.colYellow :
                volumeWidget.audioSink === "bluetooth" ? Theme.colBluetooth :
                Theme.colVol
         font.pixelSize: Theme.fontSize
@@ -128,13 +127,13 @@ DropdownWidget {
                     Rectangle {
                         width: 28
                         height: 28
-                        radius: 6
-                        color: muteMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : Qt.rgba(255, 255, 255, 0.08)
+                        radius: Theme.itemRadius
+                        color: muteMouse.containsMouse ? Theme.colHoverStrong : Theme.colDivider
 
                         Text {
                             anchors.centerIn: parent
                             text: volumeWidget.volumeMuted ? "󰖁" : "󰕾"
-                            color: volumeWidget.volumeMuted ? "#ff5555" : Theme.colVol
+                            color: volumeWidget.volumeMuted ? Theme.colRed : Theme.colVol
                             font.pixelSize: Theme.fontSize + 2
                             font.family: Theme.fontFamily
                         }
@@ -157,15 +156,15 @@ DropdownWidget {
                         id: sliderTrack
                         Layout.fillWidth: true
                         height: 10
-                        radius: 5
-                        color: Qt.rgba(255, 255, 255, 0.1)
+                        radius: height / 2
+                        color: Theme.colHover
 
                         Rectangle {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             width: parent.width * (volumeWidget.volumeLevel / 100)
-                            radius: 5
+                            radius: height / 2
                             color: volumeWidget.volumeMuted ? Theme.colMuted : Theme.colVol
                         }
 
@@ -201,7 +200,7 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: Qt.rgba(255, 255, 255, 0.08)
+                color: Theme.colDivider
             }
 
             // Input / Microphone Section
@@ -240,13 +239,13 @@ DropdownWidget {
                     Rectangle {
                         width: 28
                         height: 28
-                        radius: 6
-                        color: micMuteMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : Qt.rgba(255, 255, 255, 0.08)
+                        radius: Theme.itemRadius
+                        color: micMuteMouse.containsMouse ? Theme.colHoverStrong : Theme.colDivider
 
                         Text {
                             anchors.centerIn: parent
                             text: volumeWidget.micMuted ? "󰍭" : "󰍬"
-                            color: volumeWidget.micMuted ? "#ff5555" : Theme.colCpu
+                            color: volumeWidget.micMuted ? Theme.colRed : Theme.colCpu
                             font.pixelSize: Theme.fontSize + 2
                             font.family: Theme.fontFamily
                         }
@@ -269,15 +268,15 @@ DropdownWidget {
                         id: micTrack
                         Layout.fillWidth: true
                         height: 10
-                        radius: 5
-                        color: Qt.rgba(255, 255, 255, 0.1)
+                        radius: height / 2
+                        color: Theme.colHover
 
                         Rectangle {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             width: parent.width * (volumeWidget.micLevel / 100)
-                            radius: 5
+                            radius: height / 2
                             color: volumeWidget.micMuted ? Theme.colMuted : Theme.colCpu
                         }
 
@@ -314,8 +313,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 26
-                radius: 6
-                color: mixerMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : Qt.rgba(255, 255, 255, 0.05)
+                radius: Theme.itemRadius
+                color: mixerMouse.containsMouse ? Theme.colSelected : Theme.colSurface
 
                 RowLayout {
                     anchors.centerIn: parent

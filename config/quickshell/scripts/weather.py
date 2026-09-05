@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import json
 import urllib.request
-import urllib.error
-import sys
 
 WEATHER_ICONS = {
     "113": "󰖙",  # Sunny / Clear
@@ -55,18 +53,19 @@ WEATHER_ICONS = {
     "395": "󰙾",  # Moderate or heavy snow with thunder
 }
 
+
 def fetch_weather():
-    url = "https://wttr.in/?format=j1"
+    url = "https://wttr.in/41.0082,28.9784?format=j1"
     req = urllib.request.Request(
-        url,
-        headers={"User-Agent": "Mozilla/5.0 (compatible; QuickshellBar/1.0)"}
+        url, headers={"User-Agent": "Mozilla/5.0 (compatible; QuickshellBar/1.0)"}
     )
     try:
         with urllib.request.urlopen(req, timeout=5) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             return data
-    except Exception as e:
+    except (OSError, ValueError):
         return None
+
 
 def main():
     data = fetch_weather()
@@ -83,13 +82,12 @@ def main():
     humidity = cur.get("humidity", "0")
     wind = cur.get("windspeedKmph", "0")
     visibility = cur.get("visibility", "10")
-    
+
     # Location
     area = "Local"
     if "nearest_area" in data and data["nearest_area"]:
         nearest = data["nearest_area"][0]
         area_name = nearest.get("areaName", [{}])[0].get("value", "")
-        country = nearest.get("country", [{}])[0].get("value", "")
         if area_name:
             area = f"{area_name}"
 
@@ -107,24 +105,21 @@ def main():
                 rain_hourly.append(f"Rain drop {chance}%")
 
     text_bar = f"{icon} {temp_c}° {area}"
-    
+
     tooltip_lines = [
         f"<b>{area}</b>",
         f"<big>{icon}</big>",
         f"Feels like {feels_like}°C",
         f" {min_temp}°C\t\t {max_temp}°C",
         f"{wind} km/h\t{humidity}%",
-        f"{visibility} km\tAQI 35"
+        f"{visibility} km visibility",
     ]
     tooltip_lines.extend(rain_hourly[:6])
     tooltip_str = "\n".join(tooltip_lines)
 
-    result = {
-        "text": text_bar,
-        "alt": desc,
-        "tooltip": tooltip_str
-    }
+    result = {"text": text_bar, "alt": desc, "tooltip": tooltip_str}
     print(json.dumps(result))
+
 
 if __name__ == "__main__":
     main()

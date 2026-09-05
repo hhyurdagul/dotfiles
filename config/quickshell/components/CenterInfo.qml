@@ -117,24 +117,24 @@ Item {
         var match = tempStr.match(/-?\d+/)
         if (!match) return Theme.colFg
         var temp = parseInt(match[0])
-        if (temp <= 0) return "#8be9fd"
-        if (temp <= 10) return "#6db3f2"
-        if (temp <= 18) return "#50fa7b"
-        if (temp <= 25) return "#f1fa8c"
-        if (temp <= 32) return "#ffb86c"
-        return "#ff5555"
+        if (temp <= 0) return Theme.colSapphire
+        if (temp <= 10) return Theme.colBlue
+        if (temp <= 18) return Theme.colGreen
+        if (temp <= 25) return Theme.colYellow
+        if (temp <= 32) return Theme.colOrange
+        return Theme.colRed
     }
 
     // Get color based on weather condition
     function getConditionColor(condition) {
         var cond = condition.toLowerCase()
-        if (cond.includes("sun") || cond.includes("clear")) return "#f1fa8c"
-        if (cond.includes("cloud") || cond.includes("overcast")) return "#94a3b8"
-        if (cond.includes("rain") || cond.includes("drizzle") || cond.includes("shower")) return "#8be9fd"
-        if (cond.includes("thunder") || cond.includes("storm")) return "#bd93f9"
-        if (cond.includes("snow") || cond.includes("sleet") || cond.includes("ice")) return "#f8f8f2"
-        if (cond.includes("fog") || cond.includes("mist") || cond.includes("haze")) return "#6272a4"
-        if (cond.includes("wind")) return "#50fa7b"
+        if (cond.includes("sun") || cond.includes("clear")) return Theme.colYellow
+        if (cond.includes("cloud") || cond.includes("overcast")) return Theme.colMuted
+        if (cond.includes("rain") || cond.includes("drizzle") || cond.includes("shower")) return Theme.colSapphire
+        if (cond.includes("thunder") || cond.includes("storm")) return Theme.colMauve
+        if (cond.includes("snow") || cond.includes("sleet") || cond.includes("ice")) return Theme.colFg
+        if (cond.includes("fog") || cond.includes("mist") || cond.includes("haze")) return Theme.colMuted
+        if (cond.includes("wind")) return Theme.colGreen
         return Theme.colFg
     }
 
@@ -228,8 +228,8 @@ Item {
         // Notification Bell Pill (Left-click: notification popup, Right-click: toggle DND)
         Rectangle {
             id: notifPill
-            color: notifVisible ? Qt.rgba(255, 255, 255, 0.1) : "transparent"
-            radius: 6
+            color: notifVisible ? Theme.colHover : "transparent"
+            radius: Theme.itemRadius
             height: 24
             width: bellRow.implicitWidth + 12
             anchors.verticalCenter: parent.verticalCenter
@@ -241,8 +241,8 @@ Item {
 
                 Text {
                     text: NotifManager.dndEnabled ? "󰂛" : (NotifManager.history.length > 0 ? "󰂞" : "󰂚")
-                    color: NotifManager.dndEnabled ? "#ff5555" :
-                           (NotifManager.history.length > 0 ? "#f9e2af" :
+                    color: NotifManager.dndEnabled ? Theme.colRed :
+                           (NotifManager.history.length > 0 ? Theme.colYellow :
                            (notifMouse.containsMouse ? Theme.colFg : Theme.colMuted))
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -253,7 +253,7 @@ Item {
                 Text {
                     visible: NotifManager.history.length > 0 && !NotifManager.dndEnabled
                     text: `${NotifManager.history.length}`
-                    color: "#f9e2af"
+                    color: Theme.colYellow
                     font.pixelSize: Theme.fontSize - 3
                     font.family: Theme.fontFamily
                     font.bold: true
@@ -282,8 +282,8 @@ Item {
         // Clickable Date Pill (opens Calendar view)
         Rectangle {
             id: datePill
-            color: calendarVisible ? Qt.rgba(255, 255, 255, 0.1) : "transparent"
-            radius: 6
+            color: calendarVisible ? Theme.colHover : "transparent"
+            radius: Theme.itemRadius
             height: 24
             width: dateTextItem.implicitWidth + 12
             anchors.verticalCenter: parent.verticalCenter
@@ -326,8 +326,8 @@ Item {
         Rectangle {
             id: weatherPill
             visible: weatherText !== ""
-            color: weatherVisible ? Qt.rgba(255, 255, 255, 0.1) : "transparent"
-            radius: 6
+            color: weatherVisible ? Theme.colHover : "transparent"
+            radius: Theme.itemRadius
             height: 24
             width: weatherRow.implicitWidth + 12
             anchors.verticalCenter: parent.verticalCenter
@@ -340,6 +340,7 @@ Item {
                 Text {
                     visible: centerText.barIcon !== ""
                     text: centerText.barIcon + " "
+                    textFormat: Text.PlainText
                     color: getTempColor(weatherText)
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -350,6 +351,7 @@ Item {
                 Text {
                     visible: centerText.barTemp !== ""
                     text: centerText.barTemp
+                    textFormat: Text.PlainText
                     color: getTempColor(weatherText)
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -360,6 +362,7 @@ Item {
                 Text {
                     visible: centerText.barLocation !== ""
                     text: " " + centerText.barLocation
+                    textFormat: Text.PlainText
                     color: Theme.colFg
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -386,7 +389,7 @@ Item {
     Process {
         id: weatherProc
         property string output: ""
-        command: ["sh", "-c", "$HOME/.config/quickshell/scripts/weather.py 2>/dev/null"]
+        command: ["weather-status"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) weatherProc.output += data
@@ -480,7 +483,7 @@ Item {
 
             Column {
                 anchors.fill: parent
-                anchors.margins: 12
+                anchors.margins: Theme.popupPadding
                 spacing: 8
 
                 // Header
@@ -500,13 +503,13 @@ Item {
                     Rectangle {
                         width: 26
                         height: 26
-                        radius: 5
-                        color: dndBtnMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : (NotifManager.dndEnabled ? Qt.rgba(255/255, 85/255, 85/255, 0.2) : Qt.rgba(255, 255, 255, 0.05))
+                        radius: Theme.compactRadius
+                        color: dndBtnMouse.containsMouse ? Theme.colHoverStrong : (NotifManager.dndEnabled ? Theme.colDangerSurface : Theme.colSurface)
 
                         Text {
                             anchors.centerIn: parent
                             text: NotifManager.dndEnabled ? "󰂛" : "󰂚"
-                            color: NotifManager.dndEnabled ? "#ff5555" : Theme.colFg
+                            color: NotifManager.dndEnabled ? Theme.colRed : Theme.colFg
                             font.pixelSize: 12
                         }
 
@@ -524,8 +527,8 @@ Item {
                         visible: NotifManager.history.length > 0
                         width: 26
                         height: 26
-                        radius: 5
-                        color: clearBtnMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : Qt.rgba(255, 255, 255, 0.05)
+                        radius: Theme.compactRadius
+                        color: clearBtnMouse.containsMouse ? Theme.colHoverStrong : Theme.colSurface
 
                         Text {
                             anchors.centerIn: parent
@@ -547,7 +550,7 @@ Item {
                 Rectangle {
                     width: parent.width
                     height: 1
-                    color: Qt.rgba(255, 255, 255, 0.08)
+                    color: Theme.colDivider
                 }
 
                 // Empty state
@@ -591,8 +594,8 @@ Item {
                     delegate: Rectangle {
                         width: notifListView.width
                         height: Math.max(notifCol.implicitHeight + 12, 54)
-                        radius: 8
-                        color: notifItemMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.08) : Qt.rgba(255, 255, 255, 0.04)
+                        radius: Theme.itemRadius
+                        color: notifItemMouse.containsMouse ? Theme.colDivider : Theme.colSurfaceFaint
 
                         MouseArea {
                             id: notifItemMouse
@@ -608,7 +611,7 @@ Item {
                         Column {
                             id: notifCol
                             anchors.fill: parent
-                            anchors.margins: 8
+                            anchors.margins: Theme.itemPadding
                             spacing: 3
 
                             RowLayout {
@@ -633,7 +636,7 @@ Item {
 
                                 Text {
                                     text: "✕"
-                                    color: closeMouse.containsMouse ? "#ff5555" : Theme.colMuted
+                                    color: closeMouse.containsMouse ? Theme.colRed : Theme.colMuted
                                     font.pixelSize: 10
                                     MouseArea {
                                         id: closeMouse
@@ -658,6 +661,7 @@ Item {
                             Text {
                                 visible: modelData.body !== ""
                                 text: modelData.body
+                                textFormat: Text.PlainText
                                 color: Theme.colMuted
                                 font.pixelSize: Theme.fontSize - 2
                                 font.family: Theme.fontFamily
@@ -697,7 +701,7 @@ Item {
 
             Column {
                 anchors.fill: parent
-                anchors.margins: 14
+                anchors.margins: Theme.calendarPadding
                 spacing: 10
 
                 // Header with Month/Year and navigation
@@ -708,8 +712,8 @@ Item {
                     Rectangle {
                         width: 28
                         height: 28
-                        radius: 6
-                        color: prevMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : Qt.rgba(255, 255, 255, 0.05)
+                        radius: Theme.itemRadius
+                        color: prevMouse.containsMouse ? Theme.colHoverStrong : Theme.colSurface
 
                         Text {
                             anchors.centerIn: parent
@@ -742,8 +746,8 @@ Item {
                     Rectangle {
                         width: 28
                         height: 28
-                        radius: 6
-                        color: todayMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : Qt.rgba(255, 255, 255, 0.05)
+                        radius: Theme.itemRadius
+                        color: todayMouse.containsMouse ? Theme.colHoverStrong : Theme.colSurface
 
                         Text {
                             anchors.centerIn: parent
@@ -766,8 +770,8 @@ Item {
                     Rectangle {
                         width: 28
                         height: 28
-                        radius: 6
-                        color: nextMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : Qt.rgba(255, 255, 255, 0.05)
+                        radius: Theme.itemRadius
+                        color: nextMouse.containsMouse ? Theme.colHoverStrong : Theme.colSurface
 
                         Text {
                             anchors.centerIn: parent
@@ -808,7 +812,7 @@ Item {
                 Rectangle {
                     width: parent.width
                     height: 1
-                    color: Qt.rgba(255, 255, 255, 0.08)
+                    color: Theme.colDivider
                 }
 
                 // Days Grid (6 rows x 7 cols)
@@ -829,13 +833,13 @@ Item {
                                 anchors.centerIn: parent
                                 width: 26
                                 height: 26
-                                radius: 13
-                                color: modelData.isToday ? Theme.colNetwork : (cellMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.1) : "transparent")
+                                radius: height / 2
+                                color: modelData.isToday ? Theme.colNetwork : (cellMouse.containsMouse ? Theme.colHover : "transparent")
 
                                 Text {
                                     anchors.centerIn: parent
                                     text: modelData.day
-                                    color: modelData.isToday ? "#1e1e2e" :
+                                    color: modelData.isToday ? Theme.colBgCrust :
                                            modelData.isCurrentMonth ? Theme.colFg : Theme.colMuted
                                     font.pixelSize: 11
                                     font.family: Theme.fontFamily
@@ -881,7 +885,7 @@ Item {
             Column {
                 id: contentColumn
                 anchors.fill: parent
-                anchors.margins: 16
+                anchors.margins: Theme.weatherPadding
                 spacing: 8
 
                 // Large icon centered
@@ -911,6 +915,7 @@ Item {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: centerInfo.weatherCondition
+                    textFormat: Text.PlainText
                     color: Theme.colMuted
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -922,6 +927,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     text: centerInfo.weatherLocation || ""
+                    textFormat: Text.PlainText
                     color: Qt.rgba(Theme.colMuted.r, Theme.colMuted.g, Theme.colMuted.b, 0.6)
                     font.pixelSize: Theme.fontSize - 2
                     font.family: Theme.fontFamily
@@ -939,12 +945,14 @@ Item {
 
                     Text {
                         text: " " + centerInfo.weatherMinTemp
+                        textFormat: Text.PlainText
                         color: getTempColor(centerInfo.weatherMinTemp)
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
                     }
                     Text {
                         text: " " + centerInfo.weatherMaxTemp
+                        textFormat: Text.PlainText
                         color: getTempColor(centerInfo.weatherMaxTemp)
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
@@ -955,6 +963,7 @@ Item {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: centerInfo.weatherFeelsLike ? "Feels " + centerInfo.weatherFeelsLike : ""
+                    textFormat: Text.PlainText
                     color: Theme.colMuted
                     font.pixelSize: Theme.fontSize - 2
                     font.family: Theme.fontFamily
@@ -988,7 +997,7 @@ Item {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 28
                                 color: Qt.rgba(Theme.colNetwork.r, Theme.colNetwork.g, Theme.colNetwork.b, 0.15)
-                                radius: 4
+                                radius: Theme.tinyRadius
 
                                 Rectangle {
                                     anchors.bottom: parent.bottom
@@ -996,7 +1005,7 @@ Item {
                                     anchors.right: parent.right
                                     height: parent.height * (modelData / 100)
                                     color: Qt.rgba(Theme.colNetwork.r, Theme.colNetwork.g, Theme.colNetwork.b, 0.4 + (modelData / 200))
-                                    radius: 4
+                                    radius: Theme.tinyRadius
                                 }
 
                                 Text {

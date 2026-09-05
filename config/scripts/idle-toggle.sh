@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-# Toggle hypridle daemon on / off
+set -euo pipefail
 
-if pgrep -x "hypridle" >/dev/null 2>&1; then
-    pkill -x "hypridle"
-    notify-send -u normal -a "Idle Inhibitor" "Idle Management Disabled" "Hypridle stopped. Screen will not lock or sleep automatically."
+if systemctl --user is-active --quiet hypridle.service; then
+	systemctl --user stop hypridle.service
+	notify-send -u normal -a "Idle Inhibitor" "Idle Management Disabled" \
+		"The screen will not lock or suspend automatically."
 else
-    hypridle &
-    notify-send -u normal -a "Idle Inhibitor" "Idle Management Enabled" "Hypridle started. Screen will dim, lock, and sleep automatically."
+	systemctl --user start hypridle.service
+	notify-send -u normal -a "Idle Inhibitor" "Idle Management Enabled" \
+		"Automatic dimming, locking, and suspend are active."
 fi

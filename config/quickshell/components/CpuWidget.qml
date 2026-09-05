@@ -9,7 +9,6 @@ DropdownWidget {
     id: cpuWidget
     popupWidth: 280
     popupHeight: 300
-    popupXOffset: 200
 
     property int cpuUsage: 0
     property var lastCpuIdle: 0
@@ -21,10 +20,10 @@ DropdownWidget {
     // Calculate live total CPU usage from /proc/stat
     Process {
         id: cpuProc
-        command: ["sh", "-c", "head -1 /proc/stat"]
+        command: ["cat", "/proc/stat"]
         stdout: SplitParser {
             onRead: data => {
-                if (!data) return
+                if (!data || !data.startsWith("cpu ")) return
                 var parts = data.trim().split(/\s+/)
                 var user = parseInt(parts[1]) || 0
                 var nice = parseInt(parts[2]) || 0
@@ -90,7 +89,7 @@ DropdownWidget {
     }
 
     Timer {
-        interval: 2000
+        interval: 3000
         running: true
         repeat: true
         onTriggered: {
@@ -106,7 +105,7 @@ DropdownWidget {
         id: cpuText
         anchors.verticalCenter: parent.verticalCenter
         text: `󰍛 ${cpuWidget.cpuUsage}%`
-        color: cpuWidget.cpuUsage > 80 ? "#ff5555" : (cpuWidget.cpuUsage > 50 ? "#ffb86c" : Theme.colCpu)
+        color: cpuWidget.cpuUsage > 80 ? Theme.colRed : (cpuWidget.cpuUsage > 50 ? Theme.colOrange : Theme.colCpu)
         font.pixelSize: Theme.fontSize
         font.family: Theme.fontFamily
         font.bold: true
@@ -147,7 +146,7 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: Qt.rgba(255, 255, 255, 0.08)
+                color: Theme.colDivider
             }
 
             // Table Header
@@ -197,8 +196,8 @@ DropdownWidget {
                 delegate: Rectangle {
                     width: cpuListView.width
                     height: 28
-                    radius: 5
-                    color: itemMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.1) : Qt.rgba(255, 255, 255, 0.03)
+                    radius: Theme.compactRadius
+                    color: itemMouse.containsMouse ? Theme.colHover : Theme.colSurfaceFaint
 
                     RowLayout {
                         anchors.fill: parent
@@ -228,13 +227,13 @@ DropdownWidget {
                         Rectangle {
                             Layout.preferredWidth: 46
                             height: 20
-                            radius: 4
-                            color: modelData.cpu > 50 ? Qt.rgba(255/255, 85/255, 85/255, 0.2) : Qt.rgba(114/255, 135/255, 253/255, 0.15)
+                            radius: Theme.tinyRadius
+                            color: modelData.cpu > 50 ? Theme.colDangerSurface : Theme.colCpuSurface
 
                             Text {
                                 anchors.centerIn: parent
                                 text: `${modelData.cpu.toFixed(1)}%`
-                                color: modelData.cpu > 50 ? "#ff5555" : Theme.colCpu
+                                color: modelData.cpu > 50 ? Theme.colRed : Theme.colCpu
                                 font.pixelSize: 10
                                 font.family: Theme.fontFamily
                                 font.bold: true
@@ -254,8 +253,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 24
-                radius: 5
-                color: btopMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : Qt.rgba(255, 255, 255, 0.05)
+                radius: Theme.compactRadius
+                color: btopMouse.containsMouse ? Theme.colSelected : Theme.colSurface
 
                 RowLayout {
                     anchors.centerIn: parent

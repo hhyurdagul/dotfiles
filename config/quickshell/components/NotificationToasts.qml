@@ -72,7 +72,7 @@ Variants {
                     Column {
                         id: cardCol
                         anchors.fill: parent
-                        anchors.margins: 10
+                        anchors.margins: Theme.toastPadding
                         spacing: 4
 
                         // Header: App name, time, close button
@@ -81,6 +81,7 @@ Variants {
 
                             Text {
                                 text: modelData.app || "Notification"
+                                textFormat: Text.PlainText
                                 color: Theme.colNetwork
                                 font.pixelSize: 11
                                 font.family: Theme.fontFamily
@@ -99,13 +100,13 @@ Variants {
                             Rectangle {
                                 width: 18
                                 height: 18
-                                radius: 4
-                                color: closeBtnMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.15) : "transparent"
+                                radius: Theme.tinyRadius
+                                color: closeBtnMouse.containsMouse ? Theme.colHoverStrong : "transparent"
 
                                 Text {
                                     anchors.centerIn: parent
                                     text: "✕"
-                                    color: closeBtnMouse.containsMouse ? "#ff5555" : Theme.colMuted
+                                    color: closeBtnMouse.containsMouse ? Theme.colRed : Theme.colMuted
                                     font.pixelSize: 10
                                 }
 
@@ -124,6 +125,7 @@ Variants {
                         // Summary / Title
                         Text {
                             text: modelData.summary || ""
+                            textFormat: Text.PlainText
                             color: Theme.colFg
                             font.pixelSize: Theme.fontSize
                             font.family: Theme.fontFamily
@@ -136,6 +138,7 @@ Variants {
                         Text {
                             visible: modelData.body !== ""
                             text: modelData.body || ""
+                            textFormat: Text.PlainText
                             color: Theme.colMuted
                             font.pixelSize: Theme.fontSize - 2
                             font.family: Theme.fontFamily

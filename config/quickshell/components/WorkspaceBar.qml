@@ -141,12 +141,10 @@ RowLayout {
     Process {
         id: windowsProc
         property string output: ""
-        command: ["sh", "-c", "hyprctl clients -j | jq -r '.[] | select(.workspace.id > 0 and .workspace.id <= 9) | \"\\(.workspace.id):\\(.class)\"'"]
+        command: ["hyprctl", "clients", "-j"]
         stdout: SplitParser {
             onRead: data => {
-                if (data && data.trim()) {
-                    windowsProc.output += data.trim() + "\n"
-                }
+                if (data) windowsProc.output += data + "\n"
             }
         }
         onRunningChanged: {
@@ -154,12 +152,11 @@ RowLayout {
                 output = ""
             } else {
                 var wsIcons = {}
-                var lines = output.trim().split('\n')
-                for (var i = 0; i < lines.length; i++) {
-                    var parts = lines[i].split(':')
-                    if (parts.length >= 2) {
-                        var wsId = parseInt(parts[0])
-                        var windowClass = parts.slice(1).join(':')
+                try {
+                    var clients = JSON.parse(output)
+                    for (var i = 0; i < clients.length; i++) {
+                        var wsId = clients[i].workspace ? clients[i].workspace.id : 0
+                        var windowClass = clients[i].class || clients[i].initialClass || ""
                         if (wsId > 0 && wsId <= 9) {
                             if (!wsIcons[wsId]) wsIcons[wsId] = {icons: [], seen: {}}
                             var icon = workspaceBar.getWindowIcon(windowClass)
@@ -169,6 +166,8 @@ RowLayout {
                             }
                         }
                     }
+                } catch (e) {
+                    console.warn("Unable to parse Hyprland clients:", e)
                 }
                 workspaceBar.ws1Icons = wsIcons[1] ? wsIcons[1].icons.slice(0, 3).join(" ") : ""
                 workspaceBar.ws2Icons = wsIcons[2] ? wsIcons[2].icons.slice(0, 3).join(" ") : ""
@@ -184,17 +183,19 @@ RowLayout {
         Component.onCompleted: running = true
     }
 
-    // Update on Hyprland events
     Connections {
         target: Hyprland
         function onRawEvent(event) {
-            windowsProc.running = true
+            if (event.name === "openwindow" || event.name === "closewindow"
+                    || event.name === "movewindow" || event.name === "workspace"
+                    || event.name === "workspacev2") {
+                windowsProc.running = true
+            }
         }
     }
 
-    // Backup timer
     Timer {
-        interval: 500
+        interval: 5000
         running: true
         repeat: true
         onTriggered: windowsProc.running = true
@@ -233,8 +234,8 @@ RowLayout {
             Layout.preferredWidth: wsContent.implicitWidth + 10
             Layout.alignment: Qt.AlignVCenter
             color: isActive ? Qt.rgba(Theme.colWorkspaceActive.r, Theme.colWorkspaceActive.g, Theme.colWorkspaceActive.b, 0.15) :
-                   wsMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.05) : "transparent"
-            radius: 8
+                   wsMouse.containsMouse ? Theme.colSurface : "transparent"
+            radius: Theme.mediumRadius
             border.width: isActive ? 1 : 0
             border.color: Qt.rgba(Theme.colWorkspaceActive.r, Theme.colWorkspaceActive.g, Theme.colWorkspaceActive.b, 0.3)
 
@@ -276,7 +277,7 @@ RowLayout {
                 Rectangle {
                     width: 3
                     height: 3
-                    radius: 1.5
+                    radius: height / 2
                     color: Theme.colMuted
                     visible: wsRect.windowIconsStr.length > 0
                     anchors.verticalCenter: parent.verticalCenter

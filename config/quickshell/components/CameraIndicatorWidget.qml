@@ -17,7 +17,7 @@ Item {
         anchors.centerIn: parent
         height: 24
         width: cameraRow.implicitWidth + 12
-        radius: 6
+        radius: Theme.itemRadius
         color: Qt.rgba(Theme.colCamera.r, Theme.colCamera.g, Theme.colCamera.b, 0.2)
         border.color: Theme.colCamera
         border.width: 1
@@ -62,7 +62,7 @@ Item {
     }
 
     Timer {
-        interval: 1500
+        interval: 5000
         running: true
         repeat: true
         onTriggered: checkCameraProc.running = true

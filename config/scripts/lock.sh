@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Lock screen script using swaylock
+set -euo pipefail
 
-if ! pidof swaylock >/dev/null 2>&1; then
-    swaylock -f
+if ! pgrep -x swaylock >/dev/null; then
+	swaylock --daemonize
 fi
-loginctl lock-session 2>/dev/null || true
+
+loginctl lock-session

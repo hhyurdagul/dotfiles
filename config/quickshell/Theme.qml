@@ -10,29 +10,22 @@ QtObject {
     // Dynamic Dark/Light Mode State
     // -------------------------------------------------------------
     property bool isDark: true
+    readonly property string stateHome: Quickshell.env("XDG_STATE_HOME")
+        || (Quickshell.env("HOME") + "/.local/state")
 
-    property var _themeChecker: Process {
-        command: ["sh", "-c", "cat ~/.config/theme/mode 2>/dev/null || echo dark"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) {
-                    var m = data.trim();
-                    themeRoot.isDark = (m !== "light");
-                }
-            }
-        }
-        Component.onCompleted: running = true
+    function syncThemeMode() {
+        var mode = _themeFile.text().trim()
+        themeRoot.isDark = mode !== "light"
     }
 
-    property var _themeTimer: Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: {
-            if (themeRoot._themeChecker) {
-                themeRoot._themeChecker.running = true;
-            }
-        }
+    property var _themeFile: FileView {
+        path: themeRoot.stateHome + "/theme/mode"
+        blockLoading: true
+        watchChanges: true
+        printErrors: false
+        onFileChanged: reload()
+        onTextChanged: themeRoot.syncThemeMode()
+        Component.onCompleted: themeRoot.syncThemeMode()
     }
 
     // -------------------------------------------------------------
@@ -84,10 +77,29 @@ QtObject {
     // -------------------------------------------------------------
     // Popup & Card Layout Styling (Easily tweakable from here!)
     // -------------------------------------------------------------
-    readonly property int popupTopMargin: 8            // Gap between top bar and all floating menus
-    readonly property int cardRadius: 12               // Corner radius for all popups
-    readonly property color cardBorderColor: isDark ? Qt.rgba(255, 255, 255, 0.1) : Qt.rgba(0, 0, 0, 0.12)
+    readonly property int popupTopMargin: 8
+    readonly property int popupPadding: 12
+    readonly property int cardRadius: 12
+    readonly property int itemRadius: 6
+    readonly property int compactRadius: 5
+    readonly property int mediumRadius: 8
+    readonly property int tinyRadius: 4
+    readonly property color cardBorderColor: Qt.rgba(colFg.r, colFg.g, colFg.b, isDark ? 0.10 : 0.12)
     readonly property int cardBorderWidth: 1
+    readonly property color colHover: Qt.rgba(colFg.r, colFg.g, colFg.b, 0.10)
+    readonly property color colHoverStrong: Qt.rgba(colFg.r, colFg.g, colFg.b, 0.15)
+    readonly property color colSelected: Qt.rgba(colFg.r, colFg.g, colFg.b, 0.12)
+    readonly property color colSurface: Qt.rgba(colFg.r, colFg.g, colFg.b, 0.05)
+    readonly property color colSurfaceFaint: Qt.rgba(colFg.r, colFg.g, colFg.b, 0.03)
+    readonly property color colDivider: Qt.rgba(colFg.r, colFg.g, colFg.b, 0.08)
+    readonly property color colDangerSurface: Qt.rgba(colRed.r, colRed.g, colRed.b, 0.20)
+    readonly property color colCpuSurface: Qt.rgba(colCpu.r, colCpu.g, colCpu.b, 0.15)
+    readonly property color colMemSurface: Qt.rgba(colMem.r, colMem.g, colMem.b, 0.15)
+    readonly property int densePadding: 6
+    readonly property int itemPadding: 8
+    readonly property int toastPadding: 10
+    readonly property int calendarPadding: 14
+    readonly property int weatherPadding: 16
 
     // -------------------------------------------------------------
     // Typography

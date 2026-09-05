@@ -1,26 +1,40 @@
-{ pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 
 {
   imports = [
     ./hardware-configuration.nix
+    ./hardware.nix
+    ../../modules/containers.nix
+    ../../modules/desktop.nix
+    ../../modules/hyprland.nix
   ];
 
-  networking.hostName = "nixos";
-  system.stateVersion = "26.05";
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+    firewall.enable = true;
+  };
 
-  # Bootloader
+  system = {
+    stateVersion = "26.05";
+    configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
+  };
+
   boot.loader = {
     systemd-boot = {
       enable = true;
       configurationLimit = 10;
+      editor = false;
     };
     efi.canTouchEfiVariables = true;
   };
 
-  # Network
-  networking.networkmanager.enable = true;
-
-  # Time & Locale
   time.timeZone = "Europe/Istanbul";
 
   i18n = {
@@ -40,23 +54,18 @@
 
   console.keyMap = "trq";
 
-  # Base system services
-  services = {
-    xserver.xkb = {
-      layout = "tr";
-      variant = "";
-    };
-    fstrim.enable = true;
-    openssh = {
-      enable = true;
-      settings.PermitRootLogin = "no";
-    };
+  services.xserver.xkb = {
+    layout = "tr";
+    variant = "";
   };
 
-  # Users
+  # This laptop does not expose SSH on arbitrary networks. Add key-only SSH
+  # with an interface-scoped firewall rule when remote access is needed.
+  services.openssh.enable = false;
+
   users = {
     defaultUserShell = pkgs.zsh;
-    users.hhyurdagul = {
+    users.${username} = {
       isNormalUser = true;
       description = "Hasan Hüseyin Yurdagül";
       extraGroups = [
@@ -66,27 +75,52 @@
     };
   };
 
-  # Hardware
+  security.sudo.wheelNeedsPassword = true;
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
   };
 
-  # Nix daemon & Package manager configuration
-  nixpkgs.config.allowUnfree = true;
+  programs.zsh.enable = true;
+
+  nixpkgs.config.allowUnfreePredicate =
+    package:
+    builtins.elem (lib.getName package) [
+      "nvidia-settings"
+      "nvidia-x11"
+      "obsidian"
+      "onlyoffice-desktopeditors"
+    ];
 
   nix = {
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
     settings = {
       experimental-features = [
         "nix-command"
         "flakes"
       ];
-      auto-optimise-store = true;
+      extra-substituters = [
+        "https://hyprland.cachix.org"
+        "https://nix-community.cachix.org"
+      ];
+      extra-trusted-public-keys = [
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
+
     gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 30d";
+    };
+
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
     };
   };
 }

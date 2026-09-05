@@ -9,36 +9,38 @@ DropdownWidget {
     id: memWidget
     popupWidth: 280
     popupHeight: 300
-    popupXOffset: 200
 
     property int memUsage: 0
     property string memUsedStr: ""
     property string memTotalStr: ""
     property var topMemProcesses: []
+    function formatBytes(bytes) {
+        if (bytes < 1024 * 1024 * 1024) {
+            return (bytes / 1024 / 1024).toFixed(0) + " MiB"
+        }
+        return (bytes / 1024 / 1024 / 1024).toFixed(1) + " GiB"
+    }
+
 
     onOpened: topMemProc.running = true
 
-    // RAM usage statistics
+    // RAM usage statistics. `free` is parsed one line at a time because
+    // SplitParser emits one callback per line.
     Process {
         id: memProc
-        command: ["sh", "-c", "free -h | grep Mem | awk '{ print $2 \"\t\" $3 }'; free | grep Mem | awk '{ print $2 \"\t\" $3 }'"]
+        command: ["free", "-b"]
         stdout: SplitParser {
             onRead: data => {
-                if (!data) return
-                var lines = data.trim().split('\n')
-                if (lines.length >= 2) {
-                    var humanParts = lines[0].split('\t')
-                    if (humanParts.length >= 2) {
-                        memWidget.memTotalStr = humanParts[0]
-                        memWidget.memUsedStr = humanParts[1]
-                    }
-                    var rawParts = lines[1].split('\t')
-                    if (rawParts.length >= 2) {
-                        var total = parseInt(rawParts[0]) || 1
-                        var used = parseInt(rawParts[1]) || 0
-                        memWidget.memUsage = Math.round(100 * used / total)
-                    }
-                }
+                if (!data || !data.startsWith("Mem:")) return
+
+                var parts = data.trim().split(/\s+/)
+                if (parts.length < 3) return
+
+                var total = parseInt(parts[1]) || 1
+                var used = parseInt(parts[2]) || 0
+                memWidget.memTotalStr = memWidget.formatBytes(total)
+                memWidget.memUsedStr = memWidget.formatBytes(used)
+                memWidget.memUsage = Math.round(100 * used / total)
             }
         }
         Component.onCompleted: running = true
@@ -82,7 +84,7 @@ DropdownWidget {
     }
 
     Timer {
-        interval: 2000
+        interval: 3000
         running: true
         repeat: true
         onTriggered: {
@@ -98,7 +100,7 @@ DropdownWidget {
         id: memText
         anchors.verticalCenter: parent.verticalCenter
         text: `󰾆 ${memWidget.memUsage}%`
-        color: memWidget.memUsage > 85 ? "#ff5555" : (memWidget.memUsage > 70 ? "#ffb86c" : Theme.colMem)
+        color: memWidget.memUsage > 85 ? Theme.colRed : (memWidget.memUsage > 70 ? Theme.colOrange : Theme.colMem)
         font.pixelSize: Theme.fontSize
         font.family: Theme.fontFamily
         font.bold: true
@@ -139,7 +141,7 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: Qt.rgba(255, 255, 255, 0.08)
+                color: Theme.colDivider
             }
 
             // Table Header
@@ -189,8 +191,8 @@ DropdownWidget {
                 delegate: Rectangle {
                     width: memListView.width
                     height: 28
-                    radius: 5
-                    color: itemMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.1) : Qt.rgba(255, 255, 255, 0.03)
+                    radius: Theme.compactRadius
+                    color: itemMouse.containsMouse ? Theme.colHover : Theme.colSurfaceFaint
 
                     RowLayout {
                         anchors.fill: parent
@@ -220,8 +222,8 @@ DropdownWidget {
                         Rectangle {
                             Layout.preferredWidth: 64
                             height: 20
-                            radius: 4
-                            color: Qt.rgba(64/255, 160/255, 43/255, 0.15)
+                            radius: Theme.tinyRadius
+                            color: Theme.colMemSurface
 
                             Text {
                                 anchors.centerIn: parent
@@ -246,8 +248,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 24
-                radius: 5
-                color: btopMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : Qt.rgba(255, 255, 255, 0.05)
+                radius: Theme.compactRadius
+                color: btopMouse.containsMouse ? Theme.colSelected : Theme.colSurface
 
                 RowLayout {
                     anchors.centerIn: parent

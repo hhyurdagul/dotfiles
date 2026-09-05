@@ -9,13 +9,14 @@ DropdownWidget {
     id: batteryWidget
     popupWidth: 230
     popupHeight: 200
-    popupXOffset: 200
 
     property int batteryLevel: 95
     property string batteryStatus: "Discharging"
     property bool isPluggedIn: false
     property string currentProfile: "balanced"
     property var availableProfiles: ["performance", "balanced", "power-saver"]
+    onOpened: profileGetProc.running = true
+
 
     function getBatteryIcon(level, status, plugged) {
         if (status === "Charging") {
@@ -68,22 +69,38 @@ DropdownWidget {
         }
     }
 
-    // Battery percentage and status JSON process
-    Process {
-        id: batteryProc
-        command: ["sh", "-c", "cap=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -1 || echo 100); st=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -1 || echo Full); ac=$(cat /sys/class/power_supply/A*/online /sys/class/power_supply/ucsi*/online 2>/dev/null | grep -q 1 && echo 1 || echo 0); echo \"{\\\"cap\\\": $cap, \\\"status\\\": \\\"$st\\\", \\\"ac\\\": $ac}\""]
-        stdout: SplitParser {
-            onRead: data => {
-                if (!data) return
-                try {
-                    var obj = JSON.parse(data.trim())
-                    batteryWidget.batteryLevel = parseInt(obj.cap) || 0
-                    batteryWidget.batteryStatus = obj.status || "Discharging"
-                    batteryWidget.isPluggedIn = (obj.ac === 1 || obj.status === "Charging")
-                } catch(e) {}
-            }
-        }
-        Component.onCompleted: running = true
+    function syncBatteryState() {
+        var level = parseInt(capacityFile.text().trim())
+        var status = statusFile.text().trim()
+        var online = parseInt(adapterFile.text().trim()) === 1
+
+        batteryWidget.batteryLevel = Number.isNaN(level) ? 100 : level
+        batteryWidget.batteryStatus = status || "Unknown"
+        batteryWidget.isPluggedIn = online || status === "Charging"
+    }
+
+    property var capacityFile: FileView {
+        id: capacityFile
+        path: "/sys/class/power_supply/BAT0/capacity"
+        blockLoading: true
+        printErrors: false
+        onTextChanged: batteryWidget.syncBatteryState()
+    }
+
+    property var statusFile: FileView {
+        id: statusFile
+        path: "/sys/class/power_supply/BAT0/status"
+        blockLoading: true
+        printErrors: false
+        onTextChanged: batteryWidget.syncBatteryState()
+    }
+
+    property var adapterFile: FileView {
+        id: adapterFile
+        path: "/sys/class/power_supply/ADP1/online"
+        blockLoading: true
+        printErrors: false
+        onTextChanged: batteryWidget.syncBatteryState()
     }
 
     // Power Profile getter
@@ -104,7 +121,7 @@ DropdownWidget {
     Process {
         id: profileSetProc
         property string targetProfile: ""
-        command: ["sh", "-c", "powerprofilesctl set " + targetProfile]
+        command: ["powerprofilesctl", "set", targetProfile]
         onRunningChanged: {
             if (!running && targetProfile !== "") {
                 profileGetProc.running = true
@@ -113,12 +130,13 @@ DropdownWidget {
     }
 
     Timer {
-        interval: 1500
+        interval: 10000
         running: true
         repeat: true
         onTriggered: {
-            batteryProc.running = true
-            profileGetProc.running = true
+            capacityFile.reload()
+            statusFile.reload()
+            adapterFile.reload()
         }
     }
 
@@ -168,7 +186,7 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 1
-                color: Qt.rgba(255, 255, 255, 0.08)
+                color: Theme.colDivider
             }
 
             // Power Profile Header
@@ -187,9 +205,9 @@ DropdownWidget {
                 Rectangle {
                     width: parent.width
                     height: 30
-                    radius: 6
-                    color: modelData === batteryWidget.currentProfile ? Qt.rgba(255, 255, 255, 0.12) :
-                           (profileMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.06) : "transparent")
+                    radius: Theme.itemRadius
+                    color: modelData === batteryWidget.currentProfile ? Theme.colSelected :
+                           (profileMouse.containsMouse ? Theme.colSurface : "transparent")
 
                     RowLayout {
                         anchors.fill: parent

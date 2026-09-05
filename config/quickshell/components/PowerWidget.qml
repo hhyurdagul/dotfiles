@@ -6,14 +6,30 @@ import ".."
 
 DropdownWidget {
     id: powerWidget
-    popupWidth: 140
+    popupWidth: 170
     popupHeight: 205
     stemAlignment: "right"
+    property string pendingAction: ""
+
+    function confirmAction(action, process) {
+        if (pendingAction === action) {
+            pendingAction = ""
+            dropdownOpen = false
+            process.running = true
+            return
+        }
+        pendingAction = action
+        confirmTimer.restart()
+    }
+
+    onDropdownOpenChanged: {
+        if (!dropdownOpen) pendingAction = ""
+    }
 
     // Power actions
     Process {
         id: lockProc
-        command: ["sh", "-c", "$HOME/.config/scripts/lock.sh"]
+        command: ["lock-screen"]
     }
 
     Process {
@@ -23,7 +39,7 @@ DropdownWidget {
 
     Process {
         id: logoutProc
-        command: ["hyprctl", "dispatch", "exit"]
+        command: ["uwsm", "stop"]
     }
 
     Process {
@@ -36,6 +52,12 @@ DropdownWidget {
         command: ["systemctl", "poweroff"]
     }
 
+    Timer {
+        id: confirmTimer
+        interval: 4000
+        onTriggered: powerWidget.pendingAction = ""
+    }
+
     // Icon with spacing
     Item {
         width: powerIcon.width
@@ -45,7 +67,7 @@ DropdownWidget {
             id: powerIcon
             anchors.centerIn: parent
             text: "󰐥"
-            color: dropdownOpen ? "#ff5555" : Theme.colFg
+            color: dropdownOpen ? Theme.colRed : Theme.colFg
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
         }
@@ -59,8 +81,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 32
-                color: lockMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
-                radius: 6
+                color: lockMouse.containsMouse ? Theme.colHover : "transparent"
+                radius: Theme.itemRadius
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
@@ -98,8 +120,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 32
-                color: sleepMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
-                radius: 6
+                color: sleepMouse.containsMouse ? Theme.colHover : "transparent"
+                radius: Theme.itemRadius
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
@@ -137,8 +159,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 32
-                color: logoutMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
-                radius: 6
+                color: logoutMouse.containsMouse ? Theme.colHover : "transparent"
+                radius: Theme.itemRadius
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
@@ -176,8 +198,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 32
-                color: rebootMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
-                radius: 6
+                color: rebootMouse.containsMouse || powerWidget.pendingAction === "reboot" ? Theme.colDangerSurface : "transparent"
+                radius: Theme.itemRadius
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
@@ -192,7 +214,7 @@ DropdownWidget {
                         font.family: Theme.fontFamily
                     }
                     Text {
-                        text: "Reboot"
+                        text: powerWidget.pendingAction === "reboot" ? "Confirm reboot" : "Reboot"
                         color: Theme.colFg
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
@@ -204,10 +226,7 @@ DropdownWidget {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        powerWidget.dropdownOpen = false
-                        rebootProc.running = true
-                    }
+                    onClicked: powerWidget.confirmAction("reboot", rebootProc)
                 }
             }
 
@@ -215,8 +234,8 @@ DropdownWidget {
             Rectangle {
                 width: parent.width
                 height: 32
-                color: shutdownMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
-                radius: 6
+                color: shutdownMouse.containsMouse || powerWidget.pendingAction === "shutdown" ? Theme.colDangerSurface : "transparent"
+                radius: Theme.itemRadius
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
@@ -231,7 +250,7 @@ DropdownWidget {
                         font.family: Theme.fontFamily
                     }
                     Text {
-                        text: "Shutdown"
+                        text: powerWidget.pendingAction === "shutdown" ? "Confirm power off" : "Shutdown"
                         color: Theme.colFg
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
@@ -243,10 +262,7 @@ DropdownWidget {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        powerWidget.dropdownOpen = false
-                        shutdownProc.running = true
-                    }
+                    onClicked: powerWidget.confirmAction("shutdown", shutdownProc)
                 }
             }
         }

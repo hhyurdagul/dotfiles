@@ -2,7 +2,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Services.Notifications
-import Quickshell.Hyprland
 
 QtObject {
     id: notifManager
@@ -15,7 +14,7 @@ QtObject {
     property var server: NotificationServer {
         keepOnReload: true
         bodySupported: true
-        bodyMarkupSupported: true
+        bodyMarkupSupported: false
         actionsSupported: true
         imageSupported: true
 
@@ -31,17 +30,17 @@ QtObject {
                 notification: notif
             }
 
-            // Add to history (accumulate even during DND)
-            var hist = notifManager.history.slice()
+            // Replacement IDs update existing entries instead of duplicating them.
+            var hist = notifManager.history.filter(existing => existing.id !== item.id)
             hist.unshift(item)
             if (hist.length > 50) hist.pop()
             notifManager.history = hist
 
             // Show floating popup on screen only if DND is disabled
             if (!notifManager.dndEnabled) {
-                var toasts = notifManager.activeToasts.slice()
+                var toasts = notifManager.activeToasts.filter(existing => existing.id !== item.id)
                 toasts.unshift(item)
-                if (toasts.length > 5) toasts.pop() // keep max 5 floating on screen
+                if (toasts.length > 5) toasts.pop()
                 notifManager.activeToasts = toasts
             }
         }
@@ -60,7 +59,6 @@ QtObject {
 
         if (item) {
             invokeNotificationAction(item)
-            focusSourceWindow(item)
         }
     }
 
@@ -91,7 +89,6 @@ QtObject {
 
             if (item) {
                 invokeNotificationAction(item)
-                focusSourceWindow(item)
             }
         }
     }
@@ -103,6 +100,10 @@ QtObject {
             hist.splice(index, 1)
             notifManager.history = hist
 
+            if (item && item.id) {
+                removeToastOnly(item.id)
+            }
+
             if (item && item.notification && typeof item.notification.dismiss === "function") {
                 try {
                     item.notification.dismiss()
@@ -112,11 +113,22 @@ QtObject {
     }
 
     function clearHistory() {
+        var hist = notifManager.history.slice()
+        for (var i = 0; i < hist.length; i++) {
+            var notification = hist[i].notification
+            if (notification && typeof notification.dismiss === "function") {
+                try {
+                    notification.dismiss()
+                } catch (e) {}
+            }
+        }
         notifManager.history = []
+        notifManager.activeToasts = []
     }
 
     function toggleDnd() {
         notifManager.dndEnabled = !notifManager.dndEnabled
+        if (notifManager.dndEnabled) notifManager.activeToasts = []
     }
 
     // Helper functions
@@ -187,95 +199,4 @@ QtObject {
         }
     }
 
-    function focusSourceWindow(item) {
-        if (!item) return
-
-        var senderPid = (item.hints && (item.hints["sender-pid"] || item.hints["pid"])) || null
-        var desktopEntry = (item.desktopEntry || (item.hints && item.hints["desktop-entry"]) || "").toLowerCase()
-        var appName = (item.app || "").toLowerCase()
-        var summary = (item.summary || "").toLowerCase()
-
-        desktopEntry = desktopEntry.replace(/\.desktop$/, "")
-        var desktopBase = ""
-        if (desktopEntry.includes(".")) {
-            var parts = desktopEntry.split(".")
-            desktopBase = parts[parts.length - 1]
-        }
-
-        var cleanApp = appName.replace(/[\s\-_]/g, "")
-        var cleanDesktop = desktopEntry.replace(/[\s\-_]/g, "")
-        var cleanDesktopBase = desktopBase.replace(/[\s\-_]/g, "")
-
-        var matchedAddress = ""
-
-        if (typeof Hyprland !== "undefined" && Hyprland.toplevels && Hyprland.toplevels.values) {
-            var toplevels = Hyprland.toplevels.values
-
-            // 1. Match by sender PID if available
-            if (senderPid) {
-                for (var i = 0; i < toplevels.length; i++) {
-                    var top = toplevels[i]
-                    var ipc = top.lastIpcObject
-                    if (ipc && ipc.pid === senderPid) {
-                        matchedAddress = top.address || (ipc && ipc.address) || ""
-                        break
-                    }
-                }
-            }
-
-            // 2. Match by window class / initialClass
-            if (!matchedAddress) {
-                for (var j = 0; j < toplevels.length; j++) {
-                    var top2 = toplevels[j]
-                    var ipc2 = top2.lastIpcObject
-                    var cls = (ipc2 && ipc2.class ? ipc2.class : "").toLowerCase()
-                    var initCls = (ipc2 && ipc2.initialClass ? ipc2.initialClass : "").toLowerCase()
-                    var cleanCls = cls.replace(/[\s\-_]/g, "")
-                    var cleanInitCls = initCls.replace(/[\s\-_]/g, "")
-
-                    if (cleanDesktop && (cleanCls === cleanDesktop || cleanInitCls === cleanDesktop ||
-                        cleanCls.includes(cleanDesktop) || cleanDesktop.includes(cleanCls))) {
-                        matchedAddress = top2.address || (ipc2 && ipc2.address) || ""
-                        break
-                    }
-                    if (cleanDesktopBase && (cleanCls === cleanDesktopBase || cleanInitCls === cleanDesktopBase ||
-                        cleanCls.includes(cleanDesktopBase) || cleanDesktopBase.includes(cleanCls))) {
-                        matchedAddress = top2.address || (ipc2 && ipc2.address) || ""
-                        break
-                    }
-                    if (cleanApp && (cleanCls === cleanApp || cleanInitCls === cleanApp ||
-                        cleanCls.includes(cleanApp) || cleanApp.includes(cleanCls))) {
-                        matchedAddress = top2.address || (ipc2 && ipc2.address) || ""
-                        break
-                    }
-                }
-            }
-
-            // 3. Match by window title
-            if (!matchedAddress) {
-                for (var k = 0; k < toplevels.length; k++) {
-                    var top3 = toplevels[k]
-                    var title = (top3.title || (top3.lastIpcObject && top3.lastIpcObject.title) || "").toLowerCase()
-                    if (appName && appName.length > 2 && title.includes(appName)) {
-                        matchedAddress = top3.address || (top3.lastIpcObject && top3.lastIpcObject.address) || ""
-                        break
-                    }
-                    if (summary && summary.length > 2 && title.includes(summary)) {
-                        matchedAddress = top3.address || (top3.lastIpcObject && top3.lastIpcObject.address) || ""
-                        break
-                    }
-                }
-            }
-        }
-
-        if (matchedAddress) {
-            var addr = matchedAddress.startsWith("0x") ? matchedAddress : ("0x" + matchedAddress)
-            Hyprland.dispatch("hl.dsp.focus({ window = 'address:" + addr + "' })")
-        } else {
-            var fallbackTarget = cleanDesktopBase || cleanDesktop || cleanApp
-            if (fallbackTarget && fallbackTarget !== "notification" && fallbackTarget !== "alert") {
-                Hyprland.dispatch("hl.dsp.focus({ window = 'class:(?i)" + fallbackTarget + "' })")
-            }
-        }
-    }
 }
