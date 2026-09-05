@@ -1,6 +1,6 @@
 {
-  inputs,
   lib,
+  pkgs,
   username,
   ...
 }:
@@ -24,6 +24,8 @@
     };
   };
 
+  home.file.".p10k.zsh".source = ../../config/zsh/p10k.zsh;
+
   programs = {
     home-manager.enable = true;
 
@@ -31,9 +33,45 @@
 
     zsh = {
       enable = true;
-      autosuggestion.enable = true;
       enableCompletion = true;
+      # Rebuild the completion dump at most once a day for faster startup.
+      completionInit = ''
+        autoload -Uz compinit
+        if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+          compinit
+        else
+          compinit -C
+        fi
+      '';
+      autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
+      defaultKeymap = "viins";
+      autocd = true;
+
+      history = {
+        size = 50000;
+        ignoreAllDups = true;
+      };
+      historySubstringSearch.enable = true;
+
+      plugins = [
+        {
+          name = "powerlevel10k";
+          src = pkgs.zsh-powerlevel10k;
+          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        }
+        {
+          name = "zsh-completions";
+          src = pkgs.zsh-completions;
+          completions = [ "share/zsh/site-functions" ];
+        }
+      ];
+
+      initContent = lib.mkMerge [
+        # Powerlevel10k instant prompt must stay at the very top of .zshrc.
+        (lib.mkOrder 500 (builtins.readFile ../../config/zsh/early-init.zsh))
+        (lib.mkOrder 1000 (builtins.readFile ../../config/zsh/init.zsh))
+      ];
     };
 
     direnv = {

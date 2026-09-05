@@ -37,7 +37,10 @@ in
 
       # CLI and development tools
       age
+      bat
       btop
+      eza
+      fd
       fzf
       helix
       jq
@@ -50,8 +53,10 @@ in
       ripgrep
       sops
       typst
+      uv
       wget
       yazi
+      zoxide
     ])
     ++ [
       inputs.helium.packages.${system}.default
