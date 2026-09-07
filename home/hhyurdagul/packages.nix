@@ -46,7 +46,6 @@ in
       jq
       lazydocker
       lazygit
-      nh
       nixd
       podman-compose
       psmisc
@@ -62,6 +61,7 @@ in
       inputs.helium.packages.${system}.default
       inputs.zen-browser.packages.${system}.default
       inputs.antigravity.packages.${system}.google-antigravity-cli
+      inputs.chatgpt-nix.packages.${system}.default
       inputs.codex.packages.${system}.default
       inputs.herdr.packages.${system}.default
       inputs.hermes.packages.${system}.default

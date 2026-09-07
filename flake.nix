@@ -53,6 +53,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    chatgpt-nix = {
+      url = "github:hhyurdagul/chatgpt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";

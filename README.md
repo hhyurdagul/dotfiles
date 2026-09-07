@@ -2,6 +2,16 @@
 
 Declarative configuration for the `nixos` host and `hhyurdagul` user. NixOS owns hardware, security, containers, and the graphical session; Home Manager owns user packages, configuration, and graphical-session services.
 
+## Repository layout
+
+- `flake.nix`: inputs and the `nixos` system outputs.
+- `hosts/nixos/`: system modules (hardware, boot, users, locale, Nix settings).
+- `modules/`: shared NixOS modules (desktop session, Hyprland, containers).
+- `home/hhyurdagul/`: Home Manager config — `default.nix` (programs, shell, XDG links), `packages.nix`, `services.nix`.
+- `config/`: app dotfiles linked read-only by Home Manager (`darkman`, `helix`, `hypr`, `kitty`, `quickshell`, `swaylock`, `scripts`, `zsh`).
+
+New files must be `git add`ed before rebuilding: flakes only see tracked files.
+
 ## Bootstrap and rebuild
 
 From this checkout on an existing NixOS installation:
@@ -12,11 +22,9 @@ sudo nixos-rebuild switch --flake .#nixos
 
 The first activation replaces legacy `$HOME/dotfiles/config/...` directory symlinks with Home Manager-managed files. Home Manager keeps a conflicting pre-existing file with an `.hm-backup` suffix.
 
-Subsequent rebuilds can use either:
+Subsequent rebuilds:
 
 ```sh
-nh os switch .
-# or
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
@@ -68,6 +76,17 @@ Other session shortcuts:
 - `Super+L`: lock
 - `Super+Shift+I`: toggle idle locking
 - `Super+Shift+N`: toggle night light
+
+## Interactive shell
+
+Zsh is managed declaratively by Home Manager with `ZDOTDIR=~/.config/zsh`, so a hand-written `~/.zshrc` is never read. Edit instead:
+
+- `home/hhyurdagul/default.nix` (`programs.zsh`): options, history, plugins (`powerlevel10k`, `zsh-completions`), completion init.
+- `config/zsh/early-init.zsh`: p10k instant prompt, must stay first in `.zshrc`.
+- `config/zsh/init.zsh`: PATH, env, keybindings, tool inits (fzf, zoxide, uv), aliases.
+- `config/zsh/p10k.zsh`: prompt theme, deployed as `~/.p10k.zsh`. Regenerate with `p10k configure`, then copy the result back here.
+
+Reload the current shell after a switch with `sz`. Shell fragments are zsh: check syntax with `zsh -n`, not shellcheck.
 
 ## NVIDIA and containers
 
