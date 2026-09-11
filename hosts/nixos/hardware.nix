@@ -26,8 +26,8 @@
       };
 
       prime = {
-        intelBusId = "PCI:0@0:2:0";
-        nvidiaBusId = "PCI:1@0:0:0";
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
         offload = {
           enable = true;
           enableOffloadCmd = true;
@@ -39,12 +39,22 @@
   };
 
   services = {
-    xserver.videoDrivers = [ "nvidia" ];
+    xserver.videoDrivers = [
+      "modesetting"
+      "nvidia"
+    ];
     fstrim.enable = true;
     fwupd.enable = true;
     hardware.bolt.enable = true;
     thermald.enable = true;
   };
+  # Let RTD3 runtime-suspend the dGPU (display + audio functions) when idle.
+  # Driver already reports fine-grained PM with video memory off; this keeps
+  # PCI power control on auto so nothing pins it to D0.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03*", TEST=="power/control", ATTR{power/control}="auto"
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x04*", TEST=="power/control", ATTR{power/control}="auto"
+  '';
 
   zramSwap = {
     enable = true;

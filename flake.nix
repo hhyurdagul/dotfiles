@@ -23,11 +23,6 @@
     # Development Hyprland with its matching portal and NixOS module.
     hyprland.url = "github:hyprwm/Hyprland";
 
-    helium = {
-      url = "github:oxcl/nix-flake-helium-browser";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     antigravity = {
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,11 +35,6 @@
 
     omp = {
       url = "github:can1357/oh-my-pi";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hermes = {
-      url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

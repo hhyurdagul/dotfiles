@@ -40,8 +40,8 @@ let
   lockScreen = pkgs.writeShellApplication {
     name = "lock-screen";
     runtimeInputs = with pkgs; [
+      hyprlock
       procps
-      swaylock-effects
       systemd
     ];
     text = builtins.readFile ../../config/scripts/lock.sh;

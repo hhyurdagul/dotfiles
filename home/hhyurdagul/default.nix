@@ -21,6 +21,9 @@
       DEFAULT_BROWSER = "zen";
       EDITOR = "hx";
       VISUAL = "hx";
+      NIXOS_OZONE_WL = "1";
+      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
     };
   };
 
@@ -37,6 +40,7 @@
       # Rebuild the completion dump at most once a day for faster startup.
       completionInit = ''
         autoload -Uz compinit
+        setopt extendedglob
         if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
           compinit
         else
@@ -100,6 +104,7 @@
       "helix/languages.toml".source = ../../config/helix/languages.toml;
       "hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
       "hypr/hyprland.lua".source = ../../config/hypr/hyprland.lua;
+      "hypr/hyprlock.conf".source = ../../config/hypr/hyprlock.conf;
       "kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
       "kitty/themes" = {
         source = ../../config/kitty/themes;
@@ -109,22 +114,20 @@
         source = ../../config/quickshell;
         recursive = true;
       };
-      "swaylock/config".source = ../../config/swaylock/config;
     };
   };
 
+  # One-shot cleanup for the pre-Home-Manager layout: ~/.config entries are
+  # real HM-managed directories now, but two dangling darkman hook symlinks
+  # (00-theme.sh -> deleted config/darkman/*-mode.d paths) may remain next to
+  # the managed 00-theme hooks. Remove only symlinks pointing into the old
+  # checkout path, then delete this activation once it has run everywhere.
   home.activation.removeLegacyConfigLinks = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-    for path in darkman helix hypr kitty quickshell scripts swaylock; do
-      target="$HOME/.config/$path"
-      if [[ -L "$target" && "$(readlink "$target")" == "$HOME/dotfiles/config/$path" ]]; then
-        rm "$target"
-      fi
-    done
-
-    for mode in light-mode.d dark-mode.d; do
-      target="$HOME/.local/share/$mode"
-      if [[ -L "$target" && "$(readlink "$target")" == "$HOME/dotfiles/config/darkman/$mode" ]]; then
-        rm "$target"
+    for target in "$HOME/.local/share/light-mode.d/00-theme.sh" "$HOME/.local/share/dark-mode.d/00-theme.sh"; do
+      if [[ -L "$target" ]]; then
+        case "$(readlink "$target")" in
+          "$HOME/dotfiles/config/darkman/"*) rm "$target" ;;
+        esac
       fi
     done
   '';

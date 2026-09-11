@@ -69,6 +69,7 @@
       isNormalUser = true;
       description = "Hasan Hüseyin Yurdagül";
       extraGroups = [
+        "i2c"
         "networkmanager"
         "wheel"
       ];
@@ -91,6 +92,9 @@
       "nvidia-x11"
       "obsidian"
       "onlyoffice-desktopeditors"
+      "steam"
+      "steam-original"
+      "steam-unwrapped"
     ];
 
   nix = {
@@ -98,6 +102,10 @@
     nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
     settings = {
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
       experimental-features = [
         "nix-command"
         "flakes"

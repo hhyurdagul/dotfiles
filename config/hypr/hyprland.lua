@@ -289,7 +289,7 @@ hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(notes))
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
-hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("uwsm stop"))
+hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("lock-screen; uwsm stop"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + S", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
@@ -364,9 +364,10 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
--- Screenshots are saved under ~/Pictures/Screenshots.
-hl.bind("PRINT", hl.dsp.exec_cmd("mkdir -p \"$HOME/Pictures/Screenshots\" && grim \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png\""))
-hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("area=\"$(slurp)\" && [ -n \"$area\" ] && mkdir -p \"$HOME/Pictures/Screenshots\" && grim -g \"$area\" \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png\""))
+-- Screenshots are saved under ~/Pictures/Screenshots (explicit sh -c so
+-- $HOME and $(date) expand even though exec runs without a shell).
+hl.bind("PRINT", hl.dsp.exec_cmd("sh -c 'mkdir -p \"$HOME/Pictures/Screenshots\" && grim \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png\"'"))
+hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("sh -c 'area=\"$(slurp)\" && [ -n \"$area\" ] && mkdir -p \"$HOME/Pictures/Screenshots\" && grim -g \"$area\" \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png\"'"))
 
 
 --------------------------------

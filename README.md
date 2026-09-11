@@ -8,7 +8,7 @@ Declarative configuration for the `nixos` host and `hhyurdagul` user. NixOS owns
 - `hosts/nixos/`: system modules (hardware, boot, users, locale, Nix settings).
 - `modules/`: shared NixOS modules (desktop session, Hyprland, containers).
 - `home/hhyurdagul/`: Home Manager config — `default.nix` (programs, shell, XDG links), `packages.nix`, `services.nix`.
-- `config/`: app dotfiles linked read-only by Home Manager (`darkman`, `helix`, `hypr`, `kitty`, `quickshell`, `swaylock`, `scripts`, `zsh`).
+- `config/`: app dotfiles linked read-only by Home Manager (`darkman`, `helix`, `hypr`, `kitty`, `quickshell`, `scripts`, `zsh`).
 
 New files must be `git add`ed before rebuilding: flakes only see tracked files.
 
@@ -69,13 +69,13 @@ The generated Hyprpaper background follows the active light/dark theme. Replace 
 
 ## Runtime theme controls
 
-`Super+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. The switch updates Quickshell, Kitty, GTK, Hyprland borders, and Hyprpaper.
+`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. The switch updates Quickshell, Kitty, GTK, Hyprland borders, and Hyprpaper.
 
 Other session shortcuts:
 
-- `Super+L`: lock
-- `Super+Shift+I`: toggle idle locking
-- `Super+Shift+N`: toggle night light
+- `Super+Alt+L`: lock
+- `Super+Alt+I`: toggle idle management (dim, lock, screen-off, suspend)
+- `Super+Alt+N`: toggle night light
 
 ## Interactive shell
 
@@ -90,11 +90,12 @@ Reload the current shell after a switch with `sz`. Shell fragments are zsh: chec
 
 ## NVIDIA and containers
 
-The internal Intel GPU drives the session. The RTX 4050 uses PRIME offload and fine-grained power management:
+The internal Intel GPU drives the session (`services.xserver.videoDrivers` lists `modesetting` first). The RTX 4050 uses PRIME offload and fine-grained runtime power management, with PCI power control pinned to `auto` by a udev rule, so it suspends (RTD3, video memory off) when idle:
 
 ```sh
 nvidia-offload <program>
 nvidia-smi
+cat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status
 ```
 
 Podman is the container backend. Docker-compatible commands and the user Docker socket are enabled; no Docker daemon is installed.
@@ -107,13 +108,7 @@ systemctl --user status podman.socket
 
 ## Secrets
 
-`sops-nix` generates the host age key at `/var/lib/sops-nix/key.txt`; no secrets are currently declared. After the first switch, obtain the public recipient locally:
-
-```sh
-sudo age-keygen -y /var/lib/sops-nix/key.txt
-```
-
-Add that recipient to a repository `.sops.yaml`, encrypt values with `sops`, and declare only their paths/owners under `sops.secrets` in `modules/secrets.nix`. Never commit the private age key or decrypted values.
+No NixOS-level secrets integration exists yet (no `sops-nix` input, no `modules/secrets.nix`). The `age` and `sops` CLIs are installed for manual encryption; wire `sops-nix` in `flake.nix` before documenting a key workflow here. Never commit private age keys or decrypted values.
 
 ## Laptop policy
 

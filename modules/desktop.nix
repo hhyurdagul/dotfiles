@@ -3,12 +3,19 @@
 {
   security = {
     polkit.enable = true;
-    pam.services.swaylock = { };
     rtkit.enable = true;
+    pam.services.greetd.enableGnomeKeyring = true;
   };
 
   hardware.i2c.enable = true;
-  programs.dconf.enable = true;
+  programs = {
+    dconf.enable = true;
+    steam.enable = true;
+    gamemode.enable = true;
+    hyprlock.enable = true;
+  };
+
+  hardware.steam-hardware.enable = true;
 
   services = {
     gvfs.enable = true;

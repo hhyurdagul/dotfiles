@@ -17,9 +17,13 @@ export FZF_CTRL_T_OPTS="
 "
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-# Local CUDA install, kept off PATH on purpose.
+# Local CUDA install, kept off PATH on purpose. Guarded: /opt/cuda is an
+# imperative install outside the store, and an empty LD_LIBRARY_PATH must not
+# gain a leading colon (which means "current directory").
 export CUDA_HOME=/opt/cuda
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cuda/lib64
+if [[ -d /opt/cuda/lib64 ]]; then
+  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/opt/cuda/lib64
+fi
 
 # History/word options with no Home Manager knob
 # (share/ignore-dups/autocd come from programs.zsh options).
