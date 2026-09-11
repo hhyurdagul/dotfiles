@@ -8,6 +8,7 @@
 {
   imports = [
     ./packages.nix
+    ./paseo.nix
     ./services.nix
   ];
 
