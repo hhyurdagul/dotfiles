@@ -80,6 +80,8 @@ let
   };
 in
 {
+  services.syncthing.enable = true;
+
   home = {
     packages = [
       clipboardWatch
