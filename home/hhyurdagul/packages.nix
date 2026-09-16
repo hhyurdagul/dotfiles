@@ -13,12 +13,15 @@ in
       fuzzel
       kitty
       libnotify
+      loupe
       nautilus
       networkmanagerapplet
       obsidian
       onlyoffice-desktopeditors
+      papers
       pavucontrol
       quickshell
+      vlc
       hyprlock
 
       # Wayland and media integration

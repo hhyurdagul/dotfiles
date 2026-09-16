@@ -90,8 +90,99 @@
 
     mimeApps = {
       enable = true;
+
+      associations = {
+        added = {
+          "application/pdf" = [ "org.gnome.Papers.desktop" ];
+          "image/avif" = [ "org.gnome.Loupe.desktop" ];
+          "image/bmp" = [ "org.gnome.Loupe.desktop" ];
+          "image/gif" = [ "org.gnome.Loupe.desktop" ];
+          "image/heic" = [ "org.gnome.Loupe.desktop" ];
+          "image/heif" = [ "org.gnome.Loupe.desktop" ];
+          "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
+          "image/png" = [ "org.gnome.Loupe.desktop" ];
+          "image/svg+xml" = [ "org.gnome.Loupe.desktop" ];
+          "image/tiff" = [ "org.gnome.Loupe.desktop" ];
+          "image/webp" = [ "org.gnome.Loupe.desktop" ];
+          "video/mp4" = [ "vlc.desktop" ];
+          "video/mpeg" = [ "vlc.desktop" ];
+          "video/ogg" = [ "vlc.desktop" ];
+          "video/quicktime" = [ "vlc.desktop" ];
+          "video/webm" = [ "vlc.desktop" ];
+          "video/x-matroska" = [ "vlc.desktop" ];
+          "video/x-msvideo" = [ "vlc.desktop" ];
+        };
+        removed = {
+          "application/vnd.ms-excel" = [ "chatgpt.desktop" ];
+          "application/vnd.ms-excel.sheet.macroEnabled.12" = [ "chatgpt.desktop" ];
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [ "chatgpt.desktop" ];
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [ "chatgpt.desktop" ];
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [ "chatgpt.desktop" ];
+          "text/csv" = [ "chatgpt.desktop" ];
+          "text/tab-separated-values" = [ "chatgpt.desktop" ];
+        };
+      };
+
       defaultApplications = {
+        "application/msword" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/pdf" = [ "org.gnome.Papers.desktop" ];
+        "application/rtf" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-excel" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-excel.sheet.binary.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-excel.sheet.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-excel.template.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-powerpoint" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-powerpoint.presentation.macroEnabled.12" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.ms-powerpoint.slideshow.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-powerpoint.template.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-word.document.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.ms-word.template.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.oasis.opendocument.presentation" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.oasis.opendocument.spreadsheet" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.oasis.opendocument.text" = [ "onlyoffice-desktopeditors.desktop" ];
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.openxmlformats-officedocument.presentationml.slideshow" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.openxmlformats-officedocument.presentationml.template" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = [
+          "onlyoffice-desktopeditors.desktop"
+        ];
+        "image/avif" = [ "org.gnome.Loupe.desktop" ];
+        "image/bmp" = [ "org.gnome.Loupe.desktop" ];
+        "image/gif" = [ "org.gnome.Loupe.desktop" ];
+        "image/heic" = [ "org.gnome.Loupe.desktop" ];
+        "image/heif" = [ "org.gnome.Loupe.desktop" ];
+        "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
+        "image/png" = [ "org.gnome.Loupe.desktop" ];
+        "image/svg+xml" = [ "org.gnome.Loupe.desktop" ];
+        "image/tiff" = [ "org.gnome.Loupe.desktop" ];
+        "image/webp" = [ "org.gnome.Loupe.desktop" ];
         "text/html" = [ "zen.desktop" ];
+        "text/csv" = [ "onlyoffice-desktopeditors.desktop" ];
+        "text/tab-separated-values" = [ "onlyoffice-desktopeditors.desktop" ];
+        "video/mp4" = [ "vlc.desktop" ];
+        "video/mpeg" = [ "vlc.desktop" ];
+        "video/ogg" = [ "vlc.desktop" ];
+        "video/quicktime" = [ "vlc.desktop" ];
+        "video/webm" = [ "vlc.desktop" ];
+        "video/x-matroska" = [ "vlc.desktop" ];
+        "video/x-msvideo" = [ "vlc.desktop" ];
         "x-scheme-handler/http" = [ "zen.desktop" ];
         "x-scheme-handler/https" = [ "zen.desktop" ];
         "x-scheme-handler/about" = [ "zen.desktop" ];
