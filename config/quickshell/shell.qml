@@ -174,4 +174,5 @@ ShellRoot {
 
     // System-wide floating notification toasts
     NotificationToasts {}
+    OnScreenDisplay {}
 }

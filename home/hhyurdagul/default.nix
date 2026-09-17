@@ -93,6 +93,7 @@
 
       associations = {
         added = {
+          "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
           "application/pdf" = [ "org.gnome.Papers.desktop" ];
           "image/avif" = [ "org.gnome.Loupe.desktop" ];
           "image/bmp" = [ "org.gnome.Loupe.desktop" ];
@@ -124,6 +125,7 @@
       };
 
       defaultApplications = {
+        "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
         "application/msword" = [ "onlyoffice-desktopeditors.desktop" ];
         "application/pdf" = [ "org.gnome.Papers.desktop" ];
         "application/rtf" = [ "onlyoffice-desktopeditors.desktop" ];

@@ -25,6 +25,11 @@ if ! grim "${args[@]}" "$file"; then
   exit 1
 fi
 
+# wl-copy stays alive to serve the clipboard. Do not let that background process
+# inherit the selection lock, or later Print presses can silently do nothing.
+flock -u 9
+exec 9>&-
+
 if wl-copy --type image/png < "$file"; then
   env -u LD_LIBRARY_PATH notify-send 'Screenshot saved and copied' "$file" || true
 else

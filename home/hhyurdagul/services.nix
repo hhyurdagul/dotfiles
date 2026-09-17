@@ -98,6 +98,24 @@ let
     text = builtins.readFile ../../config/scripts/quickshell-session.sh;
   };
 
+  desktopControl = pkgs.writeShellApplication {
+    name = "desktop-control";
+    runtimeInputs = [
+      hyprlandPackage
+    ]
+    ++ (with pkgs; [
+      brightnessctl
+      coreutils
+      ddcutil
+      gawk
+      jq
+      quickshell
+      util-linux
+      wireplumber
+    ]);
+    text = builtins.readFile ../../config/scripts/desktop-control.sh;
+  };
+
   weatherStatus = pkgs.writeScriptBin "weather-status" ''
     #!${pkgs.python3}/bin/python3
     ${builtins.readFile ../../config/quickshell/scripts/weather.py}
@@ -116,6 +134,7 @@ in
   home = {
     packages = [
       clipboardWatch
+      desktopControl
       idleToggle
       lockScreen
       nightlightToggle
@@ -163,8 +182,8 @@ in
     # Home Manager generation has been activated (useUserPackages = true).
     "hypr/hyprland.lua".text =
       builtins.replaceStrings
-        [ "screenshot area" "screenshot full" ]
-        [ "${lib.getExe screenshot} area" "${lib.getExe screenshot} full" ]
+        [ "screenshot area" "screenshot full" "desktop-control " ]
+        [ "${lib.getExe screenshot} area" "${lib.getExe screenshot} full" "${lib.getExe desktopControl} " ]
         (builtins.readFile ../../config/hypr/hyprland.lua);
     "hypr/hyprpaper.conf".text = ''
       wallpaper {

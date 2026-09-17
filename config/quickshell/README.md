@@ -19,6 +19,13 @@ Designed around the **Catppuccin Mocha** color palette with a 3-section layout, 
 - Automatic Hyprland window focus grabbing (`HyprlandFocusGrab`) with click-outside dismissal.
 
 ### 3. Native Desktop Notification System
+
+- Clicking a toast or history entry invokes the app's default notification action
+  and explicitly focuses its most recently used matching window after the popup
+  releases focus. Without an action or open window, it launches the supplied
+  desktop entry. Codex notifications map to the Paseo agent window in this setup.
+  Notifications remain tracked while in history so their actions stay usable.
+  Apps must supply a default action or a recognizable app name/desktop entry.
 - **Built-in Notification Server (`NotifManager.qml`)**: Replaces external daemons like SwayNC or Dunst.
 - **Floating Toasts (`NotificationToasts.qml`)**: Real-time notification banners in the top-right corner with 5-second auto-dismiss.
 - **Do Not Disturb (DND)**:
@@ -109,6 +116,11 @@ Screenshot shortcuts are **Print** for an area and **Super+Print** for the full
 desktop. Captures are saved in `~/Pictures/Screenshots` and copied to the
 clipboard. Escape cancels area selection. Home Manager embeds the packaged
 helper path in `hyprland.lua`, so the shortcuts do not depend on the session PATH.
+
+Volume, speaker/microphone mute, and brightness keys show a short indicator at
+the bottom of the focused screen. Brightness targets that screen's laptop
+backlight or external monitor via DDC, and displays the value read back from the
+hardware. The indicator does not take keyboard focus or intercept clicks.
 
 - **Compositor**: Hyprland
 - **Shell**: Quickshell (`quickshell`)

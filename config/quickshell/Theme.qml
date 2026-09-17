@@ -100,6 +100,9 @@ QtObject {
     readonly property int toastPadding: 10
     readonly property int calendarPadding: 14
     readonly property int weatherPadding: 16
+    readonly property int osdBottomMargin: 80
+    readonly property int osdWidth: 280
+    readonly property int osdHeight: 80
 
     // -------------------------------------------------------------
     // Typography
