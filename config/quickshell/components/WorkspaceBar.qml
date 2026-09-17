@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import ".."
@@ -7,6 +8,21 @@ import ".."
 RowLayout {
     id: workspaceBar
     spacing: 3
+
+    // Hyprland 0.56 uses workspace addresses instead of numeric ids.
+    property var workspaceList: []
+    property int activeWorkspaceId: 0
+
+    function workspaceId(workspace) {
+        if (!workspace) return 0
+        var value = workspace.id ?? workspace.address
+        return /^\d+$/.test(String(value)) ? Number(value) : 0
+    }
+
+    function focusWorkspace(workspace) {
+        Quickshell.execDetached(["hyprctl", "eval",
+            "hl.dispatch(hl.dsp.focus({ workspace = " + JSON.stringify(String(workspace)) + " }))"])
+    }
 
     // Window class to icon mapping
     property var windowIcons: ({
@@ -97,31 +113,8 @@ RowLayout {
         "claude": "󰚩",
     })
 
-    // Store windows per workspace
-    property string ws1Icons: ""
-    property string ws2Icons: ""
-    property string ws3Icons: ""
-    property string ws4Icons: ""
-    property string ws5Icons: ""
-    property string ws6Icons: ""
-    property string ws7Icons: ""
-    property string ws8Icons: ""
-    property string ws9Icons: ""
-
-    function getWsIcons(wsId) {
-        switch(wsId) {
-            case 1: return ws1Icons
-            case 2: return ws2Icons
-            case 3: return ws3Icons
-            case 4: return ws4Icons
-            case 5: return ws5Icons
-            case 6: return ws6Icons
-            case 7: return ws7Icons
-            case 8: return ws8Icons
-            case 9: return ws9Icons
-            default: return ""
-        }
-    }
+    // Icons are indexed by workspace, including workspace 10 (Super+0).
+    property var workspaceIcons: ({})
 
     function getWindowIcon(windowClass) {
         if (!windowClass) return ""
@@ -141,7 +134,7 @@ RowLayout {
     Process {
         id: windowsProc
         property string output: ""
-        command: ["hyprctl", "clients", "-j"]
+        command: ["sh", "-c", "hyprctl -j --batch 'activeworkspace;workspaces;clients' | jq -sc '{active: .[0], workspaces: .[1], clients: .[2]}'"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) windowsProc.output += data + "\n"
@@ -153,11 +146,15 @@ RowLayout {
             } else {
                 var wsIcons = {}
                 try {
-                    var clients = JSON.parse(output)
+                    var state = JSON.parse(output)
+                    if (!state.active || !Array.isArray(state.workspaces) || !Array.isArray(state.clients)) return
+                    workspaceBar.activeWorkspaceId = workspaceBar.workspaceId(state.active)
+                    workspaceBar.workspaceList = state.workspaces
+                    var clients = state.clients
                     for (var i = 0; i < clients.length; i++) {
-                        var wsId = clients[i].workspace ? clients[i].workspace.id : 0
+                        var wsId = workspaceBar.workspaceId(clients[i].workspace)
                         var windowClass = clients[i].class || clients[i].initialClass || ""
-                        if (wsId > 0 && wsId <= 9) {
+                        if (wsId > 0 && wsId <= 10) {
                             if (!wsIcons[wsId]) wsIcons[wsId] = {icons: [], seen: {}}
                             var icon = workspaceBar.getWindowIcon(windowClass)
                             if (!wsIcons[wsId].seen[icon]) {
@@ -169,15 +166,9 @@ RowLayout {
                 } catch (e) {
                     console.warn("Unable to parse Hyprland clients:", e)
                 }
-                workspaceBar.ws1Icons = wsIcons[1] ? wsIcons[1].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws2Icons = wsIcons[2] ? wsIcons[2].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws3Icons = wsIcons[3] ? wsIcons[3].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws4Icons = wsIcons[4] ? wsIcons[4].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws5Icons = wsIcons[5] ? wsIcons[5].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws6Icons = wsIcons[6] ? wsIcons[6].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws7Icons = wsIcons[7] ? wsIcons[7].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws8Icons = wsIcons[8] ? wsIcons[8].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws9Icons = wsIcons[9] ? wsIcons[9].icons.slice(0, 3).join(" ") : ""
+                var icons = {}
+                for (var id in wsIcons) icons[id] = wsIcons[id].icons.slice(0, 3).join(" ")
+                workspaceBar.workspaceIcons = icons
             }
         }
         Component.onCompleted: running = true
@@ -188,14 +179,16 @@ RowLayout {
         function onRawEvent(event) {
             if (event.name === "openwindow" || event.name === "closewindow"
                     || event.name === "movewindow" || event.name === "workspace"
-                    || event.name === "workspacev2") {
+                    || event.name === "workspacev2" || event.name === "movewindowv2"
+                    || event.name === "focusedmon" || event.name === "focusedmonv2"
+                    || event.name === "createworkspace" || event.name === "destroyworkspace") {
                 windowsProc.running = true
             }
         }
     }
 
     Timer {
-        interval: 5000
+        interval: 1000
         running: true
         repeat: true
         onTriggered: windowsProc.running = true
@@ -203,14 +196,13 @@ RowLayout {
 
     property int maxWorkspaceWithWindows: {
         var max = 0
-        for (var i = 0; i < Hyprland.workspaces.values.length; i++) {
-            var ws = Hyprland.workspaces.values[i]
-            if (ws.id > max && ws.id <= 9) max = ws.id
+        for (var i = 0; i < workspaceList.length; i++) {
+            var id = workspaceId(workspaceList[i])
+            if (id > max && id <= 10) max = id
         }
         return max
     }
 
-    property int activeWorkspaceId: Hyprland.focusedWorkspace?.id ?? 1
     property int workspacesToShow: Math.max(5, maxWorkspaceWithWindows, activeWorkspaceId)
 
     property real lastWheelTime: 0
@@ -219,9 +211,9 @@ RowLayout {
         if (now - lastWheelTime < 220) return
         lastWheelTime = now
         if (deltaY > 0) {
-            Hyprland.dispatch("hl.dsp.focus({ workspace = 'e-1' })")
+            focusWorkspace("e-1")
         } else if (deltaY < 0) {
-            Hyprland.dispatch("hl.dsp.focus({ workspace = 'e+1' })")
+            focusWorkspace("e+1")
         }
     }
 
@@ -240,18 +232,10 @@ RowLayout {
             border.color: Qt.rgba(Theme.colWorkspaceActive.r, Theme.colWorkspaceActive.g, Theme.colWorkspaceActive.b, 0.3)
 
             property int wsId: index + 1
-            property var workspace: Hyprland.workspaces.values.find(ws => ws.id === wsId) ?? null
+            property var workspace: workspaceBar.workspaceList.find(ws => workspaceBar.workspaceId(ws) === wsId) ?? null
             property bool isActive: workspaceBar.activeWorkspaceId === wsId
             property bool hasWindows: workspace !== null
-            property string windowIconsStr: wsId === 1 ? workspaceBar.ws1Icons :
-                                          wsId === 2 ? workspaceBar.ws2Icons :
-                                          wsId === 3 ? workspaceBar.ws3Icons :
-                                          wsId === 4 ? workspaceBar.ws4Icons :
-                                          wsId === 5 ? workspaceBar.ws5Icons :
-                                          wsId === 6 ? workspaceBar.ws6Icons :
-                                          wsId === 7 ? workspaceBar.ws7Icons :
-                                          wsId === 8 ? workspaceBar.ws8Icons :
-                                          wsId === 9 ? workspaceBar.ws9Icons : ""
+            property string windowIconsStr: workspaceBar.workspaceIcons[wsId] || ""
 
             Behavior on color {
                 ColorAnimation { duration: 150 }
@@ -303,7 +287,7 @@ RowLayout {
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
                     if (workspaceBar.activeWorkspaceId !== wsRect.wsId) {
-                        Hyprland.dispatch("hl.dsp.focus({ workspace = " + wsRect.wsId + " })")
+                        workspaceBar.focusWorkspace(wsRect.wsId)
                     }
                 }
                 onWheel: wheel => {

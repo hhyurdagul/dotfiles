@@ -364,10 +364,10 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
--- Screenshots are saved under ~/Pictures/Screenshots (explicit sh -c so
--- $HOME and $(date) expand even though exec runs without a shell).
-hl.bind("PRINT", hl.dsp.exec_cmd("sh -c 'mkdir -p \"$HOME/Pictures/Screenshots\" && grim \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png\"'"))
-hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("sh -c 'area=\"$(slurp)\" && [ -n \"$area\" ] && mkdir -p \"$HOME/Pictures/Screenshots\" && grim -g \"$area\" \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png\"'"))
+-- Print selects an area; Super+Print captures the entire desktop.
+-- Capture after key release so modifiers do not interfere with selection.
+hl.bind("Print", hl.dsp.exec_cmd("screenshot area"), { release = true })
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("screenshot full"), { release = true })
 
 
 --------------------------------

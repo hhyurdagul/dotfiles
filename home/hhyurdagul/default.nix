@@ -195,7 +195,6 @@
       "helix/config.toml".source = ../../config/helix/config.toml;
       "helix/languages.toml".source = ../../config/helix/languages.toml;
       "hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
-      "hypr/hyprland.lua".source = ../../config/hypr/hyprland.lua;
       "hypr/hyprlock.conf".source = ../../config/hypr/hyprlock.conf;
       "kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
       "kitty/themes" = {

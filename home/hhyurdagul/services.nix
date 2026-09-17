@@ -20,12 +20,19 @@ let
     runtimeInputs = with pkgs; [
       coreutils
       darkman
-      dconf
       hyprlandPackage
       glib
       procps
     ];
-    text = builtins.readFile ../../config/scripts/theme-switcher.sh;
+    # gsettings needs compiled schemas and the dconf GSettings backend. Neither
+    # is visible in systemd-user or Hyprland-exec contexts (darkman hooks,
+    # theme-initialize, the keybind): without these exports every gsettings
+    # call fails with "No schemas installed" and dconf is never updated.
+    text = ''
+      export GSETTINGS_SCHEMA_DIR="${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas"
+      export GIO_EXTRA_MODULES="${pkgs.dconf.lib}/lib/gio/modules"
+    ''
+    + builtins.readFile ../../config/scripts/theme-switcher.sh;
   };
 
   idleToggle = pkgs.writeShellApplication {
@@ -67,6 +74,30 @@ let
     '';
   };
 
+  screenshot = pkgs.writeShellApplication {
+    name = "screenshot";
+    runtimeInputs = with pkgs; [
+      coreutils
+      grim
+      slurp
+      wl-clipboard
+      libnotify
+      util-linux
+    ];
+    text = builtins.readFile ../../config/scripts/screenshot.sh;
+  };
+
+  quickshellSession = pkgs.writeShellApplication {
+    name = "quickshell-session";
+    runtimeInputs = [
+      hyprlandPackage
+      pkgs.quickshell
+      pkgs.jq
+      pkgs.coreutils
+    ];
+    text = builtins.readFile ../../config/scripts/quickshell-session.sh;
+  };
+
   weatherStatus = pkgs.writeScriptBin "weather-status" ''
     #!${pkgs.python3}/bin/python3
     ${builtins.readFile ../../config/quickshell/scripts/weather.py}
@@ -88,6 +119,8 @@ in
       idleToggle
       lockScreen
       nightlightToggle
+      screenshot
+      quickshellSession
       themeSwitcher
       weatherStatus
     ];
@@ -126,6 +159,13 @@ in
     '';
   };
   xdg.configFile = {
+    # Embed the packaged helper's path so keybinds also work when only the
+    # Home Manager generation has been activated (useUserPackages = true).
+    "hypr/hyprland.lua".text =
+      builtins.replaceStrings
+        [ "screenshot area" "screenshot full" ]
+        [ "${lib.getExe screenshot} area" "${lib.getExe screenshot} full" ]
+        (builtins.readFile ../../config/hypr/hyprland.lua);
     "hypr/hyprpaper.conf".text = ''
       wallpaper {
         monitor =
@@ -143,7 +183,7 @@ in
     quickshell = lib.recursiveUpdate graphicalService {
       Unit.Description = "Quickshell desktop shell";
       Service = {
-        ExecStart = "${lib.getExe pkgs.quickshell} --no-duplicate";
+        ExecStart = lib.getExe quickshellSession;
         Restart = "on-failure";
         RestartSec = 2;
       };

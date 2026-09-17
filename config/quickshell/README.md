@@ -37,7 +37,7 @@ Designed around the **Catppuccin Mocha** color palette with a 3-section layout, 
   - Unified battery indicator reading directly from kernel sysfs (`/sys/class/power_supply/`).
   - Integrated 1-click power profile switcher (`Performance`, `Balanced`, `Power Saver` via `powerprofilesctl`).
 - **Network & Wi-Fi (`WifiWidget.qml`)**: Live upload/download throughput speed and interactive network list.
-- **Bluetooth (`BluetoothWidget.qml`)**: Toggle power, scan devices, and 1-click connect.
+- **Bluetooth (`BluetoothWidget.qml`)**: Toggle power, scan for 30 seconds, and pair/connect headphones. Live BlueZ state tracks every connected device. Repeated names are grouped with the connected entry first; **Show all entries** exposes individual saved addresses. The popup stays open to show progress and errors. Pairing uses a temporary `NoInputNoOutput` agent for devices such as headphones; devices requiring a PIN or passkey need a Bluetooth manager with an interactive pairing agent.
 - **System Indicators**:
   - **Camera (`CameraIndicatorWidget.qml`)**: Red pill with `REC` badge when `/dev/video*` is actively recording.
   - **Idle Inhibitor (`IdleIndicatorWidget.qml`)**: Toggle `hypridle` inhibition on/off.
@@ -98,6 +98,17 @@ config/quickshell/
 ---
 
 ## 🔧 System Requirements
+
+The Nix `quickshell-session` launcher resolves the live Hyprland instance on the
+current Wayland display before starting the bar. Workspace state supports both
+the older numeric `id` and Hyprland 0.56's `address` format, with IPC event updates
+and a one-second refresh fallback. Workspace clicks use `hyprctl eval` for Lua
+dispatchers, including empty workspaces and workspace 10.
+
+Screenshot shortcuts are **Print** for an area and **Super+Print** for the full
+desktop. Captures are saved in `~/Pictures/Screenshots` and copied to the
+clipboard. Escape cancels area selection. Home Manager embeds the packaged
+helper path in `hyprland.lua`, so the shortcuts do not depend on the session PATH.
 
 - **Compositor**: Hyprland
 - **Shell**: Quickshell (`quickshell`)

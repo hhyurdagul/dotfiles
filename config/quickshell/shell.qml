@@ -54,6 +54,16 @@ ShellRoot {
                 anchors.fill: parent
                 color: Theme.colBg
 
+                // Empty bar space closes popups; controls above receive input directly.
+                MouseArea {
+                    anchors.fill: parent
+                    propagateComposedEvents: true
+                    onClicked: mouse => {
+                        rootBarWindow.closeAllPopups();
+                        mouse.accepted = false;
+                    }
+                }
+
                 // ==========================================
                 // LEFT SECTION: Workspaces & Window Title
                 // ==========================================
@@ -156,16 +166,6 @@ ShellRoot {
 
                     PowerWidget {
                         barWindow: rootBarWindow
-                    }
-                }
-
-                // Click overlay to close popups - sits on top but propagates clicks
-                MouseArea {
-                    anchors.fill: parent
-                    propagateComposedEvents: true
-                    onClicked: mouse => {
-                        rootBarWindow.closeAllPopups();
-                        mouse.accepted = false;
                     }
                 }
             }

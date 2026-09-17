@@ -40,7 +40,9 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: {
-            dropdownOpen = !dropdownOpen
+            var shouldOpen = !dropdownOpen
+            barWindow.closeAllPopups()
+            dropdownOpen = shouldOpen
             if (dropdownOpen) {
                 root.opened()
             }
