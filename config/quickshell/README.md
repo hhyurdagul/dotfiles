@@ -44,7 +44,7 @@ Designed around the **Catppuccin Mocha** color palette with a 3-section layout, 
   - Unified battery indicator reading directly from kernel sysfs (`/sys/class/power_supply/`).
   - Integrated 1-click power profile switcher (`Performance`, `Balanced`, `Power Saver` via `powerprofilesctl`).
 - **Network & Wi-Fi (`WifiWidget.qml`)**: Live upload/download throughput speed and interactive network list.
-- **Bluetooth (`BluetoothWidget.qml`)**: Toggle power, scan for 30 seconds, and pair/connect headphones. Live BlueZ state tracks every connected device. Repeated names are grouped with the connected entry first; **Show all entries** exposes individual saved addresses. The popup stays open to show progress and errors. Pairing uses a temporary `NoInputNoOutput` agent for devices such as headphones; devices requiring a PIN or passkey need a Bluetooth manager with an interactive pairing agent.
+- **Bluetooth (`BluetoothWidget.qml`)**: Toggle power, scan for 30 seconds, and pair/connect headphones. Live BlueZ state tracks every connected device. Connected devices that report a battery level show a live percentage beside their name, with warning colors at 30% and 15%; the indicator is hidden when the level is unavailable. Repeated names are grouped with the connected entry first; **Show all entries** exposes individual saved addresses. The popup stays open to show progress and errors. Pairing uses a temporary `NoInputNoOutput` agent for devices such as headphones; devices requiring a PIN or passkey need a Bluetooth manager with an interactive pairing agent.
 - **System Indicators**:
   - **Camera (`CameraIndicatorWidget.qml`)**: Red pill with `REC` badge when `/dev/video*` is actively recording.
   - **Idle Inhibitor (`IdleIndicatorWidget.qml`)**: Toggle `hypridle` inhibition on/off.
@@ -69,7 +69,7 @@ property int cardRadius: 12               // Corner radius for all popups and to
 property string fontFamily: "JetBrainsMono Nerd Font"
 ```
 
-To tweak any aspect of the UI, simply edit `Theme.qml` — Quickshell hot-reloads the changes immediately.
+To tweak any aspect of the UI, edit `Theme.qml`. Direct edits to the running configuration hot-reload. With the Home Manager setup, rebuild to install the changes, then run `systemctl --user restart quickshell` to load the new Nix store files; replacing the configuration symlinks does not reliably trigger hot-reload.
 
 ---
 

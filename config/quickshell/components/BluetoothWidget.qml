@@ -127,6 +127,10 @@ DropdownWidget {
     }
 
     onDropdownOpenChanged: {
+        if (!actionProc.running) {
+            statusMessage = ""
+            actionFailed = false
+        }
         if (!dropdownOpen && scanTimer.running) {
             scanTimer.stop()
             if (adapter) adapter.discovering = false
@@ -205,7 +209,7 @@ DropdownWidget {
                                 btWidget.adapter.discovering = true
                                 scanTimer.restart()
                                 btWidget.actionFailed = false
-                                btWidget.statusMessage = "Put your headphones in pairing mode, then select them below."
+                                btWidget.statusMessage = ""
                             }
                         }
                     }
@@ -237,7 +241,7 @@ DropdownWidget {
                 visible: text.length > 0
                 text: !btWidget.adapter ? "No Bluetooth adapter available."
                     : !btWidget.btPowered ? "Turn on Bluetooth to see devices."
-                    : btWidget.visibleDevices.length === 0 ? "No devices found. Start a scan to pair headphones." : ""
+                    : btWidget.visibleDevices.length === 0 ? "No devices found. Start a scan to find devices." : ""
                 wrapMode: Text.WordWrap
                 color: Theme.colMuted
                 font.family: Theme.fontFamily
@@ -254,6 +258,8 @@ DropdownWidget {
                 delegate: Rectangle {
                     id: deviceRow
                     required property var modelData
+                    readonly property bool batteryAvailable: modelData.connected && modelData.batteryAvailable
+                    readonly property int batteryPercent: batteryAvailable ? Math.round(modelData.battery * 100) : 0
                     width: deviceList.width
                     height: 56
                     radius: Theme.itemRadius
@@ -262,14 +268,26 @@ DropdownWidget {
                         anchors.fill: parent
                         anchors.margins: Theme.densePadding
                         spacing: 0
-                        Text {
+                        RowLayout {
                             Layout.fillWidth: true
-                            text: deviceRow.modelData.name || deviceRow.modelData.address
-                            textFormat: Text.PlainText
-                            elide: Text.ElideRight
-                            color: deviceRow.modelData.connected ? Theme.colBluetoothConnected : Theme.colFg
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSize
+                            spacing: Theme.densePadding
+                            Text {
+                                Layout.fillWidth: true
+                                text: deviceRow.modelData.name || deviceRow.modelData.address
+                                textFormat: Text.PlainText
+                                elide: Text.ElideRight
+                                color: deviceRow.modelData.connected ? Theme.colBluetoothConnected : Theme.colFg
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.fontSize
+                            }
+                            Text {
+                                visible: deviceRow.batteryAvailable
+                                text: "󰁹 " + deviceRow.batteryPercent + "%"
+                                color: deviceRow.batteryPercent <= 15 ? Theme.colBatteryLow
+                                    : deviceRow.batteryPercent <= 30 ? Theme.colBatteryWarn : Theme.colBattery
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.fontSize
+                            }
                         }
                         Text {
                             Layout.fillWidth: true
