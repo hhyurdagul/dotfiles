@@ -6,7 +6,9 @@
 }:
 
 let
-  hyprlandPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+  system = pkgs.stdenv.hostPlatform.system;
+  hyprlandPackage = inputs.hyprland.packages.${system}.hyprland;
+  voxtype = inputs.llm-agents.packages.${system}.voxtype;
   makeWallpaper =
     name: color:
     pkgs.runCommand "${name}.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
@@ -269,6 +271,23 @@ in
       Unit.Description = "Wayland clipboard history watcher";
       Service = {
         ExecStart = lib.getExe clipboardWatch;
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
+    };
+
+    # Insert in Hyprland calls `voxtype record toggle`, which only works
+    # while this daemon is running.
+    voxtype = lib.recursiveUpdate graphicalService {
+      Unit = {
+        Description = "Voxtype voice-to-text daemon";
+        After = [
+          "pipewire.service"
+          "wireplumber.service"
+        ];
+      };
+      Service = {
+        ExecStart = "${lib.getExe voxtype} daemon";
         Restart = "on-failure";
         RestartSec = 2;
       };

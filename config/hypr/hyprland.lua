@@ -369,6 +369,9 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind("Print", hl.dsp.exec_cmd("screenshot area"), { release = true })
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("screenshot full"), { release = true })
 
+-- Press Insert to start dictation, press it again to transcribe at the cursor.
+hl.bind("Insert", hl.dsp.exec_cmd("voxtype record toggle"), { release = true })
+
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
