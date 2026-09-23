@@ -35,6 +35,10 @@ nix flake check
 nix build .#nixosConfigurations.nixos.config.system.build.toplevel
 ```
 
+## AI agents
+
+CLIs and desktops come from [`numtide/llm-agents.nix`](https://github.com/numtide/llm-agents.nix), listed in `home/hhyurdagul/packages.nix`. That input does not follow this flake's nixpkgs, so installs use the prebuilt Numtide cache (`https://cache.numtide.com`). The substituter and its public key are set in `flake.nix` `nixConfig` and in `nix.settings`.
+
 ## Updates and rollback
 
 Update every locked input, inspect the lock-file diff, then build before switching:

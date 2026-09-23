@@ -220,7 +220,7 @@ QtObject {
         // Codex notifications in this setup come from the Paseo agent window.
         // Its notification label and Wayland app id are different.
         if (normalizedApp(item.app) === "codex" || normalizedApp(id) === "codex") {
-            var agentEntry = DesktopEntries.byId("paseo")
+            var agentEntry = DesktopEntries.byId("paseo-desktop")
             if (agentEntry) return agentEntry
         }
         var entry = id ? DesktopEntries.byId(id) : null

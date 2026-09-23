@@ -8,8 +8,6 @@
 {
   imports = [
     ./packages.nix
-    ./paseo.nix
-    ./grok-bot.nix
     ./services.nix
   ];
 

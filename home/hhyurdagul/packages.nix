@@ -2,6 +2,7 @@
 
 let
   system = pkgs.stdenv.hostPlatform.system;
+  agents = inputs.llm-agents.packages.${system};
 in
 {
   home.packages =
@@ -65,11 +66,21 @@ in
     ])
     ++ [
       inputs.zen-browser.packages.${system}.default
-      inputs.antigravity.packages.${system}.google-antigravity-cli
-      inputs.chatgpt-nix.packages.${system}.default
-      inputs.codex.packages.${system}.default
-      inputs.herdr.packages.${system}.default
-      inputs.pi-nix.packages.${system}.default
-      inputs.omp.packages.${system}.default
-    ];
+    ]
+    ++ (with agents; [
+      antigravity-cli
+      chatgpt
+      claude-code
+      claude-desktop
+      grok
+      omp
+      pi
+      grok-bot
+      hermes-agent
+      hermes-desktop
+      ccusage
+      herdr
+      paseo-desktop
+      voxtype
+    ]);
 }

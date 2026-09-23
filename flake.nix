@@ -3,10 +3,12 @@
 
   nixConfig = {
     extra-substituters = [
+      "https://cache.numtide.com"
       "https://hyprland.cachix.org"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
@@ -23,34 +25,8 @@
     # Development Hyprland with its matching portal and NixOS module.
     hyprland.url = "github:hyprwm/Hyprland";
 
-    antigravity = {
-      url = "github:jacopone/antigravity-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    codex = {
-      url = "github:sadjow/codex-cli-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    pi-nix = {
-      url = "github:sadjow/pi-nix";
-    };
-
-    omp = {
-      url = "github:can1357/oh-my-pi";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    herdr = {
-      url = "github:herdrdev/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    chatgpt-nix = {
-      url = "github:hhyurdagul/chatgpt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Do not follow nixpkgs. Packages are cached against this flake's own pin.
+    llm-agents.url = "github:numtide/llm-agents.nix";
 
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
