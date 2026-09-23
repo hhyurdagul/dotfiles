@@ -8,9 +8,11 @@ in
     (with pkgs; [
       # Desktop applications
       adw-gtk3
+      blender
       chromium
       darkman
       fuzzel
+      godot
       kitty
       libnotify
       loupe
@@ -67,6 +69,7 @@ in
       inputs.chatgpt-nix.packages.${system}.default
       inputs.codex.packages.${system}.default
       inputs.herdr.packages.${system}.default
+      inputs.pi-nix.packages.${system}.default
       inputs.omp.packages.${system}.default
     ];
 }
