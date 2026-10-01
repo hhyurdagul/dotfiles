@@ -5,8 +5,8 @@ export LC_ALL=C
 kind=${1:-}
 action=${2:-}
 case "$kind:$action" in
-  volume:up|volume:down|volume:mute|microphone:mute|brightness:up|brightness:down) ;;
-  *) printf 'Usage: desktop-control volume up|down|mute / microphone mute / brightness up|down\n' >&2; exit 2 ;;
+  volume:up|volume:down|volume:mute|microphone:mute|brightness:up|brightness:down|brightness:toggle) ;;
+  *) printf 'Usage: desktop-control volume up|down|mute / microphone mute / brightness up|down|toggle\n' >&2; exit 2 ;;
 esac
 
 # Serialize repeated presses so hardware writes and their readbacks stay ordered.
@@ -41,6 +41,32 @@ if [[ "$kind" = volume || "$kind" = microphone ]]; then
 fi
 
 # Only change the focused display: backlight for a laptop panel, DDC for a monitor.
+# Super+mute toggles an external monitor between 0 and 100. The internal panel is ignored.
+if [[ "$action" == toggle ]]; then
+  case "$screen" in
+    eDP-*|LVDS-*|DSI-*) exit 0 ;;
+  esac
+  bus=""
+  for connector in /sys/class/drm/card*-"$screen"; do
+    [[ -e "$connector/ddc" ]] || continue
+    bus=$(basename "$(readlink -f "$connector/ddc")")
+    bus=${bus#i2c-}
+    break
+  done
+  [[ "$bus" =~ ^[0-9]+$ ]] || fail 'Display brightness unavailable'
+  state=$(ddcutil --bus "$bus" getvcp 10 --terse) || fail 'Brightness readback failed'
+  current=$(awk '$1 == "VCP" && $2 == "10" && $3 == "C" && $5 > 0 { printf "%.0f", $4 }' <<< "$state")
+  [[ "$current" =~ ^[0-9]+$ ]] || fail 'Brightness readback failed'
+  target=0
+  [[ "$current" -eq 0 ]] && target=100
+  ddcutil --bus "$bus" --noverify setvcp 10 "$target" >/dev/null || fail 'Monitor brightness failed'
+  state=$(ddcutil --bus "$bus" getvcp 10 --terse) || fail 'Brightness readback failed'
+  level=$(awk '$1 == "VCP" && $2 == "10" && $3 == "C" && $5 > 0 { printf "%.0f", $4 * 100 / $5 }' <<< "$state")
+  [[ "$level" =~ ^[0-9]+$ ]] || fail 'Brightness readback failed'
+  show_osd "$level" false
+  exit 0
+fi
+
 case "$screen" in
   eDP-*|LVDS-*|DSI-*)
     step=5%+

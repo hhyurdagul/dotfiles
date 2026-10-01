@@ -80,6 +80,8 @@ Other session shortcuts:
 - `Super+Alt+L`: lock
 - `Super+Alt+I`: toggle idle management (dim, lock, screen-off, suspend)
 - `Super+Alt+N`: toggle night light
+- `Super+Volume up/down`: brightness on the focused screen, same steps as the brightness keys
+- `Super+Mute`: toggle the focused external monitor between 0 and 100; ignored on the internal panel
 
 ## Interactive shell
 

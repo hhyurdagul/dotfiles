@@ -357,6 +357,11 @@ hl.bind("XF86AudioMute", hl.dsp.exec_cmd("desktop-control volume mute"), { locke
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("desktop-control microphone mute"), { locked = true })
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("desktop-control brightness up"), { locked = true })
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("desktop-control brightness down"), { locked = true })
+-- Super+volume changes the focused screen's brightness.
+-- Super+mute toggles an external monitor between 0 and 100; the internal panel is ignored.
+hl.bind(mainMod .. " + XF86AudioRaiseVolume", hl.dsp.exec_cmd("desktop-control brightness up"), { locked = true, repeating = true })
+hl.bind(mainMod .. " + XF86AudioLowerVolume", hl.dsp.exec_cmd("desktop-control brightness down"), { locked = true, repeating = true })
+hl.bind(mainMod .. " + XF86AudioMute", hl.dsp.exec_cmd("desktop-control brightness toggle"), { locked = true })
 
 -- Requires playerctl
 hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })

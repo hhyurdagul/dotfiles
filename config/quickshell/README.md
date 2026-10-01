@@ -120,7 +120,9 @@ helper path in `hyprland.lua`, so the shortcuts do not depend on the session PAT
 Volume, speaker/microphone mute, and brightness keys show a short indicator at
 the bottom of the focused screen. Brightness targets that screen's laptop
 backlight or external monitor via DDC, and displays the value read back from the
-hardware. The indicator does not take keyboard focus or intercept clicks.
+hardware. Super+volume uses those same brightness steps. Super+mute toggles the
+focused external monitor between 0 and 100, and does nothing on the internal
+panel. The indicator does not take keyboard focus or intercept clicks.
 
 - **Compositor**: Hyprland
 - **Shell**: Quickshell (`quickshell`)
