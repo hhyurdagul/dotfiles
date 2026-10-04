@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   username,
@@ -25,6 +26,26 @@
       PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
     };
+
+    # Breeze Light ships inside kdePackages.breeze (1.8 GiB closure with Qt and
+    # KDE frameworks); copy just the cursor theme. GTK's settings.ini belongs to
+    # theme-switcher, so gtk.enable stays off and that script adds the cursor.
+    # Hyprland reads the same name and size from hl.env in hyprland.lua.
+    pointerCursor = {
+      enable = true;
+      name = "Breeze_Light";
+      size = 12;
+      package = pkgs.runCommand "breeze-light-cursor" { } ''
+        mkdir -p $out/share/icons
+        cp -r ${pkgs.kdePackages.breeze}/share/icons/Breeze_Light $out/share/icons/
+      '';
+    };
+  };
+
+  # GTK4 and the settings portal read the cursor from GSettings, not settings.ini.
+  dconf.settings."org/gnome/desktop/interface" = {
+    cursor-theme = config.home.pointerCursor.name;
+    cursor-size = config.home.pointerCursor.size;
   };
 
   home.file.".p10k.zsh".source = ../../config/zsh/p10k.zsh;
@@ -205,6 +226,69 @@
       quickshell = {
         source = ../../config/quickshell;
         recursive = true;
+      };
+    };
+
+    dataFile = {
+      "icons/hicolor" = {
+        source = ../../config/icons/hicolor;
+        recursive = true;
+      };
+    };
+
+    desktopEntries = {
+      ms-word = {
+        name = "Microsoft Word";
+        genericName = "Word Processor";
+        comment = "Microsoft Word Online";
+        exec = "chromium --app=https://word.cloud.microsoft";
+        icon = "ms-word";
+        categories = [
+          "Office"
+          "WordProcessor"
+        ];
+        startupNotify = true;
+        terminal = false;
+      };
+      ms-excel = {
+        name = "Microsoft Excel";
+        genericName = "Spreadsheet";
+        comment = "Microsoft Excel Online";
+        exec = "chromium --app=https://excel.cloud.microsoft";
+        icon = "ms-excel";
+        categories = [
+          "Office"
+          "Spreadsheet"
+        ];
+        startupNotify = true;
+        terminal = false;
+      };
+      ms-powerpoint = {
+        name = "Microsoft PowerPoint";
+        genericName = "Presentation";
+        comment = "Microsoft PowerPoint Online";
+        exec = "chromium --app=https://powerpoint.cloud.microsoft";
+        icon = "ms-powerpoint";
+        categories = [
+          "Office"
+          "Presentation"
+        ];
+        startupNotify = true;
+        terminal = false;
+      };
+      ms-teams = {
+        name = "Microsoft Teams";
+        genericName = "Chat and Collaboration";
+        comment = "Microsoft Teams Online";
+        exec = "chromium --app=https://teams.cloud.microsoft";
+        icon = "ms-teams";
+        categories = [
+          "Network"
+          "Chat"
+          "InstantMessaging"
+        ];
+        startupNotify = true;
+        terminal = false;
       };
     };
   };

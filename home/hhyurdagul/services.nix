@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   pkgs,
@@ -33,6 +34,8 @@ let
     text = ''
       export GSETTINGS_SCHEMA_DIR="${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}/glib-2.0/schemas"
       export GIO_EXTRA_MODULES="${pkgs.dconf.lib}/lib/gio/modules"
+      CURSOR_THEME="${config.home.pointerCursor.name}"
+      CURSOR_SIZE="${toString config.home.pointerCursor.size}"
     ''
     + builtins.readFile ../../config/scripts/theme-switcher.sh;
   };

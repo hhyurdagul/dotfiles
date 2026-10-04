@@ -96,6 +96,8 @@ for gtk_version in gtk-3.0 gtk-4.0; do
 gtk-theme-name=$GTK_THEME
 gtk-application-prefer-dark-theme=$PREFER_DARK
 gtk-font-name=JetBrainsMono Nerd Font 10
+gtk-cursor-theme-name=$CURSOR_THEME
+gtk-cursor-theme-size=$CURSOR_SIZE
 EOF
 	mv "$tmp_gtk" "$gtk_dir/settings.ini"
 done

@@ -92,8 +92,10 @@ local notes       = "obsidian"
 
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
-hl.env("XCURSOR_SIZE", "12")
-hl.env("HYPRCURSOR_SIZE", "12")
+-- Keep in sync with home.pointerCursor in home/hhyurdagul/default.nix.
+hl.env("XCURSOR_THEME", "Breeze_Light")
+hl.env("XCURSOR_SIZE", "16")
+hl.env("HYPRCURSOR_SIZE", "16")
 
 
 -----------------------

@@ -1,8 +1,29 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  pkgs,
+  ...
+}:
 
 let
   system = pkgs.stdenv.hostPlatform.system;
   agents = inputs.llm-agents.packages.${system};
+  unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+
+  # The package's traced closure omits @getpaseo/server's root export, which the
+  # CLI only resolves to locate the daemon entrypoint; add a stub so it resolves.
+  paseo-share = pkgs.runCommand "paseo-cli-share" { } ''
+    cp -r ${agents.paseo-desktop}/share/paseo-desktop $out
+    chmod -R u+w $out/packages/server/dist/server/server
+    echo "export {};" > $out/packages/server/dist/server/server/exports.js
+  '';
+
+  # paseo-desktop only exposes the GUI; run its bundled CLI with the same electron
+  paseo-cli = pkgs.writeShellScriptBin "paseo" ''
+    exec env ELECTRON_RUN_AS_NODE=1 PASEO_NODE_ENV=production \
+      ${inputs.llm-agents.inputs.nixpkgs.legacyPackages.${system}.electron_42}/bin/electron \
+      ${paseo-share}/packages/cli/dist/index.js "$@"
+  '';
+
 in
 {
   home.packages =
@@ -82,5 +103,10 @@ in
       herdr
       paseo-desktop
       voxtype
-    ]);
+      codex
+    ])
+    ++ [
+      paseo-cli
+      unstable.zed-editor
+    ];
 }
