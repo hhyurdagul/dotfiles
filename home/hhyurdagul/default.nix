@@ -219,10 +219,18 @@
       "hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
       "hypr/hyprlock.conf".source = ../../config/hypr/hyprlock.conf;
       "kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
+      "kitty/dark-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;
+      "kitty/light-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-latte.conf;
+      "kitty/no-preference-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;
       "kitty/themes" = {
         source = ../../config/kitty/themes;
         recursive = true;
       };
+      # GLib launches Terminal=true entries (Helix for text files) through
+      # xdg-terminal-exec; kitty isn't in its built-in fallback list.
+      "xdg-terminals.list".text = ''
+        kitty.desktop
+      '';
       quickshell = {
         source = ../../config/quickshell;
         recursive = true;
@@ -237,6 +245,22 @@
     };
 
     desktopEntries = {
+      # Games launched from this inherit the PRIME offload env and render on the RTX.
+      prismlauncher-nvidia = {
+        name = "Prism Launcher (NVIDIA)";
+        genericName = "Minecraft Launcher";
+        comment = "Prism Launcher on the discrete NVIDIA GPU";
+        exec = "nvidia-offload prismlauncher";
+        icon = "org.prismlauncher.PrismLauncher";
+        categories = [
+          "Game"
+          "ActionGame"
+          "AdventureGame"
+          "Simulation"
+        ];
+        startupNotify = true;
+        terminal = false;
+      };
       ms-word = {
         name = "Microsoft Word";
         genericName = "Word Processor";

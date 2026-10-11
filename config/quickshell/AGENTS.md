@@ -6,13 +6,14 @@ This document provides technical instructions, constraints, and architectural gu
 
 ## 1. Singletons & Module Registration (`qmldir`)
 
-- **`Theme.qml`** and **`NotifManager.qml`** are declared with `pragma Singleton`.
-- Both MUST be registered inside [`config/quickshell/qmldir`](./qmldir):
+- **`Theme.qml`**, **`NotifManager.qml`**, and **`Dictation.qml`** are declared with `pragma Singleton`.
+- All MUST be registered inside [`config/quickshell/qmldir`](./qmldir):
   ```
   singleton Theme 1.0 Theme.qml
   singleton NotifManager 1.0 NotifManager.qml
+  singleton Dictation 1.0 Dictation.qml
   ```
-- Any component importing `"../"` can access `Theme` and `NotifManager` directly.
+- Any component importing `"../"` can access `Theme`, `NotifManager`, and `Dictation` directly.
 - **Rule**: NEVER hardcode colors, margins, or radiuses inside individual components. Reference `Theme.col*`, `Theme.popupTopMargin`, `Theme.cardRadius`, and `Theme.cardBorderColor`.
 
 ---

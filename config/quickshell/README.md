@@ -47,6 +47,7 @@ Designed around the **Catppuccin Mocha** color palette with a 3-section layout, 
 - **Bluetooth (`BluetoothWidget.qml`)**: Toggle power, scan for 30 seconds, and pair/connect headphones. Live BlueZ state tracks every connected device. Connected devices that report a battery level show a live percentage beside their name, with warning colors at 30% and 15%; the indicator is hidden when the level is unavailable. Repeated names are grouped with the connected entry first; **Show all entries** exposes individual saved addresses. The popup stays open to show progress and errors. Pairing uses a temporary `NoInputNoOutput` agent for devices such as headphones; devices requiring a PIN or passkey need a Bluetooth manager with an interactive pairing agent.
 - **System Indicators**:
   - **Camera (`CameraIndicatorWidget.qml`)**: Red pill with `REC` badge when `/dev/video*` is actively recording.
+  - **Microphone (`MicIndicatorWidget.qml`)**: Orange mic icon while any app captures from an input device (dictation, calls, recordings); sink monitors don't count.
   - **Idle Inhibitor (`IdleIndicatorWidget.qml`)**: Toggle `hypridle` inhibition on/off.
   - **Power Menu (`PowerWidget.qml`)**: Fast access to Lock, Suspend, Reboot, and Shutdown.
 
@@ -81,6 +82,7 @@ config/quickshell/
 ├── Theme.qml                         # Global Catppuccin Mocha theme singleton
 ├── NotifManager.qml                  # NotificationServer singleton & history
 ├── qmldir                            # QML module & singleton registration
+├── Dictation.qml                     # Handy recording state singleton (PipeWire)
 ├── components/
 │   ├── DropdownWidget.qml            # Base component for right-side dropdowns
 │   ├── NotificationToasts.qml        # Floating notification banners (top-right)
@@ -94,6 +96,8 @@ config/quickshell/
 │   ├── WifiWidget.qml                # Network speed & Wi-Fi dropdown
 │   ├── BluetoothWidget.qml           # Bluetooth device manager
 │   ├── CameraIndicatorWidget.qml     # Active camera / recording indicator
+│   ├── MicIndicatorWidget.qml        # Microphone-in-use indicator
+│   ├── DictationOverlay.qml          # Bottom-center card while Handy records
 │   ├── IdleIndicatorWidget.qml       # Hypridle inhibitor toggle
 │   ├── Clock.qml                     # Clock widget
 │   ├── PowerWidget.qml               # Lock / Suspend / Reboot / Poweroff menu
@@ -123,6 +127,11 @@ backlight or external monitor via DDC, and displays the value read back from the
 hardware. Super+volume uses those same brightness steps. Super+mute toggles the
 focused external monitor between 0 and 100, and does nothing on the internal
 panel. The indicator does not take keyboard focus or intercept clicks.
+
+While Handy records, a card at the bottom of the focused screen shows a pulsing
+dot, the microphone level, and the elapsed time; its close button runs
+`handy --cancel`, and the rest of the card passes clicks through. Handy's own
+overlay stays off: WebKitGTK paints only fragments of its transparent window.
 
 - **Compositor**: Hyprland
 - **Shell**: Quickshell (`quickshell`)

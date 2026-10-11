@@ -18,20 +18,6 @@ local function setInternalMonitor(enabled)
     })
 end
 
-local function isTargetExternalMonitor(monitor)
-    return monitor.description
-        and monitor.description:find(externalMonitorDescription, 1, true) ~= nil
-end
-
-local function targetExternalMonitorConnected()
-    for _, monitor in ipairs(hl.get_monitors()) do
-        if isTargetExternalMonitor(monitor) then
-            return true
-        end
-    end
-    return false
-end
-
 hl.monitor({
     output   = internalMonitor,
     disabled = false,
@@ -54,23 +40,14 @@ hl.monitor({
     scale    = "auto",
 })
 
-local function syncInternalMonitor()
-    setInternalMonitor(not targetExternalMonitorConnected())
+-- Keep workspaces 1–5 on the laptop and 6–10 on the external monitor.
+for workspace = 1, 10 do
+    hl.workspace_rule({
+        workspace = tostring(workspace),
+        monitor   = workspace <= 5 and internalMonitor or "desc:" .. externalMonitorDescription,
+        default   = workspace == 1 or workspace == 6,
+    })
 end
-
-hl.on("hyprland.start", syncInternalMonitor)
-hl.on("config.reloaded", syncInternalMonitor)
-hl.on("monitor.added", function(monitor)
-    if isTargetExternalMonitor(monitor) then
-        setInternalMonitor(false)
-    end
-end)
-hl.on("monitor.removed", function(monitor)
-    if isTargetExternalMonitor(monitor) then
-        setInternalMonitor(true)
-    end
-end)
-
 
 ---------------------
 ---- MY PROGRAMS ----
@@ -288,6 +265,7 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("tern"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(notes))
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
@@ -376,8 +354,10 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind("Print", hl.dsp.exec_cmd("screenshot area"), { release = true })
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("screenshot full"), { release = true })
 
--- Press Insert to start dictation, press it again to transcribe at the cursor.
-hl.bind("Insert", hl.dsp.exec_cmd("voxtype record toggle"), { release = true })
+-- Press Super+Space to start dictation, press it again to transcribe at the cursor.
+-- Handy keeps every result in its history window (tray icon). Its own shortcut
+-- setting only works in X11 windows, so keep it off Super+Space.
+hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("handy --toggle-transcription"), { release = true })
 
 
 --------------------------------

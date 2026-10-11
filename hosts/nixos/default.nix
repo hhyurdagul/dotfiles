@@ -61,14 +61,24 @@
 
   console.keyMap = "trq";
 
-  services.xserver.xkb = {
-    layout = "tr";
-    variant = "";
-  };
+  services = {
+    xserver.xkb = {
+      layout = "tr";
+      variant = "";
+    };
 
-  # This laptop does not expose SSH on arbitrary networks. Add key-only SSH
-  # with an interface-scoped firewall rule when remote access is needed.
-  services.openssh.enable = false;
+    # This laptop does not expose SSH on arbitrary networks. Add key-only SSH
+    # with an interface-scoped firewall rule when remote access is needed.
+    openssh.enable = false;
+
+    # Private network to the phone and the hermes VPS. The operator may run
+    # `tailscale serve` without sudo.
+    tailscale = {
+      enable = true;
+      openFirewall = true;
+      extraSetFlags = [ "--operator=${username}" ];
+    };
+  };
 
   users = {
     defaultUserShell = pkgs.zsh;
@@ -95,6 +105,7 @@
   nixpkgs.config.allowUnfreePredicate =
     package:
     builtins.elem (lib.getName package) [
+      "corefonts"
       "nvidia-settings"
       "nvidia-x11"
       "obsidian"
@@ -102,6 +113,7 @@
       "steam"
       "steam-original"
       "steam-unwrapped"
+      "tern"
     ];
 
   nix = {

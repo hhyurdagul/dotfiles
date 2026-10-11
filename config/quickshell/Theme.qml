@@ -72,6 +72,8 @@ QtObject {
     readonly property color colWorkspaceActive: isDark ? "#cdd6f4" : "#4c4f69"
     readonly property color colWorkspaceInactive: colMuted
     readonly property color colCamera: colRed
+    readonly property color colDictation: colPink
+    readonly property color colMic: colOrange
     readonly property color colIdle: colYellow
 
     // -------------------------------------------------------------
@@ -103,6 +105,9 @@ QtObject {
     readonly property int osdBottomMargin: 80
     readonly property int osdWidth: 280
     readonly property int osdHeight: 80
+    readonly property int dictationBottomMargin: 40
+    readonly property int dictationWidth: 240
+    readonly property int dictationHeight: 44
 
     // -------------------------------------------------------------
     // Typography

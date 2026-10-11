@@ -103,6 +103,10 @@ ShellRoot {
                         Layout.preferredHeight: parent.height
                     }
 
+                    MicIndicatorWidget {
+                        Layout.preferredHeight: parent.height
+                    }
+
                     IdleIndicatorWidget {
                         Layout.preferredHeight: parent.height
                     }
@@ -175,4 +179,5 @@ ShellRoot {
     // System-wide floating notification toasts
     NotificationToasts {}
     OnScreenDisplay {}
+    DictationOverlay {}
 }

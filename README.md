@@ -71,9 +71,11 @@ journalctl --user -u quickshell -b
 
 The generated Hyprpaper background follows the active light/dark theme. Replace the generated wallpaper derivations in `home/hhyurdagul/services.nix` when using personal images.
 
+LocalSend is enabled in `modules/desktop.nix`, including firewall access on TCP and UDP port 53317 for local-network transfers and discovery. After rebuilding and switching, launch **LocalSend** from the app launcher or run `localsend_app`. Both devices must be on the same local network.
+
 ## Runtime theme controls
 
-`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. The switch updates Quickshell, Kitty, GTK, Hyprland borders, and Hyprpaper.
+`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. The switch updates Quickshell, GTK, Hyprland borders, and Hyprpaper. Kitty and Electron apps (Obsidian, Claude, Paseo) follow the desktop `color-scheme` live; set Electron apps to their "system" theme.
 
 Other session shortcuts:
 

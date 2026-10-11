@@ -13,6 +13,10 @@
     steam.enable = true;
     gamemode.enable = true;
     hyprlock.enable = true;
+    localsend = {
+      enable = true;
+      openFirewall = true;
+    };
   };
 
   hardware.steam-hardware.enable = true;
@@ -54,5 +58,6 @@
     noto-fonts
     noto-fonts-color-emoji
     font-awesome
+    corefonts
   ];
 }

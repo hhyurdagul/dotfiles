@@ -9,7 +9,32 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   hyprlandPackage = inputs.hyprland.packages.${system}.hyprland;
-  voxtype = inputs.llm-agents.packages.${system}.voxtype;
+  # Handy types into the focused window with wtype and keeps results on the
+  # clipboard with wl-copy. It looks both up on PATH, so pin them here instead
+  # of relying on whatever PATH the service or launcher inherits.
+  # The package skips wrapGAppsHook. Without the GNOME interface schemas, GTK
+  # on Wayland leaves gtk-xft-dpi at -1. WebKitGTK turns that into a negative
+  # zoom, and the window stays blank apart from the footer.
+  # Its automatic device choice puts the model on the RTX 4050, and the GPU
+  # picker sits behind experimental settings. Hiding the NVIDIA Vulkan driver
+  # leaves the Intel iGPU: about 4x slower than NVIDIA, still ~20x realtime,
+  # and the dGPU can stay powered off.
+  handy = pkgs.symlinkJoin {
+    name = "handy";
+    paths = [ inputs.llm-agents.packages.${system}.handy ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/handy --prefix PATH : ${
+        lib.makeBinPath [
+          pkgs.wl-clipboard
+          pkgs.wtype
+        ]
+      } \
+        --prefix XDG_DATA_DIRS : ${pkgs.glib.getSchemaDataDirPath pkgs.gsettings-desktop-schemas} \
+        --set VK_LOADER_DRIVERS_DISABLE '*nvidia*'
+    '';
+    meta.mainProgram = "handy";
+  };
   makeWallpaper =
     name: color:
     pkgs.runCommand "${name}.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
@@ -25,7 +50,6 @@ let
       darkman
       hyprlandPackage
       glib
-      procps
     ];
     # gsettings needs compiled schemas and the dconf GSettings backend. Neither
     # is visible in systemd-user or Hyprland-exec contexts (darkman hooks,
@@ -140,6 +164,7 @@ in
     packages = [
       clipboardWatch
       desktopControl
+      handy
       idleToggle
       lockScreen
       nightlightToggle
@@ -171,15 +196,9 @@ in
       fi
 
       mode="$(tr -d '[:space:]' < "$state_dir/mode")"
-      case "$mode" in
-        light)
-          cp -- ${../../config/kitty/themes/catppuccin-latte.conf} "$state_dir/kitty.conf"
-          ;;
-        *)
-          printf '%s\n' dark > "$state_dir/mode"
-          cp -- ${../../config/kitty/themes/catppuccin-mocha.conf} "$state_dir/kitty.conf"
-          ;;
-      esac
+      if [[ "$mode" != light ]]; then
+        printf '%s\n' dark > "$state_dir/mode"
+      fi
     '';
   };
   xdg.configFile = {
@@ -279,18 +298,19 @@ in
       };
     };
 
-    # Insert in Hyprland calls `voxtype record toggle`, which only works
-    # while this daemon is running.
-    voxtype = lib.recursiveUpdate graphicalService {
+    # Super+Space in Hyprland calls `handy --toggle-transcription`, which signals
+    # this instance. Handy's own shortcuts are X11 grabs through XWayland and
+    # only fire while an X11 window has focus.
+    handy = lib.recursiveUpdate graphicalService {
       Unit = {
-        Description = "Voxtype voice-to-text daemon";
+        Description = "Handy speech-to-text";
         After = [
           "pipewire.service"
           "wireplumber.service"
         ];
       };
       Service = {
-        ExecStart = "${lib.getExe voxtype} daemon";
+        ExecStart = "${lib.getExe handy} --start-hidden";
         Restart = "on-failure";
         RestartSec = 2;
       };

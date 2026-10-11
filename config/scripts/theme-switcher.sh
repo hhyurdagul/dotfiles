@@ -5,7 +5,6 @@ STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 STATE_DIR="$STATE_HOME/theme"
 STATE_FILE="$STATE_DIR/mode"
-KITTY_STATE_FILE="$STATE_DIR/kitty.conf"
 MODE="${1:-toggle}"
 FROM_DARKMAN=0
 
@@ -72,19 +71,20 @@ if [[ "$TARGET_MODE" == "light" ]]; then
 	COLOR_SCHEME="prefer-light"
 	GTK_THEME="Adwaita"
 	PREFER_DARK=0
-	KITTY_THEME="$CONFIG_HOME/kitty/themes/catppuccin-latte.conf"
 	WALLPAPER="$CONFIG_HOME/hypr/wallpapers/light.png"
 else
 	COLOR_SCHEME="prefer-dark"
 	GTK_THEME="Adwaita-dark"
 	PREFER_DARK=1
-	KITTY_THEME="$CONFIG_HOME/kitty/themes/catppuccin-mocha.conf"
 	WALLPAPER="$CONFIG_HOME/hypr/wallpapers/dark.png"
 fi
 
 if command -v gsettings >/dev/null 2>&1; then
-	gsettings set org.gnome.desktop.interface color-scheme "$COLOR_SCHEME" || true
+	# Electron apps re-derive dark mode from the GTK theme on each gtk-theme
+	# change (and get it wrong for Adwaita-dark); color-scheme, which they read
+	# correctly, has to be the last change they see.
 	gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME" || true
+	gsettings set org.gnome.desktop.interface color-scheme "$COLOR_SCHEME" || true
 fi
 
 for gtk_version in gtk-3.0 gtk-4.0; do
@@ -112,13 +112,6 @@ if command -v hyprctl >/dev/null 2>&1 && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}
 	if [[ -r "$WALLPAPER" ]]; then
 		hyprctl hyprpaper wallpaper ",$WALLPAPER" >/dev/null 2>&1 || true
 	fi
-fi
-
-if [[ -r "$KITTY_THEME" ]]; then
-	tmp_kitty="$(mktemp "$STATE_DIR/.kitty.conf.XXXXXX")"
-	cp -- "$KITTY_THEME" "$tmp_kitty"
-	mv "$tmp_kitty" "$KITTY_STATE_FILE"
-	pkill -USR1 -x kitty 2>/dev/null || true
 fi
 
 if [[ "$FROM_DARKMAN" -eq 0 && "$MODE" != "init" ]] && command -v darkman >/dev/null 2>&1; then
