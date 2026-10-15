@@ -83,6 +83,39 @@ let
     text = builtins.readFile ../../config/scripts/lock.sh;
   };
 
+  displayPower = pkgs.writeShellApplication {
+    name = "display-power";
+    runtimeInputs = [
+      pkgs.niri
+      hyprlandPackage
+    ];
+    text = builtins.readFile ../../config/scripts/display-power.sh;
+  };
+
+  monitorToggle = pkgs.writeShellApplication {
+    name = "monitor-toggle";
+    runtimeInputs = [
+      pkgs.niri
+      pkgs.jq
+    ];
+    text = builtins.readFile ../../config/scripts/monitor-toggle.sh;
+  };
+
+  niriDisplayPolicy = pkgs.writeScriptBin "niri-display-policy" ''
+    #!${pkgs.python3}/bin/python3
+    ${builtins.readFile ../../config/scripts/niri-display-policy.py}
+  '';
+
+  sessionExit = pkgs.writeShellApplication {
+    name = "session-exit";
+    runtimeInputs = [
+      lockScreen
+      pkgs.niri
+      pkgs.uwsm
+    ];
+    text = builtins.readFile ../../config/scripts/session-exit.sh;
+  };
+
   nightlightToggle = pkgs.writeShellApplication {
     name = "nightlight-toggle";
     runtimeInputs = with pkgs; [
@@ -99,7 +132,20 @@ let
       wl-clipboard
     ];
     text = ''
-      exec wl-paste --type text --watch cliphist store
+      exec wl-paste --type "''${1:-text}" --watch cliphist store
+    '';
+  };
+
+  clipboardHistory = pkgs.writeShellApplication {
+    name = "clipboard-history";
+    runtimeInputs = with pkgs; [
+      python3
+      cliphist
+      wl-clipboard
+      file
+    ];
+    text = ''
+      exec python3 ${../../config/quickshell/scripts/clipboard-history.py} "$@"
     '';
   };
 
@@ -119,7 +165,9 @@ let
   quickshellSession = pkgs.writeShellApplication {
     name = "quickshell-session";
     runtimeInputs = [
+      clipboardHistory
       hyprlandPackage
+      pkgs.niri
       pkgs.quickshell
       pkgs.jq
       pkgs.coreutils
@@ -131,6 +179,7 @@ let
     name = "desktop-control";
     runtimeInputs = [
       hyprlandPackage
+      pkgs.niri
     ]
     ++ (with pkgs; [
       brightnessctl
@@ -162,12 +211,16 @@ in
 
   home = {
     packages = [
+      clipboardHistory
       clipboardWatch
       desktopControl
+      displayPower
       handy
       idleToggle
       lockScreen
       nightlightToggle
+      monitorToggle
+      sessionExit
       screenshot
       quickshellSession
       themeSwitcher
@@ -202,6 +255,42 @@ in
     '';
   };
   xdg.configFile = {
+    "niri/config.kdl".text =
+      builtins.replaceStrings
+        [
+          ''"desktop-control"''
+          ''"lock-screen"''
+          ''"idle-toggle"''
+          ''"nightlight-toggle"''
+          ''"theme-switcher"''
+          ''"monitor-toggle"''
+          ''"session-exit"''
+          ''"handy"''
+          ''"~/.local/state/theme/niri.kdl"''
+          ''xcursor-theme "Breeze_Light"''
+          "xcursor-size 12"
+          ''XCURSOR_THEME "Breeze_Light"''
+          ''XCURSOR_SIZE "12"''
+        ]
+        [
+          ''"${lib.getExe desktopControl}"''
+          ''"${lib.getExe lockScreen}"''
+          ''"${lib.getExe idleToggle}"''
+          ''"${lib.getExe nightlightToggle}"''
+          ''"${lib.getExe themeSwitcher}"''
+          ''"${lib.getExe monitorToggle}"''
+          ''"${lib.getExe sessionExit}"''
+          ''"${lib.getExe handy}"''
+          ''"${config.xdg.stateHome}/theme/niri.kdl"''
+          ''xcursor-theme "${config.home.pointerCursor.name}"''
+          "xcursor-size ${toString config.home.pointerCursor.size}"
+          ''XCURSOR_THEME "${config.home.pointerCursor.name}"''
+          ''XCURSOR_SIZE "${toString config.home.pointerCursor.size}"''
+        ]
+        (builtins.readFile ../../config/niri/config.kdl);
+    "hypr/hypridle.conf".text =
+      builtins.replaceStrings [ "hyprctl dispatch dpms" ] [ (lib.getExe displayPower) ]
+        (builtins.readFile ../../config/hypr/hypridle.conf);
     # Embed the packaged helper's path so keybinds also work when only the
     # Home Manager generation has been activated (useUserPackages = true).
     "hypr/hyprland.lua".text =
@@ -232,8 +321,20 @@ in
       };
     };
 
+    niri-display-policy = lib.recursiveUpdate graphicalService {
+      Unit = {
+        Description = "Niri HDMI hotplug and numeric workspace ordering";
+        ConditionEnvironment = "NIRI_SOCKET";
+      };
+      Service = {
+        ExecStart = lib.getExe niriDisplayPolicy;
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
+    };
+
     hypridle = lib.recursiveUpdate graphicalService {
-      Unit.Description = "Hyprland idle manager";
+      Unit.Description = "Wayland idle manager";
       Service = {
         ExecStart = lib.getExe pkgs.hypridle;
         Restart = "on-failure";
@@ -272,7 +373,10 @@ in
     };
 
     hyprpaper = lib.recursiveUpdate graphicalService {
-      Unit.Description = "Hyprland wallpaper daemon";
+      Unit = {
+        Description = "Hyprland wallpaper daemon";
+        ConditionEnvironment = "XDG_CURRENT_DESKTOP=Hyprland";
+      };
       Service = {
         ExecStart = "${lib.getExe pkgs.hyprpaper} -c %h/.config/hypr/hyprpaper.conf";
         Restart = "on-failure";
@@ -298,7 +402,16 @@ in
       };
     };
 
-    # Super+Space in Hyprland calls `handy --toggle-transcription`, which signals
+    clipboard-watch-images = lib.recursiveUpdate graphicalService {
+      Unit.Description = "Wayland image clipboard history watcher";
+      Service = {
+        ExecStart = "${lib.getExe clipboardWatch} image";
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
+    };
+
+    # Super+Space in either compositor calls `handy --toggle-transcription`, which signals
     # this instance. Handy's own shortcuts are X11 grabs through XWayland and
     # only fire while an X11 window has focus.
     handy = lib.recursiveUpdate graphicalService {

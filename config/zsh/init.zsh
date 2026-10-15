@@ -59,8 +59,8 @@ alias sz='source "$ZDOTDIR/.zshrc"'
 
 if (($+commands[eza])); then
 	alias ls="eza --icons --group-directories-first"
-	alias ll="eza --icons -l --group-directories-first --git"
-	alias la="eza --icons -la --group-directories-first --git"
+	alias ll="eza --icons -l --group-directories-first"
+	alias la="eza --icons -la --group-directories-first"
 	alias lt="eza --tree --level=2 --icons"
 else
 	alias ls="ls --color=auto"

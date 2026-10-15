@@ -19,7 +19,7 @@ Scope {
             osd.kind = kind
             osd.value = value
             osd.muted = muted
-            osd.screenName = screenName
+            osd.screenName = screenName || Compositor.focusedOutput
             osd.message = message
             hideTimer.restart()
         }

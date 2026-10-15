@@ -102,7 +102,8 @@ EOF
 	mv "$tmp_gtk" "$gtk_dir/settings.ini"
 done
 
-if command -v hyprctl >/dev/null 2>&1 && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+desktop=${XDG_CURRENT_DESKTOP:-}
+if [[ "${desktop,,}" != *niri* ]] && command -v hyprctl >/dev/null 2>&1 && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
 	if [[ "$TARGET_MODE" == "light" ]]; then
 		hyprctl eval 'hl.config({ general = { col = { active_border = { colors = {"rgba(1e66f5ee)", "rgba(04a5e5ee)"}, angle = 45 }, inactive_border = "rgba(bcc0ccaa)" } }, decoration = { shadow = { color = 0x33000000 } } })' >/dev/null || true
 	else
@@ -113,6 +114,35 @@ if command -v hyprctl >/dev/null 2>&1 && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}
 		hyprctl hyprpaper wallpaper ",$WALLPAPER" >/dev/null 2>&1 || true
 	fi
 fi
+
+# Included by Niri after its static defaults; atomic replacement triggers a
+# native config reload. Runtime state stays out of the Home Manager symlink.
+if [[ "$TARGET_MODE" == "light" ]]; then
+	NIRI_FROM="#1e66f5ee"
+	NIRI_TO="#04a5e5ee"
+	NIRI_INACTIVE="#bcc0ccaa"
+	NIRI_SHADOW="#00000033"
+	NIRI_BACKGROUND="#eff1f5"
+else
+	NIRI_FROM="#33ccffee"
+	NIRI_TO="#00ff99ee"
+	NIRI_INACTIVE="#595959aa"
+	NIRI_SHADOW="#1a1a1aee"
+	NIRI_BACKGROUND="#1e1e2e"
+fi
+tmp_niri="$(mktemp "$STATE_DIR/.niri.XXXXXX")"
+cat >"$tmp_niri" <<EOF
+layout {
+    background-color "$NIRI_BACKGROUND"
+    border {
+        active-gradient from="$NIRI_FROM" to="$NIRI_TO" angle=45
+        inactive-color "$NIRI_INACTIVE"
+    }
+    shadow { color "$NIRI_SHADOW"; }
+}
+overview { backdrop-color "$NIRI_BACKGROUND"; }
+EOF
+mv "$tmp_niri" "$STATE_DIR/niri.kdl"
 
 if [[ "$FROM_DARKMAN" -eq 0 && "$MODE" != "init" ]] && command -v darkman >/dev/null 2>&1; then
 	darkman set "$TARGET_MODE" >/dev/null 2>&1 || true

@@ -4,6 +4,17 @@
   ...
 }:
 
+let
+  smartAlert = pkgs.writeShellApplication {
+    name = "maintenance-smart-alert";
+    runtimeInputs = with pkgs; [
+      coreutils
+      jq
+      util-linux
+    ];
+    text = builtins.readFile ../../config/scripts/maintenance-smart-alert.sh;
+  };
+in
 {
   hardware = {
     enableRedistributableFirmware = true;
@@ -45,6 +56,18 @@
     ];
     fstrim.enable = true;
     fwupd.enable = true;
+    smartd = {
+      enable = true;
+      autodetect = true;
+      # Use smartd's supported exec hook rather than a root process depending on
+      # a running Wayland notification server. Alerts survive logged-out sessions.
+      defaults.monitored = "-a -n standby,q -m <nomailer> -M exec ${smartAlert}/bin/maintenance-smart-alert -M diminishing";
+      notifications = {
+        mail.enable = false;
+        wall.enable = false;
+        x11.enable = false;
+      };
+    };
     hardware.bolt.enable = true;
     thermald.enable = true;
   };
@@ -63,20 +86,25 @@
     priority = 100;
   };
 
-  systemd.oomd.enable = true;
-
-  systemd.services.lenovo-conservation-mode = {
-    description = "Enable Lenovo battery conservation mode";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "systemd-udev-settle.service" ];
-    wants = [ "systemd-udev-settle.service" ];
-    unitConfig.ConditionPathExists = "/sys/class/power_supply/BAT0/extensions/ideapad_laptop/conservation_mode";
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
+  systemd = {
+    oomd.enable = true;
+    tmpfiles.rules = [
+      "d /var/lib/workstation-maintenance 0755 root root -"
+      "d /var/lib/workstation-maintenance/smart 0755 root root -"
+    ];
+    services.lenovo-conservation-mode = {
+      description = "Enable Lenovo battery conservation mode";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "systemd-udev-settle.service" ];
+      wants = [ "systemd-udev-settle.service" ];
+      unitConfig.ConditionPathExists = "/sys/class/power_supply/BAT0/extensions/ideapad_laptop/conservation_mode";
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        echo 1 > /sys/class/power_supply/BAT0/extensions/ideapad_laptop/conservation_mode
+      '';
     };
-    script = ''
-      echo 1 > /sys/class/power_supply/BAT0/extensions/ideapad_laptop/conservation_mode
-    '';
   };
 }

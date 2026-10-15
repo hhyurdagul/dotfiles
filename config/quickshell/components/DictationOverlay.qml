@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
 import ".."
@@ -16,8 +15,8 @@ Scope {
         PanelWindow {
             required property var modelData
             screen: modelData
-            visible: Dictation.recording && (Hyprland.focusedMonitor?.name === modelData.name
-                || (!Quickshell.screens.some(s => s.name === Hyprland.focusedMonitor?.name) && modelData === Quickshell.screens[0]))
+            visible: Dictation.recording && (Compositor.focusedOutput === modelData.name
+                || (!Quickshell.screens.some(s => s.name === Compositor.focusedOutput) && modelData === Quickshell.screens[0]))
             anchors.bottom: true
             margins.bottom: Theme.dictationBottomMargin
             implicitWidth: Theme.dictationWidth

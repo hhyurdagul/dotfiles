@@ -39,7 +39,7 @@ DropdownWidget {
 
     Process {
         id: logoutProc
-        command: ["uwsm", "stop"]
+        command: ["session-exit"]
     }
 
     Process {

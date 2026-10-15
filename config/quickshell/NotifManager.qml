@@ -1,7 +1,6 @@
 pragma Singleton
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import Quickshell.Services.Notifications
 
 QtObject {
@@ -236,46 +235,32 @@ QtObject {
         var names = [item.desktopEntry, item.app]
         if (entry) names = names.concat([entry.id, entry.name, entry.startupClass])
         var keys = names.map(normalizedApp).filter(key => key.length > 0)
-        return clients.filter(client => client.mapped !== false
-            && [client.class, client.initialClass].some(name => keys.includes(normalizedApp(name))))
-            .sort((a, b) => (a.focusHistoryID ?? 9999) - (b.focusHistoryID ?? 9999))[0] || null
+        return clients.filter(client =>
+            [client.appId, client.initialAppId].some(name => keys.includes(normalizedApp(name))))
+            .sort((a, b) => a.focusRank - b.focusRank)[0] || null
     }
 
     property var focusQueue: []
-    property var focusItem: null
     property var focusDelay: Timer {
         interval: 150
         onTriggered: notifManager.startNextFocus()
     }
 
     function startNextFocus() {
-        if (focusProc.running || focusQueue.length === 0) return
-        focusItem = focusQueue[0]
+        if (focusQueue.length === 0) return
+        var item = focusQueue[0]
         focusQueue = focusQueue.slice(1)
-        focusProc.running = true
-    }
-
-    property var focusProc: Process {
-        command: ["hyprctl", "clients", "-j"]
-        stdout: StdioCollector { id: focusOutput }
-        onExited: (exitCode, exitStatus) => {
-            var item = notifManager.focusItem
-            try {
-                if (exitCode === 0) {
-                    var client = notifManager.matchingWindow(item, JSON.parse(focusOutput.text))
-                    if (client && /^0x[0-9a-f]+$/i.test(client.address)) {
-                        Quickshell.execDetached(["hyprctl", "eval",
-                            'hl.dispatch(hl.dsp.focus({ window = "address:' + client.address + '" }))'])
-                    } else if (!item.actionInvoked) {
-                        var entry = notifManager.desktopEntryFor(item)
-                        if (entry) entry.execute()
-                    }
-                }
-            } catch (e) {
-                console.warn("Unable to focus notification source:", e)
+        try {
+            var client = matchingWindow(item, Compositor.windows)
+            if (client) {
+                Compositor.focusWindow(client)
+            } else if (!item.actionInvoked) {
+                var entry = desktopEntryFor(item)
+                if (entry) entry.execute()
             }
-            notifManager.focusItem = null
-            Qt.callLater(notifManager.startNextFocus)
+        } catch (e) {
+            console.warn("Unable to focus notification source:", e)
         }
+        if (focusQueue.length > 0) Qt.callLater(startNextFocus)
     }
 }

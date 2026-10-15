@@ -12,7 +12,12 @@ esac
 # Serialize repeated presses so hardware writes and their readbacks stay ordered.
 exec 9>"${XDG_RUNTIME_DIR:-/tmp}/desktop-control-$UID-$kind.lock"
 flock -w 2 9 || exit 0
-screen=$(hyprctl -j monitors | jq -r '[.[] | select(.focused)][0].name // empty')
+desktop=${XDG_CURRENT_DESKTOP:-}
+if [[ "${desktop,,}" == *niri* ]]; then
+  screen=$(niri msg --json focused-output | jq -r '.name // empty')
+else
+  screen=$(hyprctl -j monitors | jq -r '[.[] | select(.focused)][0].name // empty')
+fi
 
 show_osd() {
   quickshell ipc -c default call osd display "$kind" "$1" "$2" "$screen" "${3:-}" >/dev/null 2>&1 || true

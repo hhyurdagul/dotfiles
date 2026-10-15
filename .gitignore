@@ -1,0 +1,22 @@
+# Local snapshots
+*.bak
+*.orig
+*.rej
+*~
+*.swp
+
+# Nix build outputs and dev shells
+result
+result-*
+.direnv/
+
+# Python tooling caches
+__pycache__/
+*.pyc
+.ruff_cache/
+
+# Local secrets (sops-encrypted files may be committed; plaintext never)
+.env
+.env.*
+*.key
+keys.txt

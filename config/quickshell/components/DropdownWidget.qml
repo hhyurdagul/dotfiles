@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import ".."
 
 Item {
@@ -52,16 +51,11 @@ Item {
         }
     }
 
-    HyprlandFocusGrab {
-        id: focusGrab
-        windows: [popup]
-        active: dropdownOpen
-        onCleared: dropdownOpen = false
-    }
 
     PopupWindow {
         id: popup
         visible: dropdownOpen
+        grabFocus: true
         anchor.window: barWindow
         anchor.item: root
         anchor.edges: Edges.Bottom

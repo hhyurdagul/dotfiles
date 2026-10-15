@@ -1,3 +1,13 @@
 [[language]]
 name = "html"
 file-types = ["html", "vto"]
+
+[language-server.nixd]
+command = "nixd"
+
+[[language]]
+name = "nix"
+language-servers = ["nixd"]
+auto-format = true
+formatter = { command = "nixfmt" }
+

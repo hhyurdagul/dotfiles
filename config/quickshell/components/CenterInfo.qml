@@ -3,7 +3,6 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
-import Quickshell.Hyprland
 import ".."
 
 Item {
@@ -448,16 +447,6 @@ Item {
         onTriggered: weatherProc.running = true
     }
 
-    HyprlandFocusGrab {
-        id: popupFocusGrab
-        windows: [notifPopup, calendarPopup, weatherPopup]
-        active: centerInfo.notifVisible || centerInfo.calendarVisible || centerInfo.weatherVisible
-        onCleared: {
-            centerInfo.notifVisible = false
-            centerInfo.calendarVisible = false
-            centerInfo.weatherVisible = false
-        }
-    }
 
     // ==========================================
     // NATIVE NOTIFICATION DROPDOWN POPUP
@@ -465,6 +454,8 @@ Item {
     PopupWindow {
         id: notifPopup
         visible: centerInfo.notifVisible
+        grabFocus: true
+        onVisibleChanged: if (!visible) centerInfo.notifVisible = false
         anchor.window: barWindow
         anchor.item: notifPill
         anchor.edges: Edges.Bottom
@@ -683,6 +674,8 @@ Item {
     PopupWindow {
         id: calendarPopup
         visible: centerInfo.calendarVisible
+        grabFocus: true
+        onVisibleChanged: if (!visible) centerInfo.calendarVisible = false
         anchor.window: barWindow
         anchor.item: datePill
         anchor.edges: Edges.Bottom
@@ -865,6 +858,8 @@ Item {
     PopupWindow {
         id: weatherPopup
         visible: centerInfo.weatherVisible && centerInfo.weatherText !== ""
+        grabFocus: true
+        onVisibleChanged: if (!visible) centerInfo.weatherVisible = false
         anchor.window: barWindow
         anchor.item: weatherPill
         anchor.edges: Edges.Bottom

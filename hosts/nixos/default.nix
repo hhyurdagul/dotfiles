@@ -13,6 +13,7 @@
     ../../modules/containers.nix
     ../../modules/desktop.nix
     ../../modules/hyprland.nix
+    ../../modules/niri.nix
   ];
 
   networking = {

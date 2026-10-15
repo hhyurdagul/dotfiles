@@ -31,11 +31,11 @@ let
   # Its self-update can't write to the store; bump version and hash instead.
   tern = pkgs.stdenv.mkDerivation rec {
     pname = "tern";
-    version = "0.7.1";
+    version = "0.8.3";
     src = pkgs.requireFile {
       name = "Tern-${version}-linux-x86_64.tar.gz";
       url = "https://stencil.so";
-      hash = "sha256-cLJAECXSNFYLJZgi9XeOxOhjmb01Ce2It2eI8tJOA9w=";
+      hash = "sha256-vMICgHolxxhYVhofV+A95F+94ZE4STAuNKLwo2xs/nk=";
     };
 
     nativeBuildInputs = [
@@ -106,19 +106,24 @@ in
       blender
       chromium
       darkman
+      file-roller
+      unar
       fuzzel
       godot
       kitty
       libnotify
-      loupe
+      libreoffice
+      imv
       nautilus
       networkmanagerapplet
       obsidian
+      obs-studio
       onlyoffice-desktopeditors
       papers
       prismlauncher
       pavucontrol
       quickshell
+      satty
       vlc
       hyprlock
 
@@ -142,6 +147,7 @@ in
       bat
       btop
       bubblewrap
+      deadnix
       eza
       fd
       fzf
@@ -150,11 +156,14 @@ in
       lazydocker
       lazygit
       nixd
+      nixfmt
       playwright-driver
       podman-compose
       psmisc
+      python3
       ripgrep
       sops
+      statix
       typst
       uv
       wget

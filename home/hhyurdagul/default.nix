@@ -10,6 +10,7 @@
   imports = [
     ./packages.nix
     ./services.nix
+    ./maintenance.nix
   ];
 
   home = {
@@ -30,7 +31,7 @@
     # Breeze Light ships inside kdePackages.breeze (1.8 GiB closure with Qt and
     # KDE frameworks); copy just the cursor theme. GTK's settings.ini belongs to
     # theme-switcher, so gtk.enable stays off and that script adds the cursor.
-    # Hyprland reads the same name and size from hl.env in hyprland.lua.
+    # Both compositor configs use this theme; Niri's size is substituted below.
     pointerCursor = {
       enable = true;
       name = "Breeze_Light";
@@ -115,16 +116,22 @@
         added = {
           "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
           "application/pdf" = [ "org.gnome.Papers.desktop" ];
-          "image/avif" = [ "org.gnome.Loupe.desktop" ];
-          "image/bmp" = [ "org.gnome.Loupe.desktop" ];
-          "image/gif" = [ "org.gnome.Loupe.desktop" ];
-          "image/heic" = [ "org.gnome.Loupe.desktop" ];
-          "image/heif" = [ "org.gnome.Loupe.desktop" ];
-          "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
-          "image/png" = [ "org.gnome.Loupe.desktop" ];
-          "image/svg+xml" = [ "org.gnome.Loupe.desktop" ];
-          "image/tiff" = [ "org.gnome.Loupe.desktop" ];
-          "image/webp" = [ "org.gnome.Loupe.desktop" ];
+          "application/zip" = [ "org.gnome.FileRoller.desktop" ];
+          "application/vnd.rar" = [ "org.gnome.FileRoller.desktop" ];
+          "application/x-rar" = [ "org.gnome.FileRoller.desktop" ];
+          "application/x-7z-compressed" = [ "org.gnome.FileRoller.desktop" ];
+          "application/x-tar" = [ "org.gnome.FileRoller.desktop" ];
+          "application/gzip" = [ "org.gnome.FileRoller.desktop" ];
+          "image/avif" = [ "imv.desktop" ];
+          "image/bmp" = [ "imv.desktop" ];
+          "image/gif" = [ "imv.desktop" ];
+          "image/heic" = [ "imv.desktop" ];
+          "image/heif" = [ "imv.desktop" ];
+          "image/jpeg" = [ "imv.desktop" ];
+          "image/png" = [ "imv.desktop" ];
+          "image/svg+xml" = [ "imv.desktop" ];
+          "image/tiff" = [ "imv.desktop" ];
+          "image/webp" = [ "imv.desktop" ];
           "video/mp4" = [ "vlc.desktop" ];
           "video/mpeg" = [ "vlc.desktop" ];
           "video/ogg" = [ "vlc.desktop" ];
@@ -148,6 +155,12 @@
         "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
         "application/msword" = [ "onlyoffice-desktopeditors.desktop" ];
         "application/pdf" = [ "org.gnome.Papers.desktop" ];
+        "application/zip" = [ "org.gnome.FileRoller.desktop" ];
+        "application/vnd.rar" = [ "org.gnome.FileRoller.desktop" ];
+        "application/x-rar" = [ "org.gnome.FileRoller.desktop" ];
+        "application/x-7z-compressed" = [ "org.gnome.FileRoller.desktop" ];
+        "application/x-tar" = [ "org.gnome.FileRoller.desktop" ];
+        "application/gzip" = [ "org.gnome.FileRoller.desktop" ];
         "application/rtf" = [ "onlyoffice-desktopeditors.desktop" ];
         "application/vnd.ms-excel" = [ "onlyoffice-desktopeditors.desktop" ];
         "application/vnd.ms-excel.sheet.binary.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
@@ -185,16 +198,16 @@
         "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = [
           "onlyoffice-desktopeditors.desktop"
         ];
-        "image/avif" = [ "org.gnome.Loupe.desktop" ];
-        "image/bmp" = [ "org.gnome.Loupe.desktop" ];
-        "image/gif" = [ "org.gnome.Loupe.desktop" ];
-        "image/heic" = [ "org.gnome.Loupe.desktop" ];
-        "image/heif" = [ "org.gnome.Loupe.desktop" ];
-        "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
-        "image/png" = [ "org.gnome.Loupe.desktop" ];
-        "image/svg+xml" = [ "org.gnome.Loupe.desktop" ];
-        "image/tiff" = [ "org.gnome.Loupe.desktop" ];
-        "image/webp" = [ "org.gnome.Loupe.desktop" ];
+        "image/avif" = [ "imv.desktop" ];
+        "image/bmp" = [ "imv.desktop" ];
+        "image/gif" = [ "imv.desktop" ];
+        "image/heic" = [ "imv.desktop" ];
+        "image/heif" = [ "imv.desktop" ];
+        "image/jpeg" = [ "imv.desktop" ];
+        "image/png" = [ "imv.desktop" ];
+        "image/svg+xml" = [ "imv.desktop" ];
+        "image/tiff" = [ "imv.desktop" ];
+        "image/webp" = [ "imv.desktop" ];
         "text/html" = [ "zen.desktop" ];
         "text/csv" = [ "onlyoffice-desktopeditors.desktop" ];
         "text/tab-separated-values" = [ "onlyoffice-desktopeditors.desktop" ];
@@ -216,7 +229,6 @@
       "darkman/config.yaml".source = ../../config/darkman/config.yaml;
       "helix/config.toml".source = ../../config/helix/config.toml;
       "helix/languages.toml".source = ../../config/helix/languages.toml;
-      "hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
       "hypr/hyprlock.conf".source = ../../config/hypr/hyprlock.conf;
       "kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
       "kitty/dark-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;

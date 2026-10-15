@@ -47,6 +47,26 @@
       username = "hhyurdagul";
       pkgs = nixpkgs.legacyPackages.${system};
 
+      lintSource = pkgs.lib.fileset.toSource {
+        root = ./.;
+        fileset = pkgs.lib.fileset.fileFilter (
+          file:
+          file.hasExt "nix"
+          || file.hasExt "py"
+          || file.hasExt "sh"
+          || file.hasExt "zsh"
+          || file.name == ".envrc"
+        ) ./.;
+      };
+      lintCheck =
+        name: tools: command:
+        pkgs.runCommand "dotfiles-${name}" { nativeBuildInputs = tools; } ''
+          set -euo pipefail
+          cd ${lintSource}
+          ${command}
+          touch "$out"
+        '';
+
       nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
@@ -72,7 +92,32 @@
 
       nixosConfigurations.nixos = nixos;
 
-      checks.${system}.nixos = nixos.config.system.build.toplevel;
+      checks.${system} = {
+        nixos = nixos.config.system.build.toplevel;
+        nixfmt = lintCheck "nixfmt" [ pkgs.nixfmt pkgs.findutils ] ''
+          find . -type f -name '*.nix' -print0 | xargs -0 -r nixfmt --check
+        '';
+        statix = lintCheck "statix" [ pkgs.statix ] "statix check .";
+        deadnix = lintCheck "deadnix" [ pkgs.deadnix ] "deadnix --fail .";
+        ruff = lintCheck "ruff" [ pkgs.python3Packages.ruff ] "ruff check --no-cache .";
+        shell = lintCheck "shell" [ pkgs.shellcheck pkgs.zsh pkgs.findutils ] ''
+          while IFS= read -r -d "" script; do
+            bash -n "$script"
+            if [[ "$script" == ./config/scripts/theme-switcher.sh ]]; then
+              # Home Manager supplies these before including this fragment.
+              {
+                printf 'CURSOR_THEME=Adwaita\nCURSOR_SIZE=24\n'
+                cat "$script"
+              } | shellcheck --shell=bash -
+            else
+              shellcheck --shell=bash "$script"
+            fi
+          done < <(find . -type f \( -name '*.sh' -o -name .envrc \) -print0)
+          while IFS= read -r -d "" script; do
+            zsh -n "$script"
+          done < <(find ./config/zsh -type f -name '*.zsh' -print0)
+        '';
+      };
 
       devShells.${system}.default = pkgs.mkShellNoCC {
         packages = with pkgs; [
@@ -82,6 +127,7 @@
           shellcheck
           shfmt
           statix
+          zsh
         ];
       };
 

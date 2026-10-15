@@ -2,7 +2,6 @@
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
-import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -23,14 +22,10 @@ ShellRoot {
 
             signal closeAllPopups
 
-            // Listen to Hyprland events to close popups when focus changes
             Connections {
-                target: Hyprland
-                function onRawEvent(event) {
-                    // Close popups when active window changes or layer closes
-                    if (event.name === "activewindow" || event.name === "activewindowv2") {
-                        rootBarWindow.closeAllPopups();
-                    }
+                target: Compositor
+                function onFocusChanged() {
+                    rootBarWindow.closeAllPopups();
                 }
             }
 
@@ -123,6 +118,12 @@ ShellRoot {
                     spacing: 0
 
                     SystemTrayWidget {
+                        barWindow: rootBarWindow
+                    }
+
+                    Separator {}
+
+                    ClipboardWidget {
                         barWindow: rootBarWindow
                     }
 

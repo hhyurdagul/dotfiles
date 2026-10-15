@@ -1,0 +1,263 @@
+// Niri 26.04. Session services and applications are managed by Home Manager.
+// Native scrolling columns replace Hyprland's dwindle tree; see the binding
+// comments below for deliberate layout and gesture adaptations.
+
+input {
+    // Also fixes the always-on native drag modifier: Super+LMB moves windows,
+    // Super+RMB resizes them. Do not bind those buttons: native drag is built in.
+    mod-key "Super"
+    mod-key-nested "Super"
+
+    keyboard {
+        xkb {
+            layout "us,tr"
+            variant ","
+            model ""
+            rules ""
+            options "caps:escape"
+        }
+        track-layout "global"
+    }
+
+    mouse { accel-speed 0; }
+    touchpad {
+        accel-speed 0
+        natural-scroll
+    }
+    trackpoint { accel-speed 0; }
+    trackball { accel-speed 0; }
+
+    // Hovering any visible part of a window focuses it and may scroll it into view.
+    focus-follows-mouse
+}
+
+cursor {
+    xcursor-theme "Breeze_Light"
+    xcursor-size 12
+}
+
+environment {
+    XCURSOR_THEME "Breeze_Light"
+    XCURSOR_SIZE "12"
+}
+
+output "eDP-1" {
+    mode "2880x1800@120"
+    scale 2
+    position x=1920 y=0
+    focus-at-startup
+}
+
+output "Lenovo Group Limited R27i-30 U533F1TR" {
+    mode "1920x1080@165"
+    scale 1
+    position x=0 y=0
+}
+
+// Other outputs use native preferred mode, automatic scale and right placement.
+// Names, not dynamic indices, preserve numeric workspace identity on reconnect.
+// The niri-display-policy service sorts these numerically after output migration.
+workspace "1" { open-on-output "eDP-1"; }
+workspace "2" { open-on-output "eDP-1"; }
+workspace "3" { open-on-output "eDP-1"; }
+workspace "4" { open-on-output "eDP-1"; }
+workspace "5" { open-on-output "eDP-1"; }
+workspace "6" { open-on-output "Lenovo Group Limited R27i-30 U533F1TR"; }
+workspace "7" { open-on-output "Lenovo Group Limited R27i-30 U533F1TR"; }
+workspace "8" { open-on-output "Lenovo Group Limited R27i-30 U533F1TR"; }
+workspace "9" { open-on-output "Lenovo Group Limited R27i-30 U533F1TR"; }
+workspace "10" { open-on-output "Lenovo Group Limited R27i-30 U533F1TR"; }
+
+layout {
+    // Hyprland's two 5px inner gaps become one 10px inter-window gap.
+    // Niri's outer gap is also 10px; struts add the remaining 10px to reach 20px.
+    gaps 10
+    struts {
+        left 10
+        right 10
+        top 10
+        bottom 10
+    }
+    center-focused-column "never"
+    default-column-width { proportion 0.5; }
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 1.0
+    }
+
+    focus-ring { off; }
+    border {
+        on
+        width 2
+        active-gradient from="#33ccffee" to="#00ff99ee" angle=45
+        inactive-color "#595959aa"
+    }
+    shadow {
+        on
+        softness 4
+        spread 0
+        offset x=0 y=0
+        color "#1a1a1aee"
+    }
+    background-color "#1e1e2e"
+}
+
+overview { backdrop-color "#181825"; }
+
+// Native dual-Kawase blur approximates Hyprland size=3, passes=1.
+// Saturation approximates vibrancy; the two renderers are not pixel-identical.
+blur {
+    on
+    passes 1
+    offset 3
+    noise 0
+    saturation 1.1696
+}
+
+window-rule {
+    // Keep focus colors at the edges instead of behind alpha-rendered app content.
+    draw-border-with-background false
+    opacity 1.0
+    geometry-corner-radius 10
+    clip-to-geometry true
+    background-effect {
+        blur true
+        xray false
+    }
+    popups { background-effect { blur true; xray false; }; }
+}
+
+// Preserve the legacy run-window placement as a bottom-left floating window.
+// Niri positions a window edge relative to the working area, not monitor_h-120.
+window-rule {
+    match app-id="^hyprland-run$"
+    open-floating true
+    default-floating-position x=20 y=20 relative-to="bottom-left"
+}
+
+// The old empty-class/title XWayland no-focus workaround is not generalized:
+// Niri has no XWayland matcher, and xwayland-satellite owns those drag surfaces.
+
+animations {
+    // The original easy spring has mass=1, stiffness=71.2633, damping=15.8273644;
+    // Niri uses integer stiffness and a dimensionless damping ratio instead.
+    window-open { spring damping-ratio=0.9374 stiffness=71 epsilon=0.0001; }
+    window-movement { spring damping-ratio=0.9374 stiffness=71 epsilon=0.0001; }
+    window-resize { spring damping-ratio=0.9374 stiffness=71 epsilon=0.0001; }
+    window-close { duration-ms 149; curve "linear"; }
+    workspace-switch {
+        duration-ms 194
+        curve "cubic-bezier" 0.5 0.5 0.75 1
+    }
+    // Border/layer/fade/zoom leaves and popin percentages have no direct mapping.
+    // Native opening/closing rendering and spatial workspace transitions remain.
+}
+
+// Native three-finger gestures: horizontal scrolls columns; vertical switches
+// workspaces (instead of Hyprland's three-finger horizontal workspace gesture).
+// There is no direction-remapping configuration for these gestures in 26.04.
+
+hotkey-overlay { skip-at-startup; }
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+binds {
+    Super+Shift+Slash repeat=false { show-hotkey-overlay; }
+    Super+Return repeat=false { spawn "kitty"; }
+    Super+T repeat=false { spawn "tern"; }
+    Super+B repeat=false { spawn "zen"; }
+    Super+O repeat=false { toggle-overview; }
+    Super+W repeat=false { toggle-column-tabbed-display; }
+    Super+Q repeat=false { close-window; }
+    Super+Shift+M repeat=false { spawn "session-exit"; }
+    Super+E repeat=false { spawn "env" "GSK_RENDERER=ngl" "nautilus" "--new-window"; }
+    Super+V repeat=false { toggle-window-floating; }
+    Super+D repeat=false { spawn "fuzzel"; }
+    Super+R repeat=false { switch-preset-column-width; }
+    Super+BracketLeft repeat=false { consume-or-expel-window-left; }
+    Super+BracketRight repeat=false { consume-or-expel-window-right; }
+    Super+gbreve repeat=false { consume-or-expel-window-left; }
+    Super+udiaeresis repeat=false { consume-or-expel-window-right; }
+    Super+F repeat=false { maximize-column; }
+    Super+Shift+F repeat=false { fullscreen-window; }
+    Super+Alt+L repeat=false { spawn "lock-screen"; }
+    Super+Alt+I repeat=false { spawn "idle-toggle"; }
+    Super+Alt+K repeat=false { switch-layout "next"; }
+    Super+Alt+T repeat=false { spawn "theme-switcher" "toggle"; }
+    Super+Alt+N repeat=false { spawn "nightlight-toggle" "toggle"; }
+    Super+Alt+C repeat=false { spawn "monitor-toggle"; }
+    Super+Tab repeat=false { focus-workspace-previous; }
+
+    Super+Left repeat=false { focus-column-or-monitor-left; }
+    Super+Right repeat=false { focus-column-or-monitor-right; }
+    Super+Up repeat=false { focus-window-or-monitor-up; }
+    Super+Down repeat=false { focus-window-or-monitor-down; }
+    Super+H repeat=false { focus-column-or-monitor-left; }
+    Super+J repeat=false { focus-window-or-monitor-down; }
+    Super+K repeat=false { focus-window-or-monitor-up; }
+    Super+L repeat=false { focus-column-or-monitor-right; }
+
+    // Horizontal movement reorders whole columns (including any stacked windows).
+    Super+Shift+Left repeat=false { move-column-left-or-to-monitor-left; }
+    Super+Shift+Right repeat=false { move-column-right-or-to-monitor-right; }
+    Super+Shift+Up repeat=false { move-window-up; }
+    Super+Shift+Down repeat=false { move-window-down; }
+    Super+Shift+H repeat=false { move-column-left-or-to-monitor-left; }
+    Super+Shift+J repeat=false { move-window-down; }
+    Super+Shift+K repeat=false { move-window-up; }
+    Super+Shift+L repeat=false { move-column-right-or-to-monitor-right; }
+
+    Super+1 repeat=false { focus-workspace "1"; }
+    Super+2 repeat=false { focus-workspace "2"; }
+    Super+3 repeat=false { focus-workspace "3"; }
+    Super+4 repeat=false { focus-workspace "4"; }
+    Super+5 repeat=false { focus-workspace "5"; }
+    Super+6 repeat=false { focus-workspace "6"; }
+    Super+7 repeat=false { focus-workspace "7"; }
+    Super+8 repeat=false { focus-workspace "8"; }
+    Super+9 repeat=false { focus-workspace "9"; }
+    Super+0 repeat=false { focus-workspace "10"; }
+    Super+Shift+1 repeat=false { move-window-to-workspace "1"; }
+    Super+Shift+2 repeat=false { move-window-to-workspace "2"; }
+    Super+Shift+3 repeat=false { move-window-to-workspace "3"; }
+    Super+Shift+4 repeat=false { move-window-to-workspace "4"; }
+    Super+Shift+5 repeat=false { move-window-to-workspace "5"; }
+    Super+Shift+6 repeat=false { move-window-to-workspace "6"; }
+    Super+Shift+7 repeat=false { move-window-to-workspace "7"; }
+    Super+Shift+8 repeat=false { move-window-to-workspace "8"; }
+    Super+Shift+9 repeat=false { move-window-to-workspace "9"; }
+    Super+Shift+0 repeat=false { move-window-to-workspace "10"; }
+
+    // BTN_FORWARD (277), including the MX Master thumb button, is MouseForward.
+    Super+MouseForward repeat=false { focus-workspace-down; }
+    Super+Shift+MouseForward repeat=false { focus-workspace-up; }
+
+    XF86AudioRaiseVolume allow-when-locked=true repeat=true { spawn "desktop-control" "volume" "up"; }
+    XF86AudioLowerVolume allow-when-locked=true repeat=true { spawn "desktop-control" "volume" "down"; }
+    XF86AudioMute allow-when-locked=true repeat=false { spawn "desktop-control" "volume" "mute"; }
+    XF86AudioMicMute allow-when-locked=true repeat=false { spawn "desktop-control" "microphone" "mute"; }
+    XF86MonBrightnessUp allow-when-locked=true repeat=false { spawn "desktop-control" "brightness" "up"; }
+    XF86MonBrightnessDown allow-when-locked=true repeat=false { spawn "desktop-control" "brightness" "down"; }
+    Super+XF86AudioRaiseVolume allow-when-locked=true repeat=true { spawn "desktop-control" "brightness" "up"; }
+    Super+XF86AudioLowerVolume allow-when-locked=true repeat=true { spawn "desktop-control" "brightness" "down"; }
+    Super+XF86AudioMute allow-when-locked=true repeat=false { spawn "desktop-control" "brightness" "toggle"; }
+
+    XF86AudioNext allow-when-locked=true repeat=false { spawn "playerctl" "next"; }
+    XF86AudioPause allow-when-locked=true repeat=false { spawn "playerctl" "play-pause"; }
+    XF86AudioPlay allow-when-locked=true repeat=false { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev allow-when-locked=true repeat=false { spawn "playerctl" "previous"; }
+
+    // Native screenshot UI / focused screen / focused window. Super+Print now
+    // captures one screen, not the old custom helper's entire desktop composite.
+    Print repeat=false { screenshot; }
+    Ctrl+Print repeat=false { screenshot-screen; }
+    Alt+Print repeat=false { screenshot-window; }
+    Super+Print repeat=false { screenshot-screen; }
+
+    // Niri 26.04 has no release-trigger binds; dictation toggles on key press.
+    Super+Space repeat=false { spawn "handy" "--toggle-transcription"; }
+}
+
+// Optional, watched live, and last so generated theme colors override defaults.
+include optional=true "~/.local/state/theme/niri.kdl"
