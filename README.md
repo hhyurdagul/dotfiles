@@ -134,7 +134,9 @@ toggles the laptop panel manually; that choice persists until the HDMI
 connection/activation state changes or the policy service restarts.
 
 After output changes or workspace moves, the service orders named workspaces
-numerically on each output without changing focus. With only one display active,
+numerically on each output without changing focus. Niri ignores workspace moves
+while the screen is locked, so after a locked hotplug the service retries every
+second and the order settles right after unlock. With only one display active,
 the order is always **1–10**, regardless of which display it is. When both
 displays are enabled, workspaces retain their configured preferred outputs.
 Niri's native trailing empty workspace remains; the custom `magic` workspace and
