@@ -27,7 +27,8 @@ English UI, Europe/Istanbul. NixOS 26.05 stable, with Home Manager as a NixOS
 module (`useGlobalPkgs`, `useUserPackages`, so user packages land in
 `/etc/profiles/per-user/hhyurdagul`).
 
-Session: greetd/tuigreet → UWSM → Hyprland (git build from the `hyprland` input,
+Session: greetd/tuigreet → `niri-session` → Niri (config in `config/niri/config.kdl`).
+Hyprland stays as a selectable UWSM fallback (git build from the `hyprland` input,
 **Lua config** in `config/hypr/hyprland.lua`). Quickshell is the bar,
 notifications, and OSD. Catppuccin light/dark switched at runtime by darkman +
 `theme-switcher`. Kitty, Helix (`EDITOR=hx`), zsh + powerlevel10k, Zen as the
@@ -47,9 +48,9 @@ apps come from numtide's `llm-agents.nix`.
 | Default apps / MIME | `xdg.mimeApps` in `home/hhyurdagul/default.nix` |
 | Shell options, plugins | `programs.zsh` in `default.nix`; aliases and env in `config/zsh/init.zsh` |
 
-Hyprland binds call helpers by bare name. `services.nix` rewrites
-`hypr/hyprland.lua` with `builtins.replaceStrings` to absolute store paths. A new
-helper called from a bind needs an entry there too.
+Niri and Hyprland binds call helpers by bare name. `services.nix` rewrites
+`niri/config.kdl` and `hypr/hyprland.lua` with `builtins.replaceStrings` to
+absolute store paths. A new helper called from a bind needs an entry there too.
 
 ## Package sources
 

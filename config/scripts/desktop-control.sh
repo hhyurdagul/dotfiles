@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export LC_ALL=C
+# C.UTF-8 keeps "." decimals for awk without tripping Qt's non-UTF-8 warning
+# in the quickshell ipc child.
+export LC_ALL=C.UTF-8
 
 kind=${1:-}
 action=${2:-}

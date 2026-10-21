@@ -167,6 +167,7 @@ binds {
     Super+Return repeat=false { spawn "kitty"; }
     Super+T repeat=false { spawn "tern"; }
     Super+B repeat=false { spawn "zen"; }
+    Super+Z repeat=false { spawn "focus-or-launch" "md.obsidian.Obsidian" "obsidian"; }
     Super+O repeat=false { toggle-overview; }
     Super+W repeat=false { toggle-column-tabbed-display; }
     Super+Q repeat=false { close-window; }

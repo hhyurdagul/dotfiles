@@ -101,6 +101,15 @@ let
     text = builtins.readFile ../../config/scripts/monitor-toggle.sh;
   };
 
+  focusOrLaunch = pkgs.writeShellApplication {
+    name = "focus-or-launch";
+    runtimeInputs = [
+      pkgs.niri
+      pkgs.jq
+    ];
+    text = builtins.readFile ../../config/scripts/focus-or-launch.sh;
+  };
+
   niriDisplayPolicy = pkgs.writeScriptBin "niri-display-policy" ''
     #!${pkgs.python3}/bin/python3
     ${builtins.readFile ../../config/scripts/niri-display-policy.py}
@@ -215,6 +224,7 @@ in
       clipboardWatch
       desktopControl
       displayPower
+      focusOrLaunch
       handy
       idleToggle
       lockScreen
@@ -264,6 +274,7 @@ in
           ''"nightlight-toggle"''
           ''"theme-switcher"''
           ''"monitor-toggle"''
+          ''"focus-or-launch"''
           ''"session-exit"''
           ''"handy"''
           ''"~/.local/state/theme/niri.kdl"''
@@ -279,6 +290,7 @@ in
           ''"${lib.getExe nightlightToggle}"''
           ''"${lib.getExe themeSwitcher}"''
           ''"${lib.getExe monitorToggle}"''
+          ''"${lib.getExe focusOrLaunch}"''
           ''"${lib.getExe sessionExit}"''
           ''"${lib.getExe handy}"''
           ''"${config.xdg.stateHome}/theme/niri.kdl"''

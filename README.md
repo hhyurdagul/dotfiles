@@ -102,6 +102,7 @@ Default shortcuts omitted from `config.kdl` are not inherited.
 |---|---|
 | `Super+Return`, `Super+T` | Kitty, Tern |
 | `Super+B` | Zen |
+| `Super+Z` | Focus Obsidian, or launch it if no window is open |
 | `Super+E`, `Super+D` | New Nautilus window (`GSK_RENDERER=ngl`), Fuzzel |
 | `Super+O`, `Super+W`, `Super+Shift+Slash` (`Super+?`) | Overview, toggle column tabs, shortcut help |
 | `Super+Q`, `Super+F`, `Super+V` | Close, maximize column, toggle floating |

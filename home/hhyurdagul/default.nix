@@ -329,20 +329,5 @@
     };
   };
 
-  # One-shot cleanup for the pre-Home-Manager layout: ~/.config entries are
-  # real HM-managed directories now, but two dangling darkman hook symlinks
-  # (00-theme.sh -> deleted config/darkman/*-mode.d paths) may remain next to
-  # the managed 00-theme hooks. Remove only symlinks pointing into the old
-  # checkout path, then delete this activation once it has run everywhere.
-  home.activation.removeLegacyConfigLinks = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-    for target in "$HOME/.local/share/light-mode.d/00-theme.sh" "$HOME/.local/share/dark-mode.d/00-theme.sh"; do
-      if [[ -L "$target" ]]; then
-        case "$(readlink "$target")" in
-          "$HOME/dotfiles/config/darkman/"*) rm "$target" ;;
-        esac
-      fi
-    done
-  '';
-
   # Keep secrets out of Home Manager values.
 }

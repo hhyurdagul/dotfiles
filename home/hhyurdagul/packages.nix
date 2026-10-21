@@ -9,6 +9,13 @@ let
   system = pkgs.stdenv.hostPlatform.system;
   agents = inputs.llm-agents.packages.${system};
   unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+  # Upstream replaced the 1.23.3b Linux archive after this input was pinned.
+  # Checksum verified against the official GitHub release asset digest.
+  zenBrowser = inputs.zen-browser.packages.${system}.default.override {
+    zen-browser-unwrapped = inputs.zen-browser.packages.${system}.zen-browser-unwrapped.override {
+      hash = "sha256-uyBF0+IWVNQP6EElAJLurf0sH8gx7vtQkiJ3PIvcoUk=";
+    };
+  };
 
   # The package's traced closure omits @getpaseo/server's root export, which the
   # CLI only resolves to locate the daemon entrypoint; add a stub so it resolves.
@@ -31,11 +38,11 @@ let
   # Its self-update can't write to the store; bump version and hash instead.
   tern = pkgs.stdenv.mkDerivation rec {
     pname = "tern";
-    version = "0.8.3";
+    version = "0.9.5";
     src = pkgs.requireFile {
       name = "Tern-${version}-linux-x86_64.tar.gz";
       url = "https://stencil.so";
-      hash = "sha256-vMICgHolxxhYVhofV+A95F+94ZE4STAuNKLwo2xs/nk=";
+      hash = "sha256-ApOSXrYtSrfOLOuLx17Ox6xYNeh+awudb+vn0MgKzlI=";
     };
 
     nativeBuildInputs = [
@@ -171,10 +178,11 @@ in
       zoxide
     ])
     ++ [
-      inputs.zen-browser.packages.${system}.default
+      zenBrowser
     ]
     ++ (with agents; [
       antigravity-cli
+      antigravity-hub
       chatgpt
       claude-code
       claude-desktop
@@ -185,6 +193,8 @@ in
       ccusage
       herdr
       paseo-desktop
+      t3code
+      t3code-desktop
       codex
     ])
     ++ [
