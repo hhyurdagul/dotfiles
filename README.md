@@ -8,7 +8,7 @@ Declarative configuration for the `nixos` host and `hhyurdagul` user. NixOS owns
 - `hosts/nixos/`: system modules (hardware, boot, users, locale, Nix settings).
 - `modules/`: shared NixOS modules (desktop sessions, Hyprland, Niri, containers).
 - `home/hhyurdagul/`: Home Manager config — `default.nix` (programs, shell, XDG links), `packages.nix`, `services.nix`.
-- `config/`: app dotfiles linked read-only by Home Manager (`darkman`, `helix`, `hypr`, `niri`, `kitty`, `quickshell`, `scripts`, `zsh`).
+- `config/`: app dotfiles linked read-only by Home Manager (`helix`, `hypr`, `niri`, `kitty`, `quickshell`, `scripts`, `zsh`).
 
 New files must be `git add`ed before rebuilding: flakes only see tracked files.
 
@@ -61,7 +61,7 @@ Older generations remain selectable from the boot menu. For a specific generatio
 
 `greetd` defaults to **Niri**, launched through its native `niri-session`. Niri starts and stops `graphical-session.target` itself; it does not run inside UWSM. Quickshell, hypridle, darkman, wlsunset, Handy, NetworkManager's applet, and the clipboard watcher remain graphical-session services. X11 applications use Niri's automatically managed `xwayland-satellite`.
 
-Hyprland remains installed as a selectable UWSM session in tuigreet's session menu. The original `modules/hyprland.nix` and `config/hypr/hyprland.lua` remain intact. The pre-migration state is commit `3cb76f6` in Git history. A local-only snapshot, **`backups/hyprland-before-niri.tar.gz`**, is ignored by Git (`.gitignore`) and may not exist in other checkouts; inspect it with `tar -tzf backups/hyprland-before-niri.tar.gz` and extract into a separate directory when comparing or restoring, rather than overwriting a live checkout. No system switch is performed by the migration.
+Hyprland remains installed as a selectable UWSM session in tuigreet's session menu. `modules/hyprland.nix` and `config/hypr/hyprland.lua` remain; the greetd command lives only in `modules/niri.nix`. The pre-migration state is commit `3cb76f6` in Git history. A local-only snapshot, **`backups/hyprland-before-niri.tar.gz`**, is ignored by Git (`.gitignore`) and may not exist in other checkouts; inspect it with `tar -tzf backups/hyprland-before-niri.tar.gz` and extract into a separate directory when comparing or restoring, rather than overwriting a live checkout. No system switch is performed by the migration.
 
 The default login command intentionally does not remember the last selected session: a previously remembered Hyprland choice must not silently override the new Niri default. Select Hyprland explicitly when needed.
 
@@ -79,7 +79,7 @@ LocalSend is enabled in `modules/desktop.nix`, including firewall access on TCP 
 
 ## Runtime theme controls
 
-`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. The switch updates Quickshell, GTK, and native Niri borders/shadows/background through a watched KDL include; Hyprland borders and Hyprpaper still update in the fallback session. Kitty and Electron apps (Obsidian, Claude, Paseo) follow the desktop `color-scheme` live; set Electron apps to their "system" theme.
+`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. Darkman's sunrise/sunset times, wlsunset and the bar's weather share one location, `location` in `home/hhyurdagul/services.nix` (Adana). The switch updates Quickshell, GTK, and native Niri borders/shadows/background through a watched KDL include; Hyprland borders and Hyprpaper still update in the fallback session. Kitty and Electron apps (Obsidian, Claude, Paseo) follow the desktop `color-scheme` live; set Electron apps to their "system" theme.
 
 Other session shortcuts:
 
@@ -103,7 +103,7 @@ Default shortcuts omitted from `config.kdl` are not inherited.
 | `Super+Return`, `Super+T` | Kitty, Tern |
 | `Super+B` | Zen |
 | `Super+Z` | Focus Obsidian, or launch it if no window is open |
-| `Super+E`, `Super+D` | New Nautilus window (`GSK_RENDERER=ngl`), Fuzzel |
+| `Super+E`, `Super+D` | Thunar, Fuzzel |
 | `Super+O`, `Super+W`, `Super+Shift+Slash` (`Super+?`) | Overview, toggle column tabs, shortcut help |
 | `Super+Q`, `Super+F`, `Super+V` | Close, maximize column, toggle floating |
 | `Super+Shift+F` | Fullscreen |
@@ -209,13 +209,19 @@ The clipboard icon immediately after the system tray opens searchable text and i
 
 ## NVIDIA and containers
 
-The internal Intel GPU drives the session (`services.xserver.videoDrivers` lists `modesetting` first). The RTX 4050 uses PRIME offload and fine-grained runtime power management, with PCI power control pinned to `auto` by a udev rule, so it suspends (RTD3, video memory off) when idle:
+The internal Intel GPU drives the session. Niri ignores the RTX 4050 DRM device, and the session hides the NVIDIA Vulkan driver, so the dGPU can stay in D3cold. Wake it only for a program that should render there:
 
 ```sh
 nvidia-offload <program>
-nvidia-smi
+```
+
+`nvidia-smi` itself wakes the card. Idle state is `suspended` / `D3cold`:
+
+```sh
 cat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status
 ```
+
+The ignore list is read when Niri starts, so it takes a relogin. Prism Launcher's NVIDIA entry already uses `nvidia-offload`.
 
 Podman is the container backend. Docker-compatible commands and the user Docker socket are enabled; no Docker daemon is installed.
 
@@ -231,4 +237,4 @@ No NixOS-level secrets integration exists yet (no `sops-nix` input, no `modules/
 
 ## Laptop policy
 
-The host enables NVIDIA PRIME offload, firmware updates, Thunderbolt authorization, thermald, zram, and systemd-oomd. `ideapad-conservation-mode.service` enables Lenovo conservation mode at boot, limiting long-term charge to protect battery health. Disable that unit if a full charge is required for travel. The installed machine is a Lenovo Yoga Pro 7 14IMH9, type 83E2, with a Core Ultra 7 155H. Its 16 GB LPDDR5X is soldered and has no RAM slots, so memory cannot be upgraded. The discrete-GPU configuration has one M.2 slot.
+The host enables NVIDIA PRIME offload, firmware updates, Thunderbolt authorization, thermald, zram, and systemd-oomd. On battery, `battery-policy` selects the power-saver profile and drops the laptop panel to 60 Hz; plugging in restores 120 Hz and, if the profile was power-saver, balanced. A manual performance choice on AC is left alone until the next unplug. `lenovo-conservation-mode.service` enables Lenovo conservation mode at boot, limiting long-term charge to protect battery health. Disable that unit if a full charge is required for travel. The installed machine is a Lenovo Yoga Pro 7 14IMH9, type 83E2, with a Core Ultra 7 155H and a 14.5 inch 2.8K 120 Hz OLED. Its 16 GB LPDDR5X is soldered and has no RAM slots, so memory cannot be upgraded. The discrete-GPU configuration has one M.2 slot.

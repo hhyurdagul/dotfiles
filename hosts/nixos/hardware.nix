@@ -39,10 +39,9 @@ in
       prime = {
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
+        # nvidia-offload comes from home/hhyurdagul/services.nix, which also
+        # undoes the session's Vulkan NVIDIA disable.
+        offload.enable = true;
       };
     };
 
@@ -77,6 +76,10 @@ in
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03*", TEST=="power/control", ATTR{power/control}="auto"
     ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x04*", TEST=="power/control", ATTR{power/control}="auto"
+    # Stable iGPU name for Hyprland's AQ_DRM_DEVICES. That list is colon-separated,
+    # so the by-path links (pci-0000:00:02.0-card) can't be used, and cardN
+    # numbering is not stable across boots.
+    SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/igpu-card"
   '';
 
   zramSwap = {

@@ -47,11 +47,12 @@ Variants {
                     border.color: Theme.cardBorderColor
                     border.width: Theme.cardBorderWidth
 
-                    // Auto-close timer for floating toast (5 seconds)
+                    // Auto-close after 5 seconds. Critical toasts (an agent waiting,
+                    // disk-health alerts) stay until clicked or dismissed.
                     Timer {
                         id: autoCloseTimer
                         interval: 5000
-                        running: !cardMouse.containsMouse && !closeBtnMouse.containsMouse
+                        running: !modelData.critical && !cardMouse.containsMouse && !closeBtnMouse.containsMouse
                         repeat: false
                         onTriggered: {
                             NotifManager.expireToast(modelData.id)

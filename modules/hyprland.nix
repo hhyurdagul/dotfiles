@@ -1,24 +1,11 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  ...
-}:
+{ inputs, ... }:
 
 {
   imports = [ inputs.hyprland.nixosModules.default ];
 
+  # Selectable fallback session. greetd's default command is set in niri.nix.
   programs.hyprland = {
     enable = true;
     withUWSM = true;
-  };
-
-  services.greetd = {
-    enable = true;
-    settings.default_session = {
-      command = "${lib.getExe pkgs.tuigreet} --time --battery --remember --remember-user-session --asterisks --cmd '${lib.getExe config.programs.uwsm.package} start -F -- ${lib.getExe config.programs.hyprland.package}'";
-      user = "greeter";
-    };
   };
 }

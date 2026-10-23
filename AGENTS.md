@@ -40,9 +40,9 @@ apps come from numtide's `llm-agents.nix`.
 | Change | Place |
 | --- | --- |
 | Hardware, boot, users, locale, Nix settings | `hosts/nixos/` |
-| System services: desktop, Hyprland/greetd, containers | `modules/*.nix` |
+| System services: desktop, Niri/greetd, Hyprland, containers | `modules/*.nix` |
 | User package | `home/hhyurdagul/packages.nix` (see sources below) |
-| User service | `home/hhyurdagul/services.nix`, using the `graphicalService` + `lib.recursiveUpdate` pattern |
+| User service | `home/hhyurdagul/services.nix`, extending `graphicalService` (`graphical-service.nix`) with `lib.recursiveUpdate` |
 | Dotfile | `config/<app>/…`, linked from `xdg.configFile` in `home/hhyurdagul/default.nix` |
 | Helper script | `config/scripts/<name>.sh`, packaged in `services.nix` with `writeShellApplication` + explicit `runtimeInputs` |
 | Default apps / MIME | `xdg.mimeApps` in `home/hhyurdagul/default.nix` |
@@ -113,8 +113,7 @@ ls "$(nix eval --raw .#nixosConfigurations.nixos.config.home-manager.users.hhyur
 
 - The login shell is zsh. Quote words that start with `=` (`echo '==='`), because
   zsh expands `=cmd`.
-- `python3` is not on `PATH`. Use `nix run nixpkgs#python3 --` or `uv run`.
-  `jq` is available.
+- `python3` (from `packages.nix`), `uv` and `jq` are on `PATH`.
 - Runtime state (theme mode, etc.) lives in `~/.local/state`, never in this repo.
 - Logs: `journalctl --user -u <service>`. App logs usually sit under
   `~/.local/share/<app>/`.

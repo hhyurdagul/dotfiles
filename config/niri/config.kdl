@@ -172,7 +172,7 @@ binds {
     Super+W repeat=false { toggle-column-tabbed-display; }
     Super+Q repeat=false { close-window; }
     Super+Shift+M repeat=false { spawn "session-exit"; }
-    Super+E repeat=false { spawn "env" "GSK_RENDERER=ngl" "nautilus" "--new-window"; }
+    Super+E repeat=false { spawn "thunar"; }
     Super+V repeat=false { toggle-window-floating; }
     Super+D repeat=false { spawn "fuzzel"; }
     Super+R repeat=false { switch-preset-column-width; }
@@ -258,6 +258,13 @@ binds {
 
     // Niri 26.04 has no release-trigger binds; dictation toggles on key press.
     Super+Space repeat=false { spawn "handy" "--toggle-transcription"; }
+}
+
+// Do not open the RTX 4050. It stays in D3cold unless a program is started
+// with nvidia-offload. Device choice is read at startup, so this needs a relogin.
+debug {
+    ignore-drm-device "/dev/dri/by-path/pci-0000:01:00.0-render"
+    ignore-drm-device "/dev/dri/by-path/pci-0000:01:00.0-card"
 }
 
 // Optional, watched live, and last so generated theme colors override defaults.

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import urllib.request
 
 WEATHER_ICONS = {
@@ -55,7 +56,9 @@ WEATHER_ICONS = {
 
 
 def fetch_weather():
-    url = "https://wttr.in/41.0082,28.9784?format=j1"
+    # "lat,lng" from the weather-status wrapper; empty lets wttr.in use the IP.
+    location = os.environ.get("WEATHER_LOCATION", "")
+    url = f"https://wttr.in/{location}?format=j1"
     req = urllib.request.Request(
         url, headers={"User-Agent": "Mozilla/5.0 (compatible; QuickshellBar/1.0)"}
     )

@@ -6,6 +6,80 @@
   ...
 }:
 
+let
+  # MIME types grouped by the app that should open them.
+  withApp = app: types: lib.genAttrs types (_: [ app ]);
+  archiveTypes = [
+    "application/zip"
+    "application/vnd.rar"
+    "application/x-rar"
+    "application/x-7z-compressed"
+    "application/x-tar"
+    "application/gzip"
+  ];
+  imageTypes = map (t: "image/${t}") [
+    "avif"
+    "bmp"
+    "gif"
+    "heic"
+    "heif"
+    "jpeg"
+    "png"
+    "svg+xml"
+    "tiff"
+    "webp"
+  ];
+  videoTypes = map (t: "video/${t}") [
+    "mp4"
+    "mpeg"
+    "ogg"
+    "quicktime"
+    "webm"
+    "x-matroska"
+    "x-msvideo"
+  ];
+  officeTypes = [
+    "application/msword"
+    "application/rtf"
+    "application/vnd.ms-excel"
+    "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+    "application/vnd.ms-excel.sheet.macroEnabled.12"
+    "application/vnd.ms-excel.template.macroEnabled.12"
+    "application/vnd.ms-powerpoint"
+    "application/vnd.ms-powerpoint.presentation.macroEnabled.12"
+    "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+    "application/vnd.ms-powerpoint.template.macroEnabled.12"
+    "application/vnd.ms-word.document.macroEnabled.12"
+    "application/vnd.ms-word.template.macroEnabled.12"
+    "application/vnd.oasis.opendocument.presentation"
+    "application/vnd.oasis.opendocument.spreadsheet"
+    "application/vnd.oasis.opendocument.text"
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
+    "application/vnd.openxmlformats-officedocument.presentationml.template"
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
+    "text/csv"
+    "text/tab-separated-values"
+  ];
+  browserTypes = [
+    "text/html"
+    "x-scheme-handler/http"
+    "x-scheme-handler/https"
+    "x-scheme-handler/about"
+    "x-scheme-handler/unknown"
+  ];
+  # Also listed under associations.added, so these apps are offered first in
+  # "Open With" even where another app registers the type.
+  fileApps =
+    withApp "thunar.desktop" [ "inode/directory" ]
+    // withApp "org.gnome.Papers.desktop" [ "application/pdf" ]
+    // withApp "org.gnome.FileRoller.desktop" archiveTypes
+    // withApp "imv.desktop" imageTypes
+    // withApp "vlc.desktop" videoTypes;
+in
 {
   imports = [
     ./packages.nix
@@ -26,6 +100,9 @@
       NIXOS_OZONE_WL = "1";
       PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+      # Vulkan and wgpu otherwise pick the RTX and keep it awake. nvidia-offload
+      # unsets this. GL stays on the iGPU unless that wrapper selects NVIDIA.
+      VK_LOADER_DRIVERS_DISABLE = "*nvidia*";
     };
 
     # Breeze Light ships inside kdePackages.breeze (1.8 GiB closure with Qt and
@@ -35,7 +112,7 @@
     pointerCursor = {
       enable = true;
       name = "Breeze_Light";
-      size = 12;
+      size = 16;
       package = pkgs.runCommand "breeze-light-cursor" { } ''
         mkdir -p $out/share/icons
         cp -r ${pkgs.kdePackages.breeze}/share/icons/Breeze_Light $out/share/icons/
@@ -113,120 +190,26 @@
       enable = true;
 
       associations = {
-        added = {
-          "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
-          "application/pdf" = [ "org.gnome.Papers.desktop" ];
-          "application/zip" = [ "org.gnome.FileRoller.desktop" ];
-          "application/vnd.rar" = [ "org.gnome.FileRoller.desktop" ];
-          "application/x-rar" = [ "org.gnome.FileRoller.desktop" ];
-          "application/x-7z-compressed" = [ "org.gnome.FileRoller.desktop" ];
-          "application/x-tar" = [ "org.gnome.FileRoller.desktop" ];
-          "application/gzip" = [ "org.gnome.FileRoller.desktop" ];
-          "image/avif" = [ "imv.desktop" ];
-          "image/bmp" = [ "imv.desktop" ];
-          "image/gif" = [ "imv.desktop" ];
-          "image/heic" = [ "imv.desktop" ];
-          "image/heif" = [ "imv.desktop" ];
-          "image/jpeg" = [ "imv.desktop" ];
-          "image/png" = [ "imv.desktop" ];
-          "image/svg+xml" = [ "imv.desktop" ];
-          "image/tiff" = [ "imv.desktop" ];
-          "image/webp" = [ "imv.desktop" ];
-          "video/mp4" = [ "vlc.desktop" ];
-          "video/mpeg" = [ "vlc.desktop" ];
-          "video/ogg" = [ "vlc.desktop" ];
-          "video/quicktime" = [ "vlc.desktop" ];
-          "video/webm" = [ "vlc.desktop" ];
-          "video/x-matroska" = [ "vlc.desktop" ];
-          "video/x-msvideo" = [ "vlc.desktop" ];
-        };
-        removed = {
-          "application/vnd.ms-excel" = [ "chatgpt.desktop" ];
-          "application/vnd.ms-excel.sheet.macroEnabled.12" = [ "chatgpt.desktop" ];
-          "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [ "chatgpt.desktop" ];
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [ "chatgpt.desktop" ];
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [ "chatgpt.desktop" ];
-          "text/csv" = [ "chatgpt.desktop" ];
-          "text/tab-separated-values" = [ "chatgpt.desktop" ];
-        };
+        added = fileApps;
+        # ChatGPT registers office and table types; keep it out of "Open With".
+        removed = withApp "chatgpt.desktop" [
+          "application/vnd.ms-excel"
+          "application/vnd.ms-excel.sheet.macroEnabled.12"
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          "text/csv"
+          "text/tab-separated-values"
+        ];
       };
 
-      defaultApplications = {
-        "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
-        "application/msword" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/pdf" = [ "org.gnome.Papers.desktop" ];
-        "application/zip" = [ "org.gnome.FileRoller.desktop" ];
-        "application/vnd.rar" = [ "org.gnome.FileRoller.desktop" ];
-        "application/x-rar" = [ "org.gnome.FileRoller.desktop" ];
-        "application/x-7z-compressed" = [ "org.gnome.FileRoller.desktop" ];
-        "application/x-tar" = [ "org.gnome.FileRoller.desktop" ];
-        "application/gzip" = [ "org.gnome.FileRoller.desktop" ];
-        "application/rtf" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-excel" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-excel.sheet.binary.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-excel.sheet.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-excel.template.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-powerpoint" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-powerpoint.presentation.macroEnabled.12" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.ms-powerpoint.slideshow.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-powerpoint.template.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-word.document.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.ms-word.template.macroEnabled.12" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.oasis.opendocument.presentation" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.oasis.opendocument.spreadsheet" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.oasis.opendocument.text" = [ "onlyoffice-desktopeditors.desktop" ];
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.openxmlformats-officedocument.presentationml.slideshow" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.openxmlformats-officedocument.presentationml.template" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.template" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = [
-          "onlyoffice-desktopeditors.desktop"
-        ];
-        "image/avif" = [ "imv.desktop" ];
-        "image/bmp" = [ "imv.desktop" ];
-        "image/gif" = [ "imv.desktop" ];
-        "image/heic" = [ "imv.desktop" ];
-        "image/heif" = [ "imv.desktop" ];
-        "image/jpeg" = [ "imv.desktop" ];
-        "image/png" = [ "imv.desktop" ];
-        "image/svg+xml" = [ "imv.desktop" ];
-        "image/tiff" = [ "imv.desktop" ];
-        "image/webp" = [ "imv.desktop" ];
-        "text/html" = [ "zen.desktop" ];
-        "text/csv" = [ "onlyoffice-desktopeditors.desktop" ];
-        "text/tab-separated-values" = [ "onlyoffice-desktopeditors.desktop" ];
-        "video/mp4" = [ "vlc.desktop" ];
-        "video/mpeg" = [ "vlc.desktop" ];
-        "video/ogg" = [ "vlc.desktop" ];
-        "video/quicktime" = [ "vlc.desktop" ];
-        "video/webm" = [ "vlc.desktop" ];
-        "video/x-matroska" = [ "vlc.desktop" ];
-        "video/x-msvideo" = [ "vlc.desktop" ];
-        "x-scheme-handler/http" = [ "zen.desktop" ];
-        "x-scheme-handler/https" = [ "zen.desktop" ];
-        "x-scheme-handler/about" = [ "zen.desktop" ];
-        "x-scheme-handler/unknown" = [ "zen.desktop" ];
-      };
+      defaultApplications =
+        fileApps
+        // withApp "onlyoffice-desktopeditors.desktop" officeTypes
+        // withApp "zen.desktop" browserTypes;
     };
 
     configFile = {
-      "darkman/config.yaml".source = ../../config/darkman/config.yaml;
       "helix/config.toml".source = ../../config/helix/config.toml;
       "helix/languages.toml".source = ../../config/helix/languages.toml;
       "hypr/hyprlock.conf".source = ../../config/hypr/hyprlock.conf;
@@ -243,6 +226,9 @@
       "xdg-terminals.list".text = ''
         kitty.desktop
       '';
+      # Tern loads <plugins>/<id>.path as an absolute package directory.
+      # Forwards inbox events to Quickshell; Tern's own banners stay in-app.
+      "tern/plugins/desktop-notify.path".text = "${../../config/tern/desktop-notify}\n";
       quickshell = {
         source = ../../config/quickshell;
         recursive = true;

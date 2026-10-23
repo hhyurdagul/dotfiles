@@ -82,6 +82,10 @@ let
     # TLS ("TLS support is not available" otherwise), and the GNOME interface
     # schemas, without which WebKitGTK gets gtk-xft-dpi -1 and renders pages at
     # a negative zoom.
+    # Save/export and unsaved-tab close look up zenity (kdialog only if zenity
+    # is absent). Appearance and other portal calls exec gdbus. Carly's
+    # "Tern isn't in front" notices exec notify-send. None of these are in a
+    # bare session PATH, so the lookup fails and the action does nothing.
     dontAutoPatchelf = true;
     postFixup = ''
       autoPatchelf $out
@@ -90,6 +94,14 @@ let
       cp -r $TMPDIR/share/applications $TMPDIR/share/icons $out/share/
       wrapProgram $out/bin/tern \
         --set-default STENCIL_GPU low-power \
+        --set VK_LOADER_DRIVERS_DISABLE '*nvidia*' \
+        --prefix PATH : ${
+          lib.makeBinPath [
+            pkgs.zenity
+            pkgs.glib
+            pkgs.libnotify
+          ]
+        } \
         --prefix GIO_EXTRA_MODULES : ${pkgs.glib-networking}/lib/gio/modules \
         --prefix XDG_DATA_DIRS : ${pkgs.glib.getSchemaDataDirPath pkgs.gsettings-desktop-schemas}
     '';
@@ -121,7 +133,7 @@ in
       libnotify
       libreoffice
       imv
-      nautilus
+      (thunar.override { thunarPlugins = [ thunar-archive-plugin ]; })
       networkmanagerapplet
       obsidian
       obs-studio
@@ -132,7 +144,6 @@ in
       quickshell
       satty
       vlc
-      hyprlock
 
       # Wayland and media integration
       brightnessctl
@@ -154,7 +165,6 @@ in
       bat
       btop
       bubblewrap
-      deadnix
       eza
       fd
       fzf
@@ -170,7 +180,6 @@ in
       python3
       ripgrep
       sops
-      statix
       typst
       uv
       wget

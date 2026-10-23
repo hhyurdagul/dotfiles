@@ -22,8 +22,6 @@ Item {
     property string weatherMaxTemp: ""
     property string weatherWind: ""
     property string weatherHumidity: ""
-    property string weatherVisibility: ""
-    property string weatherAqi: ""
     property var hourlyRain: []
 
     property bool notifVisible: false
@@ -141,7 +139,10 @@ Item {
     function parseWeatherJson(output) {
         try {
             var json = JSON.parse(output)
-            centerInfo.weatherText = json.text || ""
+            // weather.py prints an empty result when offline. Keep the last good
+            // weather on screen and in the cache.
+            if (!json.text) return false
+            centerInfo.weatherText = json.text
             centerInfo.weatherCondition = json.alt || ""
 
             function stripHtml(str) {
@@ -174,14 +175,6 @@ Item {
                             if (parts.length >= 2) {
                                 centerInfo.weatherWind = parts[0].trim()
                                 centerInfo.weatherHumidity = parts[1].trim()
-                            }
-                        }
-                        if (line.includes('km') && line.includes('AQI')) {
-                            var visParts = line.split('\t').filter(p => p.trim())
-                            if (visParts.length >= 2) {
-                                centerInfo.weatherVisibility = visParts[0].trim()
-                                var aqiMatch = line.match(/AQI\s*(\d+)/)
-                                if (aqiMatch) centerInfo.weatherAqi = aqiMatch[1]
                             }
                         }
                     }

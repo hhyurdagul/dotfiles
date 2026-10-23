@@ -55,7 +55,7 @@ end
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "GSK_RENDERER=ngl nautilus --new-window"
+local fileManager = "thunar"
 local menu        = "fuzzel"
 local browser     = "zen"
 local notes       = "obsidian"
@@ -73,6 +73,9 @@ local notes       = "obsidian"
 hl.env("XCURSOR_THEME", "Breeze_Light")
 hl.env("XCURSOR_SIZE", "16")
 hl.env("HYPRCURSOR_SIZE", "16")
+-- Intel only. The RTX stays asleep unless a program is started with nvidia-offload.
+-- The by-path name contains colons, which split this list; see hardware.nix.
+hl.env("AQ_DRM_DEVICES", "/dev/dri/igpu-card")
 
 
 -----------------------

@@ -1,0 +1,7 @@
+schema = 1
+id = "desktop-notify"
+name = "Desktop notifications"
+version = "1.0.0"
+description = "Forwards Tern inbox events to the desktop notification server."
+icon = "bell"
+window = "window.luau"

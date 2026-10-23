@@ -37,6 +37,7 @@ QtObject {
                 body: notif.body || "",
                 time: Qt.formatTime(new Date(), "hh:mm"),
                 desktopEntry: notif.desktopEntry || "",
+                critical: notif.urgency === NotificationUrgency.Critical,
                 hints: notif.hints || {},
                 notification: notif
             }

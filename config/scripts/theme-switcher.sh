@@ -69,20 +69,20 @@ mv "$tmp_mode" "$STATE_FILE"
 
 if [[ "$TARGET_MODE" == "light" ]]; then
 	COLOR_SCHEME="prefer-light"
-	GTK_THEME="Adwaita"
+	GTK_THEME="adw-gtk3"
 	PREFER_DARK=0
 	WALLPAPER="$CONFIG_HOME/hypr/wallpapers/light.png"
 else
 	COLOR_SCHEME="prefer-dark"
-	GTK_THEME="Adwaita-dark"
+	GTK_THEME="adw-gtk3-dark"
 	PREFER_DARK=1
 	WALLPAPER="$CONFIG_HOME/hypr/wallpapers/dark.png"
 fi
 
 if command -v gsettings >/dev/null 2>&1; then
-	# Electron apps re-derive dark mode from the GTK theme on each gtk-theme
-	# change (and get it wrong for Adwaita-dark); color-scheme, which they read
-	# correctly, has to be the last change they see.
+	# Electron apps re-derive dark mode from the GTK theme name and get it
+	# wrong; color-scheme, which they read correctly, has to be the last
+	# change they see. Thunar is GTK3 and only has adw-gtk3 installed.
 	gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME" || true
 	gsettings set org.gnome.desktop.interface color-scheme "$COLOR_SCHEME" || true
 fi

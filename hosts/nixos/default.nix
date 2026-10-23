@@ -63,10 +63,7 @@
   console.keyMap = "trq";
 
   services = {
-    xserver.xkb = {
-      layout = "tr";
-      variant = "";
-    };
+    xserver.xkb.layout = "tr";
 
     # This laptop does not expose SSH on arbitrary networks. Add key-only SSH
     # with an interface-scoped firewall rule when remote access is needed.
@@ -93,8 +90,6 @@
       ];
     };
   };
-
-  security.sudo.wheelNeedsPassword = true;
 
   hardware.bluetooth = {
     enable = true;

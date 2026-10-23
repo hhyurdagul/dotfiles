@@ -9,6 +9,12 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   hyprlandPackage = inputs.hyprland.packages.${system}.hyprland;
+  # Adana. Darkman's sunrise/sunset theme switch, wlsunset and the bar's
+  # weather all read it.
+  location = {
+    lat = "37.0000";
+    lng = "35.3213";
+  };
   # Handy types into the focused window with wtype and keeps results on the
   # clipboard with wl-copy. It looks both up on PATH, so pin them here instead
   # of relying on whatever PATH the service or launcher inherits.
@@ -203,17 +209,42 @@ let
     text = builtins.readFile ../../config/scripts/desktop-control.sh;
   };
 
-  weatherStatus = pkgs.writeScriptBin "weather-status" ''
-    #!${pkgs.python3}/bin/python3
-    ${builtins.readFile ../../config/quickshell/scripts/weather.py}
-  '';
-
-  graphicalService = {
-    Unit = {
-      PartOf = [ "graphical-session.target" ];
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
+  weatherStatus = pkgs.writeShellApplication {
+    name = "weather-status";
+    runtimeInputs = [ pkgs.python3 ];
+    text = ''
+      WEATHER_LOCATION="${location.lat},${location.lng}" \
+        exec python3 ${../../config/quickshell/scripts/weather.py}
+    '';
   };
+
+  # Replaces the NixOS prime helper (enableOffloadCmd is off) so the session-wide
+  # Vulkan disable does not also hide the RTX from programs offloaded on purpose.
+  nvidiaOffload = pkgs.writeShellApplication {
+    name = "nvidia-offload";
+    text = ''
+      unset VK_LOADER_DRIVERS_DISABLE
+      export __NV_PRIME_RENDER_OFFLOAD=1
+      export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+      export __GLX_VENDOR_LIBRARY_NAME=nvidia
+      export __VK_LAYER_NV_optimus=NVIDIA_only
+      exec "$@"
+    '';
+  };
+
+  batteryPolicy = pkgs.writeShellApplication {
+    name = "battery-policy";
+    runtimeInputs = with pkgs; [
+      coreutils
+      jq
+      niri
+      power-profiles-daemon
+      upower
+    ];
+    text = builtins.readFile ../../config/scripts/battery-policy.sh;
+  };
+
+  graphicalService = import ./graphical-service.nix;
 in
 {
   services.syncthing.enable = true;
@@ -234,6 +265,8 @@ in
       screenshot
       quickshellSession
       themeSwitcher
+      nvidiaOffload
+      batteryPolicy
       weatherStatus
     ];
 
@@ -265,6 +298,11 @@ in
     '';
   };
   xdg.configFile = {
+    "darkman/config.yaml".text = ''
+      lat: ${location.lat}
+      lng: ${location.lng}
+      usegeoclue: false
+    '';
     "niri/config.kdl".text =
       builtins.replaceStrings
         [
@@ -345,6 +383,16 @@ in
       };
     };
 
+    battery-policy = lib.recursiveUpdate graphicalService {
+      Unit.Description = "Battery power profile and laptop-panel refresh";
+      Service = {
+        ExecStart = lib.getExe batteryPolicy;
+        # The loop ends cleanly if upower --monitor exits.
+        Restart = "always";
+        RestartSec = 2;
+      };
+    };
+
     hypridle = lib.recursiveUpdate graphicalService {
       Unit.Description = "Wayland idle manager";
       Service = {
@@ -367,7 +415,6 @@ in
       Unit = {
         Description = "Apply the saved desktop theme";
         After = [ "darkman.service" ];
-        PartOf = [ "graphical-session.target" ];
       };
       Service = {
         Type = "oneshot";
@@ -378,7 +425,7 @@ in
     wlsunset = lib.recursiveUpdate graphicalService {
       Unit.Description = "Automatic night-light temperature";
       Service = {
-        ExecStart = "${lib.getExe pkgs.wlsunset} -l 41.0082 -L 28.9784 -t 2500 -T 6500";
+        ExecStart = "${lib.getExe pkgs.wlsunset} -l ${location.lat} -L ${location.lng} -t 2500 -T 6500";
         Restart = "on-failure";
         RestartSec = 2;
       };

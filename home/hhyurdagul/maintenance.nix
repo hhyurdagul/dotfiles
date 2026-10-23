@@ -16,10 +16,7 @@ let
       exec python3 ${../../config/scripts/disk-health-notify.py}
     '';
   };
-  graphicalService = {
-    Unit.PartOf = [ "graphical-session.target" ];
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
+  graphicalService = import ./graphical-service.nix;
 in
 {
   home.packages = [ diskHealthNotify ];
