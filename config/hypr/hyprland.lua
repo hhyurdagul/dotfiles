@@ -239,7 +239,7 @@ hl.config({
         kb_layout  = "us,tr",
         kb_variant = ",",
         kb_model   = "",
-        kb_options = "caps:escape",
+        kb_options = "caps:escape,compose:rctrl",
         kb_rules   = "",
 
         follow_mouse = 1,
@@ -276,6 +276,7 @@ hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd("lock-screen; uwsm stop"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + S", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + period", hl.dsp.exec_cmd("unicode-picker"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))

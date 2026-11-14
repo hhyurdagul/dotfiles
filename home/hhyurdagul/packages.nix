@@ -1,6 +1,5 @@
 {
   inputs,
-  lib,
   pkgs,
   ...
 }:
@@ -9,112 +8,10 @@ let
   system = pkgs.stdenv.hostPlatform.system;
   agents = inputs.llm-agents.packages.${system};
   unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-  # Upstream replaced the 1.23.3b Linux archive after this input was pinned.
-  # Checksum verified against the official GitHub release asset digest.
-  zenBrowser = inputs.zen-browser.packages.${system}.default.override {
-    zen-browser-unwrapped = inputs.zen-browser.packages.${system}.zen-browser-unwrapped.override {
-      hash = "sha256-uyBF0+IWVNQP6EElAJLurf0sH8gx7vtQkiJ3PIvcoUk=";
-    };
-  };
+  zenBrowser = inputs.zen-browser.packages.${system}.default;
 
-  # The package's traced closure omits @getpaseo/server's root export, which the
-  # CLI only resolves to locate the daemon entrypoint; add a stub so it resolves.
-  paseo-share = pkgs.runCommand "paseo-cli-share" { } ''
-    cp -r ${agents.paseo-desktop}/share/paseo-desktop $out
-    chmod -R u+w $out/packages/server/dist/server/server
-    echo "export {};" > $out/packages/server/dist/server/server/exports.js
-  '';
-
-  # paseo-desktop only exposes the GUI; run its bundled CLI with the same electron
-  paseo-cli = pkgs.writeShellScriptBin "paseo" ''
-    exec env ELECTRON_RUN_AS_NODE=1 PASEO_NODE_ENV=production \
-      ${inputs.llm-agents.inputs.nixpkgs.legacyPackages.${system}.electron_42}/bin/electron \
-      ${paseo-share}/packages/cli/dist/index.js "$@"
-  '';
-
-  # Tern is waitlist-only: the tarball needs a Stencil login, so Nix can't fetch
-  # it. Download it by hand, then add it to the store before building:
-  #   nix-store --add-fixed sha256 ~/Downloads/Tern-<version>-linux-x86_64.tar.gz
-  # Its self-update can't write to the store; bump version and hash instead.
-  tern = pkgs.stdenv.mkDerivation rec {
-    pname = "tern";
-    version = "0.9.5";
-    src = pkgs.requireFile {
-      name = "Tern-${version}-linux-x86_64.tar.gz";
-      url = "https://stencil.so";
-      hash = "sha256-ApOSXrYtSrfOLOuLx17Ox6xYNeh+awudb+vn0MgKzlI=";
-    };
-
-    nativeBuildInputs = [
-      pkgs.autoPatchelfHook
-      pkgs.makeWrapper
-    ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-    # dlopened at runtime, so autoPatchelf can't see them: GPU rendering,
-    # Wayland/X11 input, audio, PAM for remote sessions, and WebKitGTK for
-    # web page blocks.
-    runtimeDependencies = with pkgs; [
-      libGL
-      libpulseaudio
-      libxcb
-      libxkbcommon
-      linux-pam
-      pipewire
-      vulkan-loader
-      wayland
-      webkitgtk_4_1
-    ];
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 tern $out/bin/tern
-      runHook postInstall
-    '';
-
-    # A store-installed Tern leaves desktop entries and icons to its package.
-    # `tern register` writes them into a scratch HOME; ship those. The binary
-    # only runs once patched, so patch here instead of in the default hook.
-    # Wrap after registering so the entries keep pointing at bin/tern.
-    # wgpu defaults to the discrete GPU, which keeps the NVIDIA card awake and
-    # copies every frame to the Intel side that drives the display. Use the
-    # iGPU unless STENCIL_GPU says otherwise.
-    # Web page blocks need what wrapGAppsHook would add: glib-networking for
-    # TLS ("TLS support is not available" otherwise), and the GNOME interface
-    # schemas, without which WebKitGTK gets gtk-xft-dpi -1 and renders pages at
-    # a negative zoom.
-    # Save/export and unsaved-tab close look up zenity (kdialog only if zenity
-    # is absent). Appearance and other portal calls exec gdbus. Carly's
-    # "Tern isn't in front" notices exec notify-send. None of these are in a
-    # bare session PATH, so the lookup fails and the action does nothing.
-    dontAutoPatchelf = true;
-    postFixup = ''
-      autoPatchelf $out
-      HOME=$TMPDIR XDG_DATA_HOME=$TMPDIR/share $out/bin/tern register >/dev/null
-      mkdir -p $out/share
-      cp -r $TMPDIR/share/applications $TMPDIR/share/icons $out/share/
-      wrapProgram $out/bin/tern \
-        --set-default STENCIL_GPU low-power \
-        --set VK_LOADER_DRIVERS_DISABLE '*nvidia*' \
-        --prefix PATH : ${
-          lib.makeBinPath [
-            pkgs.zenity
-            pkgs.glib
-            pkgs.libnotify
-          ]
-        } \
-        --prefix GIO_EXTRA_MODULES : ${pkgs.glib-networking}/lib/gio/modules \
-        --prefix XDG_DATA_DIRS : ${pkgs.glib.getSchemaDataDirPath pkgs.gsettings-desktop-schemas}
-    '';
-
-    meta = {
-      description = "Multiplexing terminal from Stencil";
-      homepage = "https://stencil.so";
-      license = lib.licenses.unfree;
-      sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
-      mainProgram = "tern";
-      platforms = [ "x86_64-linux" ];
-    };
-  };
+  tern = pkgs.callPackage ../../pkgs/tern.nix { };
+  learnharness = pkgs.callPackage ../../pkgs/learnharness.nix { };
 
 in
 {
@@ -130,6 +27,7 @@ in
       fuzzel
       godot
       kitty
+      kooha
       libnotify
       libreoffice
       imv
@@ -143,6 +41,7 @@ in
       pavucontrol
       quickshell
       satty
+      solaar
       vlc
 
       # Wayland and media integration
@@ -174,7 +73,6 @@ in
       lazygit
       nixd
       nixfmt
-      playwright-driver
       podman-compose
       psmisc
       python3
@@ -198,16 +96,16 @@ in
       grok
       omp
       pi
+      prime-agent
       grok-bot
       ccusage
       herdr
-      paseo-desktop
       t3code
       t3code-desktop
       codex
     ])
     ++ [
-      paseo-cli
+      learnharness
       tern
       unstable.zed-editor
     ];

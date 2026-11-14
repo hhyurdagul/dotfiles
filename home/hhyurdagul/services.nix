@@ -164,6 +164,24 @@ let
     '';
   };
 
+  # Fuzzel search over punctuation (dashes, quotes), symbols and emoji; the
+  # choice is typed into the focused window. Recent picks are listed first.
+  unicodePicker = pkgs.writeShellApplication {
+    name = "unicode-picker";
+    runtimeInputs = with pkgs; [
+      rofimoji
+      fuzzel
+      wtype
+      wl-clipboard
+    ];
+    text = ''
+      exec rofimoji --selector fuzzel --typer wtype --clipboarder wl-copy \
+        --files general_punctuation latin-1_supplement arrows mathematical_operators \
+        currency_symbols letterlike_symbols superscripts_and_subscripts emojis \
+        --skin-tone neutral --prompt "unicode" "$@"
+    '';
+  };
+
   screenshot = pkgs.writeShellApplication {
     name = "screenshot";
     runtimeInputs = with pkgs; [
@@ -268,6 +286,7 @@ in
       nvidiaOffload
       batteryPolicy
       weatherStatus
+      unicodePicker
     ];
 
     file = {
@@ -315,6 +334,7 @@ in
           ''"focus-or-launch"''
           ''"session-exit"''
           ''"handy"''
+          ''"unicode-picker"''
           ''"~/.local/state/theme/niri.kdl"''
           ''xcursor-theme "Breeze_Light"''
           "xcursor-size 12"
@@ -331,6 +351,7 @@ in
           ''"${lib.getExe focusOrLaunch}"''
           ''"${lib.getExe sessionExit}"''
           ''"${lib.getExe handy}"''
+          ''"${lib.getExe unicodePicker}"''
           ''"${config.xdg.stateHome}/theme/niri.kdl"''
           ''xcursor-theme "${config.home.pointerCursor.name}"''
           "xcursor-size ${toString config.home.pointerCursor.size}"

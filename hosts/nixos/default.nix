@@ -96,6 +96,10 @@
     powerOnBoot = true;
   };
 
+  # Udev rules granting the user raw hidraw access to Logitech receivers
+  # (Unifying and Bolt, vendor 046d), so Solaar can pair without root.
+  hardware.logitech.wireless.enable = true;
+
   programs.zsh.enable = true;
 
   nixpkgs.config.allowUnfreePredicate =

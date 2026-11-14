@@ -98,7 +98,6 @@ in
       EDITOR = "hx";
       VISUAL = "hx";
       NIXOS_OZONE_WL = "1";
-      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
       # Vulkan and wgpu otherwise pick the RTX and keep it awake. nvidia-offload
       # unsets this. GL stays on the iGPU unless that wrapper selects NVIDIA.

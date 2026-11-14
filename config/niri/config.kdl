@@ -14,7 +14,7 @@ input {
             variant ","
             model ""
             rules ""
-            options "caps:escape"
+            options "caps:escape,compose:rctrl"
         }
         track-layout "global"
     }
@@ -23,6 +23,7 @@ input {
     touchpad {
         accel-speed 0
         natural-scroll
+        tap
     }
     trackpoint { accel-speed 0; }
     trackball { accel-speed 0; }
@@ -43,7 +44,7 @@ environment {
 
 output "eDP-1" {
     mode "2880x1800@120"
-    scale 2
+    scale 1.75
     position x=1920 y=0
     focus-at-startup
 }
@@ -167,7 +168,7 @@ binds {
     Super+Return repeat=false { spawn "kitty"; }
     Super+T repeat=false { spawn "tern"; }
     Super+B repeat=false { spawn "zen"; }
-    Super+Z repeat=false { spawn "focus-or-launch" "md.obsidian.Obsidian" "obsidian"; }
+    Super+A repeat=false { spawn "focus-or-launch" "md.obsidian.Obsidian" "obsidian"; }
     Super+O repeat=false { toggle-overview; }
     Super+W repeat=false { toggle-column-tabbed-display; }
     Super+Q repeat=false { close-window; }
@@ -175,6 +176,7 @@ binds {
     Super+E repeat=false { spawn "thunar"; }
     Super+V repeat=false { toggle-window-floating; }
     Super+D repeat=false { spawn "fuzzel"; }
+    Super+Period repeat=false { spawn "unicode-picker"; }
     Super+R repeat=false { switch-preset-column-width; }
     Super+BracketLeft repeat=false { consume-or-expel-window-left; }
     Super+BracketRight repeat=false { consume-or-expel-window-right; }

@@ -25,7 +25,7 @@ Designed around the **Catppuccin Mocha** color palette with a 3-section layout, 
   and explicitly focuses its most recently used matching window after the popup
   releases focus (`app_id` and integer window IDs on Niri; window classes and addresses on Hyprland).
   Without an action or open window, it launches the supplied
-  desktop entry. Codex notifications map to the Paseo agent window in this setup.
+  desktop entry.
   Notifications remain tracked while in history so their actions stay usable.
   Apps must supply a default action or a recognizable app name/desktop entry.
 - **Built-in Notification Server (`NotifManager.qml`)**: Replaces external daemons like SwayNC or Dunst.
@@ -141,7 +141,7 @@ environment. Do not reuse stale environment variables from a previous session.
   the popup rather than leaving it open for custom handling. As with native popup
   grabs generally, clicking another control may first dismiss the existing popup.
 - **Notifications and overlays**: Notification default actions, history, DND,
-  app matching (including the Codex/Paseo mapping), weather, hardware dropdowns,
+  app matching, weather, hardware dropdowns,
   and dictation remain compositor-independent. Dictation follows the backend's
   focused output. OSD uses the helper-supplied output, or the backend's focused
   output when none is supplied; an unavailable output falls back to the first screen.

@@ -79,7 +79,7 @@ LocalSend is enabled in `modules/desktop.nix`, including firewall access on TCP 
 
 ## Runtime theme controls
 
-`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. Darkman's sunrise/sunset times, wlsunset and the bar's weather share one location, `location` in `home/hhyurdagul/services.nix` (Adana). The switch updates Quickshell, GTK, and native Niri borders/shadows/background through a watched KDL include; Hyprland borders and Hyprpaper still update in the fallback session. Kitty and Electron apps (Obsidian, Claude, Paseo) follow the desktop `color-scheme` live; set Electron apps to their "system" theme.
+`Super+Alt+T` toggles light/dark mode without rebuilding. Runtime state lives under `$XDG_STATE_HOME/theme` (normally `~/.local/state/theme`), never in this Git checkout. Darkman uses the same `theme-switcher` command. Darkman's sunrise/sunset times, wlsunset and the bar's weather share one location, `location` in `home/hhyurdagul/services.nix` (Adana). The switch updates Quickshell, GTK, and native Niri borders/shadows/background through a watched KDL include; Hyprland borders and Hyprpaper still update in the fallback session. Kitty and Electron apps (Obsidian, Claude) follow the desktop `color-scheme` live; set Electron apps to their "system" theme.
 
 Other session shortcuts:
 
@@ -167,7 +167,7 @@ three-finger horizontal touchpad swipe.
 | Added native defaults: `Ctrl+Print`, `Alt+Print` | Focused-monitor / focused-window screenshots; clipboard and default `Pictures/Screenshots` destination |
 | Release-trigger screenshots and Handy dictation | Trigger on key press with repeat disabled; Niri 26.04 has no release-trigger bindings |
 | Workspaces 1–5 laptop, 6–10 Lenovo external | Named workspaces with preferred outputs; migrated workspaces are sorted numerically per output, giving 1–10 on a single display. Niri also maintains dynamic empty workspaces |
-| Laptop 2880×1800@120 scale 2; Lenovo 1920×1080@165 scale 1 | Lenovo left at (0, 0), laptop right at (1920, 0) in logical pixels; unknown outputs use Niri automatic mode/scale/placement |
+| Laptop 2880×1800@120 scale 2; Lenovo 1920×1080@165 scale 1 | Niri uses scale 1.75 (175%) on the laptop and scale 1 on Lenovo; Lenovo left at (0, 0), laptop right at (1920, 0) in logical pixels; unknown outputs use Niri automatic mode/scale/placement |
 | US/TR keyboard, Caps→Escape, natural touchpad scrolling, neutral mouse speed | Preserved; hover focuses any partially visible window and can scroll it into view, without a visibility/scroll-distance limit |
 | 2 px gradient borders, 10 px rounding, full opacity, shadows, inner/outer gaps | Ported to Niri geometry; gap/shadow rendering is approximate |
 | Hyprland blur size/passes/vibrancy | Native Niri blur approximation; algorithms and saturation/vibrancy differ |

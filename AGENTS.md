@@ -42,6 +42,7 @@ apps come from numtide's `llm-agents.nix`.
 | Hardware, boot, users, locale, Nix settings | `hosts/nixos/` |
 | System services: desktop, Niri/greetd, Hyprland, containers | `modules/*.nix` |
 | User package | `home/hhyurdagul/packages.nix` (see sources below) |
+| Locally packaged app (not in any input) | `pkgs/<name>.nix` in `callPackage` form, called from `packages.nix` |
 | User service | `home/hhyurdagul/services.nix`, extending `graphicalService` (`graphical-service.nix`) with `lib.recursiveUpdate` |
 | Dotfile | `config/<app>/…`, linked from `xdg.configFile` in `home/hhyurdagul/default.nix` |
 | Helper script | `config/scripts/<name>.sh`, packaged in `services.nix` with `writeShellApplication` + explicit `runtimeInputs` |
