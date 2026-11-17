@@ -90,7 +90,13 @@ in
   };
 
   systemd = {
-    oomd.enable = true;
+    # Without a monitored slice oomd watches nothing; user slices cover every
+    # niri app scope and rootless podman container, so a swap storm kills the
+    # offending scope instead of freezing the session.
+    oomd = {
+      enable = true;
+      enableUserSlices = true;
+    };
     tmpfiles.rules = [
       "d /var/lib/workstation-maintenance 0755 root root -"
       "d /var/lib/workstation-maintenance/smart 0755 root root -"
