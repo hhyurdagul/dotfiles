@@ -99,6 +99,8 @@ in
       VISUAL = "hx";
       NIXOS_OZONE_WL = "1";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+      # Docker-API clients (lazydocker, compose) talk to the rootless Podman socket.
+      DOCKER_HOST = "unix://$XDG_RUNTIME_DIR/podman/podman.sock";
       # Vulkan and wgpu otherwise pick the RTX and keep it awake. nvidia-offload
       # unsets this. GL stays on the iGPU unless that wrapper selects NVIDIA.
       VK_LOADER_DRIVERS_DISABLE = "*nvidia*";
@@ -216,10 +218,6 @@ in
       "kitty/dark-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;
       "kitty/light-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-latte.conf;
       "kitty/no-preference-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;
-      "kitty/themes" = {
-        source = ../../config/kitty/themes;
-        recursive = true;
-      };
       # GLib launches Terminal=true entries (Helix for text files) through
       # xdg-terminal-exec; kitty isn't in its built-in fallback list.
       "xdg-terminals.list".text = ''

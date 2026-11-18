@@ -7,13 +7,6 @@ RowLayout {
     id: workspaceBar
     spacing: 3
 
-    property var workspaceList: Compositor.workspaces
-    property int activeWorkspaceId: Number(Compositor.activeWorkspaceName) || 0
-
-    function workspaceId(workspace) {
-        return workspace && /^\d+$/.test(workspace.name) ? Number(workspace.name) : 0
-    }
-
     function focusWorkspace(workspace) {
         Compositor.focusWorkspace(String(workspace))
     }
@@ -112,7 +105,7 @@ RowLayout {
         for (var window of Compositor.windows) {
             var name = window.workspaceName
             if (!icons[name]) icons[name] = []
-            var icon = getWindowIcon(window.appId || window.initialAppId)
+            var icon = getWindowIcon(window.appId)
             if (!icons[name].includes(icon) && icons[name].length < 3) icons[name].push(icon)
         }
         var labels = {}
@@ -135,21 +128,8 @@ RowLayout {
     }
 
 
-    property int maxWorkspaceWithWindows: {
-        var max = 0
-        for (var i = 0; i < workspaceList.length; i++) {
-            var id = workspaceId(workspaceList[i])
-            if (id > max && id <= 10) max = id
-        }
-        return max
-    }
-
-    property var workspaceNames: {
-        var count = Compositor.isNiri ? 10 : Math.max(5, maxWorkspaceWithWindows, activeWorkspaceId)
-        var names = []
-        for (var i = 1; i <= count; i++) names.push(String(i))
-        return names
-    }
+    // Niri workspaces are named 1-10 in config.kdl; always show all of them.
+    readonly property var workspaceNames: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
     property real lastWheelTime: 0
     function switchWorkspaceByWheel(deltaY) {

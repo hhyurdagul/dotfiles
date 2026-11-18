@@ -1,6 +1,8 @@
 [[language]]
 name = "html"
-file-types = ["html", "vto"]
+# A user file-types list replaces Helix's built-in one, so repeat the 25.07
+# defaults before adding Vento templates.
+file-types = ["html", "htm", "shtml", "xhtml", "xht", "jsp", "asp", "aspx", "jshtm", "volt", "rhtml", "cshtml", "vto"]
 
 [language-server.nixd]
 command = "nixd"

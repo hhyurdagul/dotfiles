@@ -10,7 +10,7 @@ FROM_DARKMAN=0
 
 mkdir -p "$STATE_DIR"
 
-if [[ "${2:-}" == "--from-darkman" || "$MODE" == "--from-darkman" ]]; then
+if [[ "${2:-}" == "--from-darkman" ]]; then
 	FROM_DARKMAN=1
 fi
 
@@ -71,12 +71,10 @@ if [[ "$TARGET_MODE" == "light" ]]; then
 	COLOR_SCHEME="prefer-light"
 	GTK_THEME="adw-gtk3"
 	PREFER_DARK=0
-	WALLPAPER="$CONFIG_HOME/hypr/wallpapers/light.png"
 else
 	COLOR_SCHEME="prefer-dark"
 	GTK_THEME="adw-gtk3-dark"
 	PREFER_DARK=1
-	WALLPAPER="$CONFIG_HOME/hypr/wallpapers/dark.png"
 fi
 
 if command -v gsettings >/dev/null 2>&1; then
@@ -101,19 +99,6 @@ gtk-cursor-theme-size=$CURSOR_SIZE
 EOF
 	mv "$tmp_gtk" "$gtk_dir/settings.ini"
 done
-
-desktop=${XDG_CURRENT_DESKTOP:-}
-if [[ "${desktop,,}" != *niri* ]] && command -v hyprctl >/dev/null 2>&1 && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
-	if [[ "$TARGET_MODE" == "light" ]]; then
-		hyprctl eval 'hl.config({ general = { col = { active_border = { colors = {"rgba(1e66f5ee)", "rgba(04a5e5ee)"}, angle = 45 }, inactive_border = "rgba(bcc0ccaa)" } }, decoration = { shadow = { color = 0x33000000 } } })' >/dev/null || true
-	else
-		hyprctl eval 'hl.config({ general = { col = { active_border = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 }, inactive_border = "rgba(595959aa)" } }, decoration = { shadow = { color = 0xee1a1a1a } } })' >/dev/null || true
-	fi
-
-	if [[ -r "$WALLPAPER" ]]; then
-		hyprctl hyprpaper wallpaper ",$WALLPAPER" >/dev/null 2>&1 || true
-	fi
-fi
 
 # Included by Niri after its static defaults; atomic replacement triggers a
 # native config reload. Runtime state stays out of the Home Manager symlink.

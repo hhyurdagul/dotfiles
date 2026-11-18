@@ -1,26 +1,29 @@
-# On battery: power-saver and 60 Hz on the laptop panel. On AC, restore 120 Hz
-# and leave a manual performance choice alone; only power-saver is promoted
-# back to balanced. The panel change is Niri-only.
+# On battery: power-saver and 60 Hz on the laptop panel. On AC: performance and
+# 120 Hz. Only AC transitions (and startup) apply a profile, so a manual choice
+# survives until the next plug event.
 
 online() {
 	cat /sys/class/power_supply/ADP1/online 2>/dev/null || printf '1\n'
 }
 
 apply() {
-	local rate current
+	local rate mode
 	if [[ "$(online)" == "1" ]]; then
-		current="$(powerprofilesctl get 2>/dev/null || true)"
-		if [[ "$current" == "power-saver" ]]; then
-			powerprofilesctl set balanced || true
-		fi
+		powerprofilesctl set performance || true
 		rate=120
 	else
 		powerprofilesctl set power-saver || true
 		rate=60
 	fi
 
-	if [[ -n "${NIRI_SOCKET:-}" ]] && niri msg --json outputs | jq -e 'has("eDP-1")' >/dev/null 2>&1; then
-		niri msg output eDP-1 mode "2880x1800@${rate}" || true
+	# The panel advertises 120.001/60.001 Hz and niri wants an exact match, so
+	# look the mode up instead of asking for @120/@60.
+	mode="$(niri msg --json outputs 2>/dev/null | jq -r --argjson rate "$rate" '
+		[."eDP-1".modes[]? | select(.width == 2880 and .height == 1800
+			and ((.refresh_rate / 1000) | round) == $rate)][0]
+		| select(.) | "\(.width)x\(.height)@\(.refresh_rate / 1000)"')" || mode=""
+	if [[ -n "$mode" ]]; then
+		niri msg output eDP-1 mode "$mode" || true
 	fi
 }
 

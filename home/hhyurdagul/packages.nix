@@ -12,6 +12,7 @@ let
 
   tern = pkgs.callPackage ../../pkgs/tern.nix { };
   learnharness = pkgs.callPackage ../../pkgs/learnharness.nix { };
+  openmausbot = pkgs.callPackage ../../pkgs/openmausbot.nix { };
 
 in
 {
@@ -55,10 +56,6 @@ in
       xdg-terminal-exec
       wlsunset
 
-      # Hyprland helpers
-      hypridle
-      hyprpaper
-
       # CLI and development tools
       age
       bat
@@ -79,6 +76,7 @@ in
       ripgrep
       sops
       typst
+      (python3Packages.toPythonApplication python3Packages.trafilatura)
       uv
       wget
       yazi
@@ -106,7 +104,24 @@ in
     ])
     ++ [
       learnharness
+      openmausbot
       tern
       unstable.zed-editor
     ];
+
+  # OpenMausBot writes this entry itself, but from inside its FHS sandbox it
+  # sees the unwrapped -extracted binary, which can't run outside the wrapper
+  # and goes stale on every update. Own the file so login uses the wrapper.
+  xdg.configFile."autostart/openmausbot.desktop" = {
+    force = true;
+    text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=OpenMausBot
+      Exec=${pkgs.lib.getExe openmausbot} --omb-hidden
+      NoDisplay=true
+      X-GNOME-Autostart-enabled=true
+      X-OpenMausBot-Lending=true
+    '';
+  };
 }

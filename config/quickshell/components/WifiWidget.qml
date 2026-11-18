@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import ".."
 
 DropdownWidget {
@@ -9,16 +8,13 @@ DropdownWidget {
     popupWidth: 260
     popupHeight: Math.min(wifiNetworks.length * 40 + 70, 360)
 
-    property string wifiSSID: ""
-    property int wifiSignal: 0
-    property bool wifiConnected: false
-    property var wifiNetworks: []
-    property bool wifiEnabled: true
-    property real downloadSpeed: 0
-    property real uploadSpeed: 0
-    property real lastRxBytes: 0
-    property real lastTxBytes: 0
-    property real lastSampleTime: 0
+    readonly property string wifiSSID: NetworkStatus.ssid
+    readonly property int wifiSignal: NetworkStatus.strength
+    readonly property bool wifiConnected: NetworkStatus.connected
+    readonly property var wifiNetworks: NetworkStatus.networks
+    readonly property bool wifiEnabled: NetworkStatus.radioEnabled
+    readonly property real downloadSpeed: NetworkStatus.downloadSpeed
+    readonly property real uploadSpeed: NetworkStatus.uploadSpeed
 
     function formatSpeed(bytesPerSec) {
         if (bytesPerSec < 1024) return bytesPerSec.toFixed(0) + " B/s"
@@ -26,179 +22,7 @@ DropdownWidget {
         return (bytesPerSec / 1024 / 1024).toFixed(1) + " M/s"
     }
 
-    function parseNmcliLine(line) {
-        var fields = []
-        var field = ""
-        var escaped = false
-        for (var i = 0; i < line.length; i++) {
-            var character = line[i]
-            if (escaped) {
-                field += character
-                escaped = false
-            } else if (character === "\\") {
-                escaped = true
-            } else if (character === ":") {
-                fields.push(field)
-                field = ""
-            } else {
-                field += character
-            }
-        }
-        fields.push(field)
-        return fields
-    }
-
-    onOpened: wifiScanProc.running = true
-
-    Process {
-        id: wifiCurrentProc
-        property string output: ""
-        command: ["nmcli", "--terse", "--escape", "yes", "--fields",
-                  "ACTIVE,SSID,SIGNAL,SECURITY", "device", "wifi", "list",
-                  "--rescan", "no"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) wifiCurrentProc.output += data + "\n"
-            }
-        }
-        onRunningChanged: {
-            if (running) {
-                output = ""
-            } else {
-                wifiWidget.wifiConnected = false
-                wifiWidget.wifiSSID = ""
-                wifiWidget.wifiSignal = 0
-                var lines = output.trim().split("\n")
-                for (var i = 0; i < lines.length; i++) {
-                    var fields = wifiWidget.parseNmcliLine(lines[i])
-                    if (fields[0] === "yes") {
-                        wifiWidget.wifiConnected = true
-                        wifiWidget.wifiSSID = fields[1] || ""
-                        wifiWidget.wifiSignal = parseInt(fields[2]) || 0
-                        break
-                    }
-                }
-            }
-        }
-        Component.onCompleted: running = true
-    }
-
-    Process {
-        id: wifiRadioProc
-        command: ["nmcli", "radio", "wifi"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) wifiWidget.wifiEnabled = data.trim() === "enabled"
-            }
-        }
-        Component.onCompleted: running = true
-    }
-
-    Process {
-        id: wifiScanProc
-        property string output: ""
-        command: ["nmcli", "--terse", "--escape", "yes", "--fields",
-                  "ACTIVE,SSID,SIGNAL,SECURITY", "device", "wifi", "list",
-                  "--rescan", "auto"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) wifiScanProc.output += data + "\n"
-            }
-        }
-        onRunningChanged: {
-            if (running) {
-                output = ""
-            } else {
-                var lines = output.trim().split("\n")
-                var networks = []
-                var seen = {}
-                for (var i = 0; i < lines.length; i++) {
-                    var fields = wifiWidget.parseNmcliLine(lines[i])
-                    var ssid = fields[1] || ""
-                    if (ssid && !seen[ssid]) {
-                        seen[ssid] = true
-                        networks.push({
-                            ssid: ssid,
-                            signal: parseInt(fields[2]) || 0,
-                            security: fields[3] || ""
-                        })
-                    }
-                }
-                networks.sort((left, right) => right.signal - left.signal)
-                wifiWidget.wifiNetworks = networks.slice(0, 15)
-            }
-        }
-    }
-
-    Process {
-        id: wifiConnectProc
-        property string targetSSID: ""
-        command: ["nmcli", "device", "wifi", "connect", targetSSID]
-        onExited: (exitCode, exitStatus) => {
-            if (exitCode !== 0) nmEditorProc.running = true
-            wifiScanDelay.restart()
-        }
-    }
-
-    Process {
-        id: nmEditorProc
-        command: ["nm-connection-editor"]
-    }
-
-    Timer {
-        id: wifiScanDelay
-        interval: 1500
-        repeat: false
-        onTriggered: {
-            wifiCurrentProc.running = true
-            wifiScanProc.running = true
-        }
-    }
-
-    Process {
-        id: netSpeedProc
-        property real currentRx: 0
-        property real currentTx: 0
-        command: ["cat", "/proc/net/dev"]
-        stdout: SplitParser {
-            onRead: data => {
-                var match = data.match(/^\s*(?:wl|en)[^:]*:\s*(.*)$/)
-                if (!match) return
-                var parts = match[1].trim().split(/\s+/)
-                if (parts.length < 9) return
-                netSpeedProc.currentRx += parseFloat(parts[0]) || 0
-                netSpeedProc.currentTx += parseFloat(parts[8]) || 0
-            }
-        }
-        onRunningChanged: {
-            if (running) {
-                currentRx = 0
-                currentTx = 0
-            } else {
-                var now = Date.now()
-                if (wifiWidget.lastRxBytes > 0 && now > wifiWidget.lastSampleTime) {
-                    var elapsedSeconds = (now - wifiWidget.lastSampleTime) / 1000
-                    wifiWidget.downloadSpeed = Math.max(0, currentRx - wifiWidget.lastRxBytes) / elapsedSeconds
-                    wifiWidget.uploadSpeed = Math.max(0, currentTx - wifiWidget.lastTxBytes) / elapsedSeconds
-                }
-                wifiWidget.lastRxBytes = currentRx
-                wifiWidget.lastTxBytes = currentTx
-                wifiWidget.lastSampleTime = now
-            }
-        }
-        Component.onCompleted: running = true
-    }
-
-    Timer {
-        interval: 5000
-        running: true
-        repeat: true
-        onTriggered: {
-            wifiCurrentProc.running = true
-            netSpeedProc.running = true
-            wifiRadioProc.running = true
-        }
-    }
+    onOpened: NetworkStatus.scan()
 
     // Icon content in top bar
     Row {
@@ -250,14 +74,14 @@ DropdownWidget {
                 }
 
                 Text {
-                    text: wifiScanProc.running ? "󰑐" : "󰑓"
+                    text: NetworkStatus.scanning ? "󰑐" : "󰑓"
                     color: Theme.colNetwork
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: wifiScanProc.running = true
+                        onClicked: NetworkStatus.scan()
                     }
                 }
             }
@@ -322,8 +146,7 @@ DropdownWidget {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            wifiConnectProc.targetSSID = modelData.ssid
-                            wifiConnectProc.running = true
+                            NetworkStatus.connectTo(modelData.ssid)
                             wifiWidget.dropdownOpen = false
                         }
                     }

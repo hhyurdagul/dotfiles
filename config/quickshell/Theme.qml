@@ -32,12 +32,10 @@ QtObject {
     // Base Surface & Text Colors (Catppuccin Mocha vs Latte)
     // -------------------------------------------------------------
     readonly property color colBg: isDark ? "#1e1e2e" : "#eff1f5"
-    readonly property color colBgSurface: isDark ? "#313244" : "#e6e9ef"
     readonly property color colBgCrust: isDark ? "#11111b" : "#dce0e8"
     readonly property color colFg: isDark ? "#cdd6f4" : "#4c4f69"
     readonly property color colFgDim: isDark ? "#a6adc8" : "#6c6f85"
     readonly property color colMuted: isDark ? "#6c7086" : "#9ca0b0"
-    readonly property color colBorder: isDark ? "#45475a" : "#bcc0cc"
 
     // -------------------------------------------------------------
     // Unified Accent Palette (Catppuccin Mocha vs Latte)
@@ -46,9 +44,7 @@ QtObject {
     readonly property color colRed: isDark ? "#f38ba8" : "#d20f39"
     readonly property color colYellow: isDark ? "#f9e2af" : "#df8e1d"
     readonly property color colOrange: isDark ? "#fab387" : "#fe640b"
-    readonly property color colPeach: isDark ? "#fe640b" : "#fe640b"
     readonly property color colBlue: isDark ? "#89b4fa" : "#1e66f5"
-    readonly property color colLavender: isDark ? "#b4befe" : "#7287fd"
     readonly property color colSapphire: isDark ? "#74c7ec" : "#209fb5"
     readonly property color colMauve: isDark ? "#cba6f7" : "#8839ef"
     readonly property color colPink: isDark ? "#f5c2e7" : "#ea76cb"
@@ -70,7 +66,6 @@ QtObject {
     readonly property color colBluetoothConnected: colGreen
     readonly property color colWindow: colMauve
     readonly property color colWorkspaceActive: isDark ? "#cdd6f4" : "#4c4f69"
-    readonly property color colWorkspaceInactive: colMuted
     readonly property color colCamera: colRed
     readonly property color colDictation: colPink
     readonly property color colMic: colOrange

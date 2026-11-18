@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Services.Pipewire
 import ".."
 
@@ -10,6 +9,13 @@ DropdownWidget {
     id: volumeWidget
     popupWidth: 260
     popupHeight: 180
+    acceptsRightClick: true
+
+    function openMixer() {
+        Quickshell.execDetached(["pavucontrol"])
+    }
+
+    onRightClicked: openMixer()
 
     property var sink: Pipewire.defaultAudioSink
     property var source: Pipewire.defaultAudioSource
@@ -74,11 +80,6 @@ DropdownWidget {
         font.pixelSize: Theme.fontSize
         font.family: Theme.fontFamily
         font.bold: true
-    }
-
-    Process {
-        id: pavuProc
-        command: ["pavucontrol"]
     }
 
     PwObjectTracker {
@@ -339,7 +340,7 @@ DropdownWidget {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        pavuProc.running = true
+                        volumeWidget.openMixer()
                         volumeWidget.dropdownOpen = false
                     }
                 }

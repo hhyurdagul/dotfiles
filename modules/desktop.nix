@@ -1,10 +1,9 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   security = {
     polkit.enable = true;
     rtkit.enable = true;
-    pam.services.greetd.enableGnomeKeyring = true;
   };
 
   hardware.i2c.enable = true;
@@ -23,6 +22,9 @@
 
   services = {
     gvfs.enable = true;
+    # programs.hyprlock forces this on; its unit carries nixpkgs' Hyprland on
+    # PATH and is shadowed by the Home Manager hypridle service anyway.
+    hypridle.enable = lib.mkForce false;
     tumbler.enable = true;
     udisks2.enable = true;
     upower.enable = true;

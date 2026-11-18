@@ -10,94 +10,40 @@ DropdownWidget {
     popupWidth: 280
     popupHeight: 300
 
-    property int cpuUsage: 0
-    property var lastCpuIdle: 0
-    property var lastCpuTotal: 0
+    readonly property int cpuUsage: SystemStats.cpuUsage
     property var topCpuProcesses: []
 
     onOpened: topCpuProc.running = true
 
-    // Calculate live total CPU usage from /proc/stat
-    Process {
-        id: cpuProc
-        command: ["cat", "/proc/stat"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (!data || !data.startsWith("cpu ")) return
-                var parts = data.trim().split(/\s+/)
-                var user = parseInt(parts[1]) || 0
-                var nice = parseInt(parts[2]) || 0
-                var system = parseInt(parts[3]) || 0
-                var idle = parseInt(parts[4]) || 0
-                var iowait = parseInt(parts[5]) || 0
-                var irq = parseInt(parts[6]) || 0
-                var softirq = parseInt(parts[7]) || 0
-
-                var total = user + nice + system + idle + iowait + irq + softirq
-                var idleTime = idle + iowait
-
-                if (cpuWidget.lastCpuTotal > 0) {
-                    var totalDiff = total - cpuWidget.lastCpuTotal
-                    var idleDiff = idleTime - cpuWidget.lastCpuIdle
-                    if (totalDiff > 0) {
-                        cpuWidget.cpuUsage = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
-                    }
-                }
-                cpuWidget.lastCpuTotal = total
-                cpuWidget.lastCpuIdle = idleTime
-            }
-        }
-        Component.onCompleted: running = true
-    }
-
-    // Top CPU consuming processes
+    // Top CPU consumers right now. `top` reports usage since the previous
+    // iteration, so only the second one (one second later) is current; the
+    // first, like `ps %cpu`, is a lifetime average.
     Process {
         id: topCpuProc
-        property string output: ""
-        command: ["sh", "-c", "ps -eo pid,comm,%cpu,%mem --sort=-%cpu --no-headers | awk '$2!=\"ps\" { printf \"%s\\t%s\\t%s\\t%s\\n\", $1, $2, $3, $4 }' | head -10"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) topCpuProc.output += data + "\n"
-            }
-        }
-        onRunningChanged: {
-            if (running) {
-                output = ""
-            } else if (output) {
-                var lines = output.trim().split('\n')
+        command: ["sh", "-c", "LC_ALL=C top -b -n2 -d1 -o %CPU -w 512 | awk '/^top -/ { n++ } n == 2 && header && NF >= 12 && $12 != \"top\" { cmd = $12; for (i = 13; i <= NF; i++) cmd = cmd \" \" $i; printf \"%s\\t%s\\t%s\\t%s\\n\", $1, cmd, $9, $10; if (++count == 10) exit } n == 2 && $1 == \"PID\" { header = 1 }'"]
+        stdout: StdioCollector {
+            onStreamFinished: {
                 var procs = []
-                for (var i = 0; i < lines.length; i++) {
-                    var parts = lines[i].split('\t')
-                    if (parts.length >= 3 && parts[1]) {
-                        procs.push({
-                            pid: parts[0].trim(),
-                            name: parts[1].trim(),
-                            cpu: parseFloat(parts[2]) || 0,
-                            mem: parseFloat(parts[3]) || 0
-                        })
-                    }
+                for (var line of text.trim().split("\n")) {
+                    var parts = line.split("\t")
+                    if (parts.length < 4 || !parts[1]) continue
+                    procs.push({
+                        pid: parts[0].trim(),
+                        name: parts[1].trim(),
+                        cpu: parseFloat(parts[2]) || 0,
+                        mem: parseFloat(parts[3]) || 0
+                    })
                 }
                 cpuWidget.topCpuProcesses = procs
             }
         }
     }
 
-    // Process to launch btop / terminal monitor
-    Process {
-        id: btopProc
-        command: ["kitty", "-e", "btop"]
-    }
-
     Timer {
         interval: 3000
-        running: true
+        running: cpuWidget.dropdownOpen
         repeat: true
-        onTriggered: {
-            cpuProc.running = true
-            if (cpuWidget.dropdownOpen) {
-                topCpuProc.running = true
-            }
-        }
+        onTriggered: topCpuProc.running = true
     }
 
     // Top bar icon content
@@ -279,7 +225,7 @@ DropdownWidget {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        btopProc.running = true
+                        Quickshell.execDetached(["kitty", "-e", "btop"])
                         cpuWidget.dropdownOpen = false
                     }
                 }

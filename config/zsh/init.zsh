@@ -7,7 +7,12 @@ path=("$HOME/.local/bin" $path)
 export PATH
 
 # Pager and finder previews (bat/eza/fd come from home.packages).
-export BAT_THEME="TwoDark"
+# bat picks between these from the terminal background, so it follows the
+# light/dark switch.
+export BAT_THEME_DARK="TwoDark"
+export BAT_THEME_LIGHT="OneHalfLight"
+# groff's SGR escapes survive `col -b` as literal text; ask for overstrike.
+export MANROFFOPT="-c"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export FZF_DEFAULT_COMMAND="fd --type f --strip-cwd-prefix --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

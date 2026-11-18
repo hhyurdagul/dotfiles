@@ -15,8 +15,11 @@ Item {
     property bool dropdownOpen: false
     property string stemAlignment: "center"  // "left", "center", or "right"
     property alias popupContent: popupLoader.sourceComponent
+    // Widgets with a right-click action set this and handle rightClicked.
+    property bool acceptsRightClick: false
 
     signal opened()
+    signal rightClicked()
     signal wheelScrolled(var wheel)
 
     default property alias iconContent: iconContainer.data
@@ -38,7 +41,13 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: {
+        acceptedButtons: root.acceptsRightClick ? (Qt.LeftButton | Qt.RightButton) : Qt.LeftButton
+        onClicked: mouse => {
+            if (mouse.button === Qt.RightButton) {
+                barWindow.closeAllPopups()
+                root.rightClicked()
+                return
+            }
             var shouldOpen = !dropdownOpen
             barWindow.closeAllPopups()
             dropdownOpen = shouldOpen

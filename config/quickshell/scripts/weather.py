@@ -2,6 +2,9 @@
 import json
 import os
 import urllib.request
+from datetime import datetime
+
+RAIN_SLOTS = 5
 
 WEATHER_ICONS = {
     "113": "󰖙",  # Sunny / Clear
@@ -70,6 +73,29 @@ def fetch_weather():
         return None
 
 
+def upcoming_rain(days, now):
+    """(hour, chance) for the next forecast slots, from the current hour on.
+
+    wttr.in gives 3-hourly slots per local date; tomorrow continues today's
+    list once today's later slots run out. WEATHER_LOCATION is in the
+    machine's own time zone, so local `now` matches the forecast's dates.
+    """
+    today = now.date().isoformat()
+    slots = []
+    for day in days:
+        date = day.get("date", "")
+        if date < today:
+            continue
+        for slot in day.get("hourly", []):
+            hour = int(slot.get("time", "0")) // 100
+            if date == today and hour < now.hour:
+                continue
+            slots.append((hour, slot.get("chanceofrain", "0")))
+            if len(slots) == RAIN_SLOTS:
+                return slots
+    return slots
+
+
 def main():
     data = fetch_weather()
     if not data or "current_condition" not in data or not data["current_condition"]:
@@ -82,9 +108,6 @@ def main():
     temp_c = cur.get("temp_C", "0")
     feels_like = cur.get("FeelsLikeC", temp_c)
     desc = cur.get("weatherDesc", [{}])[0].get("value", "Clear")
-    humidity = cur.get("humidity", "0")
-    wind = cur.get("windspeedKmph", "0")
-    visibility = cur.get("visibility", "10")
 
     # Location
     area = "Local"
@@ -97,15 +120,10 @@ def main():
     # Min/Max from today's forecast
     min_temp = temp_c
     max_temp = temp_c
-    rain_hourly = []
-    if "weather" in data and data["weather"]:
+    if data.get("weather"):
         today = data["weather"][0]
         min_temp = today.get("mintempC", temp_c)
         max_temp = today.get("maxtempC", temp_c)
-        if "hourly" in today:
-            for h in today["hourly"]:
-                chance = h.get("chanceofrain", "0")
-                rain_hourly.append(f"Rain drop {chance}%")
 
     text_bar = f"{icon} {temp_c}° {area}"
 
@@ -114,10 +132,11 @@ def main():
         f"<big>{icon}</big>",
         f"Feels like {feels_like}°C",
         f" {min_temp}°C\t\t {max_temp}°C",
-        f"{wind} km/h\t{humidity}%",
-        f"{visibility} km visibility",
     ]
-    tooltip_lines.extend(rain_hourly[:6])
+    tooltip_lines.extend(
+        f"Rain {hour:02d}:00 {chance}%"
+        for hour, chance in upcoming_rain(data.get("weather", []), datetime.now())
+    )
     tooltip_str = "\n".join(tooltip_lines)
 
     result = {"text": text_bar, "alt": desc, "tooltip": tooltip_str}

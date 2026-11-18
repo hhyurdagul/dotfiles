@@ -22,42 +22,62 @@ QtObject {
             // Keep actions valid after this signal returns and while in history.
             var alreadyTracked = notif.tracked
             notif.tracked = true
-            var notificationId = notif.id
-            if (!alreadyTracked || notif.lastGeneration) notif.closed.connect(() => {
-                notifManager.removeToastOnly(notificationId)
-                notifManager.history = notifManager.history.map(item => {
-                    if (item.id !== notificationId) return item
-                    return Object.assign({}, item, { notification: null })
-                })
+            // After a config reload the server re-announces retained
+            // notifications (lastGeneration); the old connections died with
+            // the previous QML engine, so connect them again.
+            if (!alreadyTracked || notif.lastGeneration) notifManager.watch(notif)
+            notifManager.publish(notif, !notif.lastGeneration)
+        }
+    }
+
+    function watch(notif) {
+        var notificationId = notif.id
+        notif.closed.connect(() => {
+            notifManager.removeToastOnly(notificationId)
+            notifManager.history = notifManager.history.map(item => {
+                if (item.id !== notificationId) return item
+                return Object.assign({}, item, { notification: null })
             })
-            var item = {
-                id: notif.id || (Date.now() + Math.random()),
-                app: notif.appName || "Notification",
-                summary: notif.summary || "Alert",
-                body: notif.body || "",
-                time: Qt.formatTime(new Date(), "hh:mm"),
-                desktopEntry: notif.desktopEntry || "",
-                critical: notif.urgency === NotificationUrgency.Critical,
-                hints: notif.hints || {},
-                notification: notif
-            }
+        })
+        // A replacement (`notify-send -r`, progress updates) reuses this object
+        // and only changes its properties; onNotification does not fire again.
+        // Batch the property signals of one replacement into a single refresh.
+        var refresh = () => notifManager.publish(notif, true)
+        var scheduleRefresh = () => Qt.callLater(refresh)
+        notif.appNameChanged.connect(scheduleRefresh)
+        notif.summaryChanged.connect(scheduleRefresh)
+        notif.bodyChanged.connect(scheduleRefresh)
+        notif.urgencyChanged.connect(scheduleRefresh)
+        notif.desktopEntryChanged.connect(scheduleRefresh)
+    }
 
-            // Replacement IDs update existing entries instead of duplicating them.
-            var hist = notifManager.history.filter(existing => existing.id !== item.id)
-            hist.unshift(item)
-            if (hist.length > 50) {
-                var oldest = hist.pop()
-                if (oldest.notification) oldest.notification.dismiss()
-            }
-            notifManager.history = hist
+    // Puts the notification's current content at the top of history (one
+    // entry per id) and, unless suppressed or in DND, (re)shows its toast.
+    function publish(notif, showToast) {
+        var item = {
+            id: notif.id,
+            app: notif.appName || "Notification",
+            summary: notif.summary || "Alert",
+            body: notif.body || "",
+            time: Qt.formatTime(new Date(), "hh:mm"),
+            desktopEntry: notif.desktopEntry || "",
+            critical: notif.urgency === NotificationUrgency.Critical,
+            notification: notif
+        }
 
-            // Show floating popup on screen only if DND is disabled
-            if (!notifManager.dndEnabled && !notif.lastGeneration) {
-                var toasts = notifManager.activeToasts.filter(existing => existing.id !== item.id)
-                toasts.unshift(item)
-                if (toasts.length > 5) toasts.pop()
-                notifManager.activeToasts = toasts
-            }
+        var hist = notifManager.history.filter(existing => existing.id !== item.id)
+        hist.unshift(item)
+        if (hist.length > 50) {
+            var oldest = hist.pop()
+            if (oldest.notification) oldest.notification.dismiss()
+        }
+        notifManager.history = hist
+
+        if (showToast && !notifManager.dndEnabled) {
+            var toasts = notifManager.activeToasts.filter(existing => existing.id !== item.id)
+            toasts.unshift(item)
+            if (toasts.length > 5) toasts.pop()
+            notifManager.activeToasts = toasts
         }
     }
 
@@ -178,10 +198,6 @@ QtObject {
         notifManager.history = hist
     }
 
-    function removeToast(toastId) {
-        removeToastOnly(toastId)
-    }
-
     function invokeNotificationAction(item) {
         if (!item) return
         // Invoking the action may destroy the native notification immediately.
@@ -230,8 +246,7 @@ QtObject {
         var names = [item.desktopEntry, item.app]
         if (entry) names = names.concat([entry.id, entry.name, entry.startupClass])
         var keys = names.map(normalizedApp).filter(key => key.length > 0)
-        return clients.filter(client =>
-            [client.appId, client.initialAppId].some(name => keys.includes(normalizedApp(name))))
+        return clients.filter(client => keys.includes(normalizedApp(client.appId)))
             .sort((a, b) => a.focusRank - b.focusRank)[0] || null
     }
 

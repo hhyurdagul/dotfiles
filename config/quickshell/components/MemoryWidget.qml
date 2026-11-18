@@ -10,9 +10,9 @@ DropdownWidget {
     popupWidth: 280
     popupHeight: 300
 
-    property int memUsage: 0
-    property string memUsedStr: ""
-    property string memTotalStr: ""
+    readonly property int memUsage: SystemStats.memUsage
+    readonly property string memUsedStr: formatBytes(SystemStats.memUsedBytes)
+    readonly property string memTotalStr: formatBytes(SystemStats.memTotalBytes)
     property var topMemProcesses: []
     function formatBytes(bytes) {
         if (bytes < 1024 * 1024 * 1024) {
@@ -21,30 +21,7 @@ DropdownWidget {
         return (bytes / 1024 / 1024 / 1024).toFixed(1) + " GiB"
     }
 
-
     onOpened: topMemProc.running = true
-
-    // RAM usage statistics. `free` is parsed one line at a time because
-    // SplitParser emits one callback per line.
-    Process {
-        id: memProc
-        command: ["free", "-b"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (!data || !data.startsWith("Mem:")) return
-
-                var parts = data.trim().split(/\s+/)
-                if (parts.length < 3) return
-
-                var total = parseInt(parts[1]) || 1
-                var used = parseInt(parts[2]) || 0
-                memWidget.memTotalStr = memWidget.formatBytes(total)
-                memWidget.memUsedStr = memWidget.formatBytes(used)
-                memWidget.memUsage = Math.round(100 * used / total)
-            }
-        }
-        Component.onCompleted: running = true
-    }
 
     // Top memory consuming processes
     Process {
@@ -78,21 +55,11 @@ DropdownWidget {
         }
     }
 
-    Process {
-        id: btopProc
-        command: ["kitty", "-e", "btop"]
-    }
-
     Timer {
         interval: 3000
-        running: true
+        running: memWidget.dropdownOpen
         repeat: true
-        onTriggered: {
-            memProc.running = true
-            if (memWidget.dropdownOpen) {
-                topMemProc.running = true
-            }
-        }
+        onTriggered: topMemProc.running = true
     }
 
     // Top bar icon content
@@ -274,7 +241,7 @@ DropdownWidget {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        btopProc.running = true
+                        Quickshell.execDetached(["kitty", "-e", "btop"])
                         memWidget.dropdownOpen = false
                     }
                 }

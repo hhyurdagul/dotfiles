@@ -24,7 +24,10 @@ in
   systemd.user.services.disk-health-notify = lib.recursiveUpdate graphicalService {
     Unit = {
       Description = "Show recorded disk-health alerts";
-      After = [ "quickshell.service" ];
+      After = [
+        "graphical-session.target"
+        "quickshell.service"
+      ];
     };
     Service = {
       Type = "oneshot";

@@ -1,12 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Io
 import ".."
 
 Item {
     id: cameraWidget
 
-    property bool cameraActive: false
+    readonly property bool cameraActive: CameraStatus.active
 
     visible: cameraActive
     Layout.preferredWidth: cameraActive ? cameraRow.implicitWidth + 12 : 0
@@ -45,26 +44,5 @@ Item {
                 font.bold: true
             }
         }
-    }
-
-    // Check if any process is actively using /dev/video*
-    Process {
-        id: checkCameraProc
-        command: ["sh", "-c", "fuser /dev/video* 2>/dev/null | grep -q '[0-9]' && echo 'active' || echo 'inactive'"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) {
-                    cameraWidget.cameraActive = data.trim() === "active"
-                }
-            }
-        }
-        Component.onCompleted: running = true
-    }
-
-    Timer {
-        interval: 5000
-        running: true
-        repeat: true
-        onTriggered: checkCameraProc.running = true
     }
 }

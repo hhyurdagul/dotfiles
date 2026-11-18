@@ -8,7 +8,6 @@
 
 let
   system = pkgs.stdenv.hostPlatform.system;
-  hyprlandPackage = inputs.hyprland.packages.${system}.hyprland;
   # Adana. Darkman's sunrise/sunset theme switch, wlsunset and the bar's
   # weather all read it.
   location = {
@@ -41,24 +40,16 @@ let
     '';
     meta.mainProgram = "handy";
   };
-  makeWallpaper =
-    name: color:
-    pkgs.runCommand "${name}.png" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
-      magick -size 32x32 "xc:#${color}" "$out"
-    '';
-  darkWallpaper = makeWallpaper "catppuccin-mocha-wallpaper" "1e1e2e";
-  lightWallpaper = makeWallpaper "catppuccin-latte-wallpaper" "eff1f5";
 
   themeSwitcher = pkgs.writeShellApplication {
     name = "theme-switcher";
     runtimeInputs = with pkgs; [
       coreutils
       darkman
-      hyprlandPackage
       glib
     ];
     # gsettings needs compiled schemas and the dconf GSettings backend. Neither
-    # is visible in systemd-user or Hyprland-exec contexts (darkman hooks,
+    # is visible in systemd-user or keybind contexts (darkman hooks,
     # theme-initialize, the keybind): without these exports every gsettings
     # call fails with "No schemas installed" and dconf is never updated.
     text = ''
@@ -89,15 +80,6 @@ let
     text = builtins.readFile ../../config/scripts/lock.sh;
   };
 
-  displayPower = pkgs.writeShellApplication {
-    name = "display-power";
-    runtimeInputs = [
-      pkgs.niri
-      hyprlandPackage
-    ];
-    text = builtins.readFile ../../config/scripts/display-power.sh;
-  };
-
   monitorToggle = pkgs.writeShellApplication {
     name = "monitor-toggle";
     runtimeInputs = [
@@ -126,7 +108,6 @@ let
     runtimeInputs = [
       lockScreen
       pkgs.niri
-      pkgs.uwsm
     ];
     text = builtins.readFile ../../config/scripts/session-exit.sh;
   };
@@ -199,11 +180,13 @@ let
     name = "quickshell-session";
     runtimeInputs = [
       clipboardHistory
-      hyprlandPackage
       pkgs.niri
       pkgs.quickshell
-      pkgs.jq
       pkgs.coreutils
+      # Bar helpers: camera watcher (inotifywait, fuser) and the CPU popup (top).
+      pkgs.inotify-tools
+      pkgs.psmisc
+      pkgs.procps
     ];
     text = builtins.readFile ../../config/scripts/quickshell-session.sh;
   };
@@ -211,7 +194,6 @@ let
   desktopControl = pkgs.writeShellApplication {
     name = "desktop-control";
     runtimeInputs = [
-      hyprlandPackage
       pkgs.niri
     ]
     ++ (with pkgs; [
@@ -272,7 +254,6 @@ in
       clipboardHistory
       clipboardWatch
       desktopControl
-      displayPower
       focusOrLaunch
       handy
       idleToggle
@@ -297,24 +278,6 @@ in
         exec ${lib.getExe themeSwitcher} dark --from-darkman
       '';
     };
-
-    activation.initializeThemeState = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/theme"
-      mkdir -p "$state_dir"
-
-      if [[ ! -e "$state_dir/mode" ]]; then
-        if [[ -r "$HOME/.config/theme/mode" ]]; then
-          tr -d '[:space:]' < "$HOME/.config/theme/mode" > "$state_dir/mode"
-        else
-          printf '%s\n' dark > "$state_dir/mode"
-        fi
-      fi
-
-      mode="$(tr -d '[:space:]' < "$state_dir/mode")"
-      if [[ "$mode" != light ]]; then
-        printf '%s\n' dark > "$state_dir/mode"
-      fi
-    '';
   };
   xdg.configFile = {
     "darkman/config.yaml".text = ''
@@ -359,27 +322,16 @@ in
           ''XCURSOR_SIZE "${toString config.home.pointerCursor.size}"''
         ]
         (builtins.readFile ../../config/niri/config.kdl);
-    "hypr/hypridle.conf".text =
-      builtins.replaceStrings [ "hyprctl dispatch dpms" ] [ (lib.getExe displayPower) ]
-        (builtins.readFile ../../config/hypr/hypridle.conf);
-    # Embed the packaged helper's path so keybinds also work when only the
-    # Home Manager generation has been activated (useUserPackages = true).
-    "hypr/hyprland.lua".text =
-      builtins.replaceStrings
-        [ "screenshot area" "screenshot full" "desktop-control " ]
-        [ "${lib.getExe screenshot} area" "${lib.getExe screenshot} full" "${lib.getExe desktopControl} " ]
-        (builtins.readFile ../../config/hypr/hyprland.lua);
-    "hypr/hyprpaper.conf".text = ''
-      wallpaper {
-        monitor =
-        path = ${darkWallpaper}
-        fit_mode = fill
-      }
-      splash = false
-      ipc = true
+    "hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
+    # The network-manager-applet service below runs nm-applet --indicator for
+    # the tray. Hide the package's XDG autostart entry, which would start a
+    # second applet without it.
+    "autostart/nm-applet.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=NetworkManager Applet
+      Hidden=true
     '';
-    "hypr/wallpapers/dark.png".source = darkWallpaper;
-    "hypr/wallpapers/light.png".source = lightWallpaper;
   };
 
   systemd.user.services = {
@@ -423,6 +375,18 @@ in
       };
     };
 
+    # Held by idle-toggle. hypridle honours systemd idle inhibitors, so this
+    # pauses dim/lock/screen-off/suspend while lock-before-sleep keeps working.
+    # Not wanted by the session target: idle management is on after login.
+    idle-inhibit = {
+      Unit = {
+        Description = "Inhibit idle actions (idle-toggle)";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Service.ExecStart = ''${pkgs.systemd}/bin/systemd-inhibit --what=idle --who=idle-toggle --why="Idle management disabled" ${pkgs.coreutils}/bin/sleep infinity'';
+    };
+
     darkman = lib.recursiveUpdate graphicalService {
       Unit.Description = "Automatic light and dark mode";
       Service = {
@@ -435,7 +399,10 @@ in
     theme-initialize = lib.recursiveUpdate graphicalService {
       Unit = {
         Description = "Apply the saved desktop theme";
-        After = [ "darkman.service" ];
+        After = [
+          "graphical-session.target"
+          "darkman.service"
+        ];
       };
       Service = {
         Type = "oneshot";
@@ -447,18 +414,6 @@ in
       Unit.Description = "Automatic night-light temperature";
       Service = {
         ExecStart = "${lib.getExe pkgs.wlsunset} -l ${location.lat} -L ${location.lng} -t 2500 -T 6500";
-        Restart = "on-failure";
-        RestartSec = 2;
-      };
-    };
-
-    hyprpaper = lib.recursiveUpdate graphicalService {
-      Unit = {
-        Description = "Hyprland wallpaper daemon";
-        ConditionEnvironment = "XDG_CURRENT_DESKTOP=Hyprland";
-      };
-      Service = {
-        ExecStart = "${lib.getExe pkgs.hyprpaper} -c %h/.config/hypr/hyprpaper.conf";
         Restart = "on-failure";
         RestartSec = 2;
       };
@@ -491,13 +446,14 @@ in
       };
     };
 
-    # Super+Space in either compositor calls `handy --toggle-transcription`, which signals
+    # Niri's Super+Space calls `handy --toggle-transcription`, which signals
     # this instance. Handy's own shortcuts are X11 grabs through XWayland and
     # only fire while an X11 window has focus.
     handy = lib.recursiveUpdate graphicalService {
       Unit = {
         Description = "Handy speech-to-text";
         After = [
+          "graphical-session.target"
           "pipewire.service"
           "wireplumber.service"
         ];

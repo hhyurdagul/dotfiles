@@ -27,9 +27,9 @@ English UI, Europe/Istanbul. NixOS 26.05 stable, with Home Manager as a NixOS
 module (`useGlobalPkgs`, `useUserPackages`, so user packages land in
 `/etc/profiles/per-user/hhyurdagul`).
 
-Session: greetd/tuigreet → `niri-session` → Niri (config in `config/niri/config.kdl`).
-Hyprland stays as a selectable UWSM fallback (git build from the `hyprland` input,
-**Lua config** in `config/hypr/hyprland.lua`). Quickshell is the bar,
+Session: greetd/tuigreet → `niri-session` → Niri (config in `config/niri/config.kdl`),
+the only compositor. hypridle and hyprlock (configs in `config/hypr/`) handle idle
+and locking. Quickshell is the bar,
 notifications, and OSD. Catppuccin light/dark switched at runtime by darkman +
 `theme-switcher`. Kitty, Helix (`EDITOR=hx`), zsh + powerlevel10k, Zen as the
 default browser, Podman with Docker compatibility. Many AI agent CLIs and desktop
@@ -40,18 +40,18 @@ apps come from numtide's `llm-agents.nix`.
 | Change | Place |
 | --- | --- |
 | Hardware, boot, users, locale, Nix settings | `hosts/nixos/` |
-| System services: desktop, Niri/greetd, Hyprland, containers | `modules/*.nix` |
+| System services: desktop, Niri/greetd, containers | `modules/*.nix` |
 | User package | `home/hhyurdagul/packages.nix` (see sources below) |
 | Locally packaged app (not in any input) | `pkgs/<name>.nix` in `callPackage` form, called from `packages.nix` |
-| User service | `home/hhyurdagul/services.nix`, extending `graphicalService` (`graphical-service.nix`) with `lib.recursiveUpdate` |
+| User service | `home/hhyurdagul/services.nix`, extending `graphicalService` (`graphical-service.nix`) with `lib.recursiveUpdate`. `recursiveUpdate` replaces lists, so a service that sets its own `Unit.After` must keep `"graphical-session.target"` in it |
 | Dotfile | `config/<app>/…`, linked from `xdg.configFile` in `home/hhyurdagul/default.nix` |
 | Helper script | `config/scripts/<name>.sh`, packaged in `services.nix` with `writeShellApplication` + explicit `runtimeInputs` |
 | Default apps / MIME | `xdg.mimeApps` in `home/hhyurdagul/default.nix` |
 | Shell options, plugins | `programs.zsh` in `default.nix`; aliases and env in `config/zsh/init.zsh` |
 
-Niri and Hyprland binds call helpers by bare name. `services.nix` rewrites
-`niri/config.kdl` and `hypr/hyprland.lua` with `builtins.replaceStrings` to
-absolute store paths. A new helper called from a bind needs an entry there too.
+Niri binds call helpers by bare name. `services.nix` rewrites `niri/config.kdl`
+with `builtins.replaceStrings` to absolute store paths. A new helper called from
+a bind needs an entry there too.
 
 ## Package sources
 
@@ -73,7 +73,7 @@ Unfree packages from `pkgs` must be named in `allowUnfreePredicate` in
 (llm-agents) don't need it.
 
 New flake inputs should `follows = "nixpkgs"` unless they ship a binary cache
-built against their own pin (llm-agents, hyprland). In that case add the cache
+built against their own pin (llm-agents). In that case add the cache
 to **both** `nixConfig` in `flake.nix` and `nix.settings` in `hosts/nixos/default.nix`.
 
 ## Known traps

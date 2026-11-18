@@ -3,3 +3,7 @@ singleton Theme 1.0 Theme.qml
 singleton NotifManager 1.0 NotifManager.qml
 singleton Dictation 1.0 Dictation.qml
 singleton Compositor 1.0 Compositor.qml
+singleton SystemStats 1.0 SystemStats.qml
+singleton NetworkStatus 1.0 NetworkStatus.qml
+singleton IdleInhibitor 1.0 IdleInhibitor.qml
+singleton CameraStatus 1.0 CameraStatus.qml

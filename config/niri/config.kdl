@@ -43,7 +43,7 @@ environment {
 }
 
 output "eDP-1" {
-    mode "2880x1800@120"
+    mode "2880x1800@120.001"
     scale 1.75
     position x=1920 y=0
     focus-at-startup
@@ -128,14 +128,6 @@ window-rule {
         xray false
     }
     popups { background-effect { blur true; xray false; }; }
-}
-
-// Preserve the legacy run-window placement as a bottom-left floating window.
-// Niri positions a window edge relative to the working area, not monitor_h-120.
-window-rule {
-    match app-id="^hyprland-run$"
-    open-floating true
-    default-floating-position x=20 y=20 relative-to="bottom-left"
 }
 
 // The old empty-class/title XWayland no-focus workaround is not generalized:

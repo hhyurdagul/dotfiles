@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import ".."
 
 DropdownWidget {
@@ -11,11 +10,13 @@ DropdownWidget {
     stemAlignment: "right"
     property string pendingAction: ""
 
-    function confirmAction(action, process) {
+    // Power actions run detached: the locker and session-exit must survive a
+    // Quickshell restart, and session-exit ends Quickshell itself.
+    function confirmAction(action, command) {
         if (pendingAction === action) {
             pendingAction = ""
             dropdownOpen = false
-            process.running = true
+            Quickshell.execDetached(command)
             return
         }
         pendingAction = action
@@ -24,32 +25,6 @@ DropdownWidget {
 
     onDropdownOpenChanged: {
         if (!dropdownOpen) pendingAction = ""
-    }
-
-    // Power actions
-    Process {
-        id: lockProc
-        command: ["lock-screen"]
-    }
-
-    Process {
-        id: sleepProc
-        command: ["systemctl", "suspend"]
-    }
-
-    Process {
-        id: logoutProc
-        command: ["session-exit"]
-    }
-
-    Process {
-        id: rebootProc
-        command: ["systemctl", "reboot"]
-    }
-
-    Process {
-        id: shutdownProc
-        command: ["systemctl", "poweroff"]
     }
 
     Timer {
@@ -111,7 +86,7 @@ DropdownWidget {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         powerWidget.dropdownOpen = false
-                        lockProc.running = true
+                        Quickshell.execDetached(["lock-screen"])
                     }
                 }
             }
@@ -150,7 +125,7 @@ DropdownWidget {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         powerWidget.dropdownOpen = false
-                        sleepProc.running = true
+                        Quickshell.execDetached(["systemctl", "suspend"])
                     }
                 }
             }
@@ -189,7 +164,7 @@ DropdownWidget {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         powerWidget.dropdownOpen = false
-                        logoutProc.running = true
+                        Quickshell.execDetached(["session-exit"])
                     }
                 }
             }
@@ -226,7 +201,7 @@ DropdownWidget {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: powerWidget.confirmAction("reboot", rebootProc)
+                    onClicked: powerWidget.confirmAction("reboot", ["systemctl", "reboot"])
                 }
             }
 
@@ -262,7 +237,7 @@ DropdownWidget {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: powerWidget.confirmAction("shutdown", shutdownProc)
+                    onClicked: powerWidget.confirmAction("shutdown", ["systemctl", "poweroff"])
                 }
             }
         }

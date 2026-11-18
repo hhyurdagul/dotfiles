@@ -19,6 +19,7 @@ in
   hardware = {
     enableRedistributableFirmware = true;
     firmware = [ pkgs.sof-firmware ];
+    cpu.intel.npu.enable = true;
 
     graphics = {
       enable = true;
@@ -69,18 +70,13 @@ in
     };
     hardware.bolt.enable = true;
     thermald.enable = true;
+
+    # Lenovo conservation mode caps long-term charge to protect the battery.
+    # Applied when ideapad_acpi binds, so it can't race the module load.
+    udev.extraRules = ''
+      ACTION=="add|bind", SUBSYSTEM=="platform", DRIVER=="ideapad_acpi", TEST=="conservation_mode", ATTR{conservation_mode}="1"
+    '';
   };
-  # Let RTD3 runtime-suspend the dGPU (display + audio functions) when idle.
-  # Driver already reports fine-grained PM with video memory off; this keeps
-  # PCI power control on auto so nothing pins it to D0.
-  services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03*", TEST=="power/control", ATTR{power/control}="auto"
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x04*", TEST=="power/control", ATTR{power/control}="auto"
-    # Stable iGPU name for Hyprland's AQ_DRM_DEVICES. That list is colon-separated,
-    # so the by-path links (pci-0000:00:02.0-card) can't be used, and cardN
-    # numbering is not stable across boots.
-    SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/igpu-card"
-  '';
 
   zramSwap = {
     enable = true;
@@ -101,19 +97,5 @@ in
       "d /var/lib/workstation-maintenance 0755 root root -"
       "d /var/lib/workstation-maintenance/smart 0755 root root -"
     ];
-    services.lenovo-conservation-mode = {
-      description = "Enable Lenovo battery conservation mode";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "systemd-udev-settle.service" ];
-      wants = [ "systemd-udev-settle.service" ];
-      unitConfig.ConditionPathExists = "/sys/class/power_supply/BAT0/extensions/ideapad_laptop/conservation_mode";
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-      };
-      script = ''
-        echo 1 > /sys/class/power_supply/BAT0/extensions/ideapad_laptop/conservation_mode
-      '';
-    };
   };
 }

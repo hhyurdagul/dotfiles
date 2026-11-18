@@ -8,8 +8,7 @@
 {
   programs.niri.enable = true;
 
-  # Niri's own systemd session starts/stops graphical-session.target. UWSM
-  # remains installed solely for the selectable Hyprland fallback.
+  # Niri's own systemd session starts/stops graphical-session.target.
   services.greetd = {
     enable = true;
     settings.default_session = {

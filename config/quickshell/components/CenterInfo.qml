@@ -20,9 +20,7 @@ Item {
     property string weatherFeelsLike: ""
     property string weatherMinTemp: ""
     property string weatherMaxTemp: ""
-    property string weatherWind: ""
-    property string weatherHumidity: ""
-    property var hourlyRain: []
+    property var hourlyRain: []  // [{ time: "15:00", chance: 40 }], upcoming slots
 
     property bool notifVisible: false
     property bool calendarVisible: false
@@ -160,35 +158,21 @@ Item {
                 var iconMatch = tooltip.match(/<big>([^<]+)<\/big>/)
                 if (iconMatch) centerInfo.weatherIcon = stripHtml(iconMatch[1])
 
-                var tempMatch = tooltip.match(/([^\t]+)\t\t([^\n<]+)/)
-                if (tempMatch) {
-                    var lines = tooltip.split('\n')
-                    for (var i = 0; i < lines.length; i++) {
-                        var line = lines[i]
-                        var minMaxMatch = line.match(/\s*([^\t]+)\t\t\s*([^\t\n]+)/)
-                        if (minMaxMatch && minMaxMatch[1].includes('°') && minMaxMatch[2].includes('°')) {
-                            centerInfo.weatherMinTemp = stripHtml(minMaxMatch[1])
-                            centerInfo.weatherMaxTemp = stripHtml(minMaxMatch[2])
-                        }
-                        if (line.includes('km/h') && line.includes('%')) {
-                            var parts = line.split('\t').filter(p => p.trim())
-                            if (parts.length >= 2) {
-                                centerInfo.weatherWind = parts[0].trim()
-                                centerInfo.weatherHumidity = parts[1].trim()
-                            }
-                        }
+                var lines = tooltip.split('\n')
+                for (var i = 0; i < lines.length; i++) {
+                    var minMaxMatch = lines[i].match(/\s*([^\t]+)\t\t\s*([^\t\n]+)/)
+                    if (minMaxMatch && minMaxMatch[1].includes('°') && minMaxMatch[2].includes('°')) {
+                        centerInfo.weatherMinTemp = stripHtml(minMaxMatch[1])
+                        centerInfo.weatherMaxTemp = stripHtml(minMaxMatch[2])
                     }
                 }
 
-                var rainMatch = tooltip.match(/Rain drop (\d+)%/g)
-                if (rainMatch) {
-                    var rainArr = []
-                    for (var j = 0; j < rainMatch.length && j < 5; j++) {
-                        var pct = rainMatch[j].match(/(\d+)/)
-                        if (pct) rainArr.push(parseInt(pct[1]))
-                    }
-                    centerInfo.hourlyRain = rainArr
-                }
+                var rainPattern = /Rain (\d\d:\d\d) (\d+)%/g
+                var rainArr = []
+                var rainMatch
+                while ((rainMatch = rainPattern.exec(tooltip)) !== null && rainArr.length < 5)
+                    rainArr.push({ time: rainMatch[1], chance: parseInt(rainMatch[2]) })
+                centerInfo.hourlyRain = rainArr
             }
             return true
         } catch (e) {
@@ -390,11 +374,14 @@ Item {
         onRunningChanged: {
             if (running) {
                 output = ""
-            } else if (output) {
-                if (parseWeatherJson(output)) {
-                    saveWeatherCache(output)
-                }
+                return
             }
+            // weather.py prints an empty result when offline; retry soon
+            // instead of keeping stale weather for a whole hour.
+            var ok = output !== "" && parseWeatherJson(output)
+            if (ok) saveWeatherCache(output)
+            weatherRefresh.interval = ok ? 3600000 : 60000
+            weatherRefresh.restart()
         }
         Component.onCompleted: cacheReadProc.running = true
     }
@@ -434,9 +421,7 @@ Item {
     }
 
     Timer {
-        interval: 3600000
-        running: true
-        repeat: true
+        id: weatherRefresh
         onTriggered: weatherProc.running = true
     }
 
@@ -981,28 +966,41 @@ Item {
                         Repeater {
                             model: centerInfo.hourlyRain
 
-                            Rectangle {
+                            ColumnLayout {
                                 Layout.fillWidth: true
-                                Layout.preferredHeight: 28
-                                color: Qt.rgba(Theme.colNetwork.r, Theme.colNetwork.g, Theme.colNetwork.b, 0.15)
-                                radius: Theme.tinyRadius
+                                spacing: 2
 
                                 Rectangle {
-                                    anchors.bottom: parent.bottom
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    height: parent.height * (modelData / 100)
-                                    color: Qt.rgba(Theme.colNetwork.r, Theme.colNetwork.g, Theme.colNetwork.b, 0.4 + (modelData / 200))
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 28
+                                    color: Qt.rgba(Theme.colNetwork.r, Theme.colNetwork.g, Theme.colNetwork.b, 0.15)
                                     radius: Theme.tinyRadius
+
+                                    Rectangle {
+                                        anchors.bottom: parent.bottom
+                                        anchors.left: parent.left
+                                        anchors.right: parent.right
+                                        height: parent.height * (modelData.chance / 100)
+                                        color: Qt.rgba(Theme.colNetwork.r, Theme.colNetwork.g, Theme.colNetwork.b, 0.4 + (modelData.chance / 200))
+                                        radius: Theme.tinyRadius
+                                    }
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: modelData.chance + "%"
+                                        color: Theme.colFg
+                                        font.pixelSize: 9
+                                        font.family: Theme.fontFamily
+                                        font.bold: true
+                                    }
                                 }
 
                                 Text {
-                                    anchors.centerIn: parent
-                                    text: modelData + "%"
-                                    color: Theme.colFg
+                                    Layout.alignment: Qt.AlignHCenter
+                                    text: modelData.time
+                                    color: Theme.colMuted
                                     font.pixelSize: 9
                                     font.family: Theme.fontFamily
-                                    font.bold: true
                                 }
                             }
                         }
