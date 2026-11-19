@@ -47,6 +47,7 @@ let
       coreutils
       darkman
       glib
+      systemd
     ];
     # gsettings needs compiled schemas and the dconf GSettings backend. Neither
     # is visible in systemd-user or keybind contexts (darkman hooks,
@@ -59,6 +60,21 @@ let
       CURSOR_SIZE="${toString config.home.pointerCursor.size}"
     ''
     + builtins.readFile ../../config/scripts/theme-switcher.sh;
+  };
+
+  # The wallpaper images live in config/wallpapers; replace either file and
+  # rebuild to change it.
+  wallpaper = pkgs.writeShellApplication {
+    name = "wallpaper";
+    runtimeInputs = with pkgs; [
+      coreutils
+      swaybg
+    ];
+    text = ''
+      LIGHT_WALLPAPER="${../../config/wallpapers/light.jpg}"
+      DARK_WALLPAPER="${../../config/wallpapers/dark.jpg}"
+    ''
+    + builtins.readFile ../../config/scripts/wallpaper.sh;
   };
 
   idleToggle = pkgs.writeShellApplication {
@@ -414,6 +430,23 @@ in
       Unit.Description = "Automatic night-light temperature";
       Service = {
         ExecStart = "${lib.getExe pkgs.wlsunset} -l ${location.lat} -L ${location.lng} -t 2500 -T 6500";
+        Restart = "on-failure";
+        RestartSec = 2;
+      };
+    };
+
+    # Niri's place-within-backdrop layer rule matches swaybg's "wallpaper"
+    # namespace, so the image sits behind the workspaces and the overview.
+    wallpaper = lib.recursiveUpdate graphicalService {
+      Unit = {
+        Description = "Desktop wallpaper for the current light/dark mode";
+        After = [
+          "graphical-session.target"
+          "theme-initialize.service"
+        ];
+      };
+      Service = {
+        ExecStart = lib.getExe wallpaper;
         Restart = "on-failure";
         RestartSec = 2;
       };

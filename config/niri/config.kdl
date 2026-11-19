@@ -102,10 +102,19 @@ layout {
         offset x=0 y=0
         color "#1a1a1aee"
     }
-    background-color "#1e1e2e"
+    // Transparent, so the backdrop wallpaper stays still behind workspaces.
+    background-color "transparent"
 }
 
+// Shown only while swaybg isn't running.
 overview { backdrop-color "#181825"; }
+
+// Put swaybg (the wallpaper service) into the backdrop: visible behind
+// workspaces and the overview.
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
 
 // Native dual-Kawase blur approximates Hyprland size=3, passes=1.
 // Saturation approximates vibrancy; the two renderers are not pixel-identical.

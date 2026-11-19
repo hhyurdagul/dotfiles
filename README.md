@@ -71,7 +71,7 @@ systemctl --user status quickshell hypridle darkman wlsunset battery-policy
 journalctl --user -u quickshell -b
 ```
 
-Niri's solid background follows the active light/dark theme natively. Configure a Niri-compatible wallpaper client if images are wanted.
+The wallpapers are `config/wallpapers/light.jpg` and `config/wallpapers/dark.jpg`, drawn by `swaybg` through `wallpaper.service` (`config/scripts/wallpaper.sh`), which picks the one for the current light/dark mode; `theme-switcher` restarts it on every mode change. A Niri layer rule places it in the backdrop and workspace backgrounds are transparent, so it stays still behind workspaces and shows behind the overview. To change either, replace the file and rebuild. The overview backdrop colour follows the theme and only shows if swaybg isn't running.
 
 LocalSend is enabled in `modules/desktop.nix`, including firewall access on TCP and UDP port 53317 for local-network transfers and discovery. After rebuilding and switching, launch **LocalSend** from the app launcher or run `localsend_app`. Both devices must be on the same local network.
 

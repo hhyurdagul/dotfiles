@@ -118,7 +118,6 @@ fi
 tmp_niri="$(mktemp "$STATE_DIR/.niri.XXXXXX")"
 cat >"$tmp_niri" <<EOF
 layout {
-    background-color "$NIRI_BACKGROUND"
     border {
         active-gradient from="$NIRI_FROM" to="$NIRI_TO" angle=45
         inactive-color "$NIRI_INACTIVE"
@@ -128,6 +127,10 @@ layout {
 overview { backdrop-color "$NIRI_BACKGROUND"; }
 EOF
 mv "$tmp_niri" "$STATE_DIR/niri.kdl"
+
+# Only restarts a running wallpaper; at login wallpaper.service starts after
+# theme-initialize and reads the mode itself.
+systemctl --user try-restart wallpaper.service || true
 
 if [[ "$FROM_DARKMAN" -eq 0 && "$MODE" != "init" ]] && command -v darkman >/dev/null 2>&1; then
 	darkman set "$TARGET_MODE" >/dev/null 2>&1 || true
