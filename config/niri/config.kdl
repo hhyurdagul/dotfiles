@@ -92,28 +92,35 @@ layout {
     border {
         on
         width 2
-        active-gradient from="#33ccffee" to="#00ff99ee" angle=45
-        inactive-color "#595959aa"
+        active-gradient from="#e8955eee" to="#ecc27aee" angle=45
+        inactive-color "#7d6f64aa"
     }
     shadow {
         on
         softness 4
         spread 0
         offset x=0 y=0
-        color "#1a1a1aee"
+        color "#12100fee"
     }
     // Transparent, so the backdrop wallpaper stays still behind workspaces.
     background-color "transparent"
 }
 
 // Shown only while swaybg isn't running.
-overview { backdrop-color "#181825"; }
+overview { backdrop-color "#1a1715"; }
 
 // Put swaybg (the wallpaper service) into the backdrop: visible behind
 // workspaces and the overview.
 layer-rule {
     match namespace="^wallpaper$"
     place-within-backdrop true
+}
+
+// Fuzzel paints a translucent background (theme-switcher); blur what's behind it.
+layer-rule {
+    match namespace="^launcher$"
+    geometry-corner-radius 10
+    background-effect { blur true; xray false; }
 }
 
 // Native dual-Kawase blur approximates Hyprland size=3, passes=1.
@@ -137,6 +144,16 @@ window-rule {
         xray false
     }
     popups { background-effect { blur true; xray false; }; }
+}
+
+// Tern and kitty draw an alpha background themselves, so their text stays solid.
+// These apps paint opaque, so niri fades the whole window, text included.
+// Super+Alt+O toggles it per window for long reading. Zen is left out: web pages
+// over the wallpaper are hard to read.
+window-rule {
+    match app-id="^md\\.obsidian\\.Obsidian$"
+    match app-id="^[Tt]hunar$"
+    opacity 0.92
 }
 
 // The old empty-class/title XWayland no-focus workaround is not generalized:
@@ -191,6 +208,7 @@ binds {
     Super+Alt+T repeat=false { spawn "theme-switcher" "toggle"; }
     Super+Alt+N repeat=false { spawn "nightlight-toggle" "toggle"; }
     Super+Alt+C repeat=false { spawn "monitor-toggle"; }
+    Super+Alt+O repeat=false { toggle-window-rule-opacity; }
     Super+Tab repeat=false { focus-workspace-previous; }
 
     Super+Left repeat=false { focus-column-or-monitor-left; }

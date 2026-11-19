@@ -1,0 +1,52 @@
+/* Ember/Dust for Zen's frame: the Quickshell palette (config/quickshell/Theme.qml).
+ * Follows the desktop light/dark mode through -moz-system-dark-theme, which
+ * theme-switcher drives via the color-scheme portal. Overrides each space's
+ * gradient. With zen.widget.linux.transparency the frame stays translucent, so
+ * niri's blur shows through; pages are untouched. Written against Zen 1.24. */
+
+:root {
+  --ember-bg: #f5ede3;
+  --ember-fg: #3a302a;
+  --ember-accent: #b0521a;
+  --ember-frame: rgb(245 237 227 / 0.72);
+  --ember-scheme: light;
+}
+
+@media (-moz-system-dark-theme) {
+  :root {
+    --ember-bg: #1a1715;
+    --ember-fg: #ebdfd2;
+    --ember-accent: #e8955e;
+    --ember-frame: rgb(26 23 21 / 0.72);
+    --ember-scheme: dark;
+  }
+}
+
+/* Zen sets these inline from the space gradient; user !important wins. */
+:root {
+  --zen-primary-color: var(--ember-accent) !important;
+  --toolbox-textcolor: var(--ember-fg) !important;
+  --toolbar-color-scheme: var(--ember-scheme) !important;
+
+  /* Zen derives its surfaces, buttons and borders from these two. */
+  --zen-branding-dark: #1a1715 !important;
+  --zen-branding-paper: #f5ede3 !important;
+
+  --zen-dialog-background: var(--ember-bg) !important;
+  --arrowpanel-background: var(--ember-bg) !important;
+  --arrowpanel-color: var(--ember-fg) !important;
+}
+
+/* A gradient picks its own dark/light for #browser; keep it on the desktop's. */
+#main-window[zen-should-be-dark-mode] #browser {
+  color-scheme: var(--ember-scheme) !important;
+}
+
+.zen-browser-generic-background::before,
+.zen-browser-generic-background::after {
+  background: var(--ember-frame) !important;
+}
+
+.zen-browser-generic-background .zen-browser-grain {
+  display: none !important;
+}

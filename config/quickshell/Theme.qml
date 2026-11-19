@@ -29,31 +29,35 @@ QtObject {
     }
 
     // -------------------------------------------------------------
-    // Base Surface & Text Colors (Catppuccin Mocha vs Latte)
+    // Base Surface & Text Colors (Ember dark vs Dust light)
+    // Taken from config/wallpapers: dark is charcoal smoke with copper
+    // sparks, light is sand and cream dust with an amber glow.
     // -------------------------------------------------------------
-    readonly property color colBg: isDark ? "#1e1e2e" : "#eff1f5"
-    readonly property color colBgCrust: isDark ? "#11111b" : "#dce0e8"
-    readonly property color colFg: isDark ? "#cdd6f4" : "#4c4f69"
-    readonly property color colFgDim: isDark ? "#a6adc8" : "#6c6f85"
-    readonly property color colMuted: isDark ? "#6c7086" : "#9ca0b0"
+    readonly property color colBg: isDark ? "#1a1715" : "#f5ede3"
+    readonly property color colBgCrust: isDark ? "#12100f" : "#e7dccd"
+    readonly property color colFg: isDark ? "#ebdfd2" : "#3a302a"
+    readonly property color colFgDim: isDark ? "#bcae9f" : "#5e5249"
+    readonly property color colMuted: isDark ? "#7d6f64" : "#8f8173"
 
     // -------------------------------------------------------------
-    // Unified Accent Palette (Catppuccin Mocha vs Latte)
+    // Unified Accent Palette (Ember vs Dust)
+    // Warm, desaturated hues; blue and teal stay cool for contrast with the
+    // warm surfaces. Every accent reads at >= 4.5:1 on colBg.
     // -------------------------------------------------------------
-    readonly property color colGreen: isDark ? "#a6e3a1" : "#40a02b"
-    readonly property color colRed: isDark ? "#f38ba8" : "#d20f39"
-    readonly property color colYellow: isDark ? "#f9e2af" : "#df8e1d"
-    readonly property color colOrange: isDark ? "#fab387" : "#fe640b"
-    readonly property color colBlue: isDark ? "#89b4fa" : "#1e66f5"
-    readonly property color colSapphire: isDark ? "#74c7ec" : "#209fb5"
-    readonly property color colMauve: isDark ? "#cba6f7" : "#8839ef"
-    readonly property color colPink: isDark ? "#f5c2e7" : "#ea76cb"
-    readonly property color colTeal: isDark ? "#94e2d5" : "#179299"
+    readonly property color colGreen: isDark ? "#b3bd85" : "#5b7429"
+    readonly property color colRed: isDark ? "#e57a6a" : "#b23a2c"
+    readonly property color colYellow: isDark ? "#ecc27a" : "#8a5f0a"
+    readonly property color colOrange: isDark ? "#e8955e" : "#b0521a"
+    readonly property color colBlue: isDark ? "#93acc0" : "#3c6585"
+    readonly property color colSapphire: isDark ? "#84b3bc" : "#2b7383"
+    readonly property color colMauve: isDark ? "#c9a2a8" : "#84506a"
+    readonly property color colPink: isDark ? "#dba08c" : "#a14f4c"
+    readonly property color colTeal: isDark ? "#95bfae" : "#2d7565"
 
     // -------------------------------------------------------------
     // Semantic Component Color Bindings
     // -------------------------------------------------------------
-    readonly property color colClock: colOrange
+    readonly property color colClock: colYellow
     readonly property color colCpu: colBlue
     readonly property color colMem: colTeal
     readonly property color colVol: colGreen
@@ -65,7 +69,8 @@ QtObject {
     readonly property color colBluetooth: colBlue
     readonly property color colBluetoothConnected: colGreen
     readonly property color colWindow: colMauve
-    readonly property color colWorkspaceActive: isDark ? "#cdd6f4" : "#4c4f69"
+    // The active workspace glows like the wallpapers' embers.
+    readonly property color colWorkspaceActive: colOrange
     readonly property color colCamera: colRed
     readonly property color colDictation: colPink
     readonly property color colMic: colOrange

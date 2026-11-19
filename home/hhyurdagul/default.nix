@@ -211,13 +211,19 @@ in
     };
 
     configFile = {
+      "fuzzel/fuzzel.ini".source = ../../config/fuzzel/fuzzel.ini;
       "helix/config.toml".source = ../../config/helix/config.toml;
       "helix/languages.toml".source = ../../config/helix/languages.toml;
+      "helix/themes/ember.toml".source = ../../config/helix/themes/ember.toml;
       "hypr/hyprlock.conf".source = ../../config/hypr/hyprlock.conf;
       "kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
-      "kitty/dark-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;
-      "kitty/light-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-latte.conf;
-      "kitty/no-preference-theme.auto.conf".source = ../../config/kitty/themes/catppuccin-mocha.conf;
+      "kitty/dark-theme.auto.conf".source = ../../config/kitty/themes/ember-dark.conf;
+      "kitty/light-theme.auto.conf".source = ../../config/kitty/themes/dust-light.conf;
+      "kitty/no-preference-theme.auto.conf".source = ../../config/kitty/themes/ember-dark.conf;
+      # The profile directory name is random, from Zen's first start; update it
+      # if the profile is ever recreated (see ~/.config/zen/profiles.ini).
+      "zen/w8fv342i.Default Profile/user.js".source = ../../config/zen/user.js;
+      "zen/w8fv342i.Default Profile/chrome/userChrome.css".source = ../../config/zen/userChrome.css;
       # GLib launches Terminal=true entries (Helix for text files) through
       # xdg-terminal-exec; kitty isn't in its built-in fallback list.
       "xdg-terminals.list".text = ''

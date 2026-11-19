@@ -7,7 +7,7 @@ This document provides technical instructions, constraints, and architectural gu
 ## 1. Singletons & Module Registration (`qmldir`)
 
 - These root files are declared with `pragma Singleton`:
-  - **`Theme.qml`**: colors, sizes, fonts; `isDark` switches Mocha/Latte at runtime.
+  - **`Theme.qml`**: colors, sizes, fonts; `isDark` switches Ember/Dust (wallpaper-derived) at runtime.
   - **`NotifManager.qml`**: notification server, toasts, history, DND.
   - **`Dictation.qml`**: Handy recording state.
   - **`Compositor.qml`**: the only Niri IPC client (workspaces, windows, focused output, focus actions).

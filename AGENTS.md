@@ -30,8 +30,10 @@ module (`useGlobalPkgs`, `useUserPackages`, so user packages land in
 Session: greetd/tuigreet → `niri-session` → Niri (config in `config/niri/config.kdl`),
 the only compositor. hypridle and hyprlock (configs in `config/hypr/`) handle idle
 and locking. Quickshell is the bar,
-notifications, and OSD. Catppuccin light/dark switched at runtime by darkman +
-`theme-switcher`. Kitty, Helix (`EDITOR=hx`), zsh + powerlevel10k, Zen as the
+notifications, and OSD. One palette, Ember (dark) / Dust (light), defined in
+`config/quickshell/Theme.qml` and copied into kitty, Helix (via kitty's ANSI
+palette), Zen's `userChrome.css`, niri, fuzzel and hyprlock; darkman +
+`theme-switcher` switch modes at runtime. Kitty, Helix (`EDITOR=hx`), zsh + powerlevel10k, Zen as the
 default browser, Podman with Docker compatibility. Many AI agent CLIs and desktop
 apps come from numtide's `llm-agents.nix`.
 

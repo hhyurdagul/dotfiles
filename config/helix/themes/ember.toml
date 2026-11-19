@@ -1,0 +1,87 @@
+# Ember/Dust through kitty's palette (config/kitty/themes). Helix 25.07 can't
+# switch themes with the desktop, but kitty swaps its palette live, so ANSI
+# names follow light/dark without a restart. No ui.background: kitty's
+# translucent background stays visible.
+#
+# Slots: black = raised surface, gray = muted, light-gray = dim text,
+# white = text, light-red = orange, light-blue = sapphire, light-magenta = pink.
+
+"ui.cursor" = { fg = "black", bg = "gray" }
+"ui.cursor.primary" = { fg = "black", bg = "light-red" }
+"ui.cursor.match" = { fg = "light-yellow", modifiers = ["bold", "underlined"] }
+"ui.selection" = { bg = "black" }
+"ui.highlight" = { bg = "black" }
+
+"ui.linenr" = "gray"
+"ui.linenr.selected" = { fg = "light-gray", modifiers = ["bold"] }
+"ui.statusline" = { fg = "light-gray", bg = "black" }
+"ui.statusline.inactive" = { fg = "gray", bg = "black" }
+"ui.statusline.normal" = { fg = "black", bg = "blue", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "black", bg = "green", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "black", bg = "magenta", modifiers = ["bold"] }
+"ui.bufferline" = { fg = "gray", bg = "black" }
+"ui.bufferline.active" = { fg = "white", bg = "black", modifiers = ["bold"] }
+
+"ui.popup" = { fg = "white", bg = "black" }
+"ui.window" = "gray"
+"ui.help" = { fg = "white", bg = "black" }
+"ui.menu" = { fg = "white", bg = "black" }
+"ui.menu.selected" = { modifiers = ["reversed"] }
+"ui.menu.scroll" = { fg = "gray", bg = "black" }
+"ui.text.focus" = { fg = "light-red", modifiers = ["bold"] }
+"ui.text.inactive" = "gray"
+"ui.text.directory" = "light-blue"
+
+"ui.virtual.whitespace" = "gray"
+"ui.virtual.ruler" = { bg = "black" }
+"ui.virtual.indent-guide" = "black"
+"ui.virtual.inlay-hint" = "gray"
+"ui.virtual.jump-label" = { fg = "light-red", modifiers = ["bold", "underlined"] }
+
+"comment" = { fg = "gray", modifiers = ["italic"] }
+"keyword" = "magenta"
+"keyword.directive" = "light-magenta"
+"function" = "blue"
+"function.macro" = "light-magenta"
+"constructor" = "light-blue"
+"type" = "yellow"
+"constant" = "light-red"
+"constant.character.escape" = "light-magenta"
+"string" = "green"
+"string.regexp" = "light-magenta"
+"variable" = "white"
+"variable.builtin" = "red"
+"variable.parameter" = { fg = "white", modifiers = ["italic"] }
+"variable.other.member" = "cyan"
+"attribute" = "yellow"
+"namespace" = "light-blue"
+"label" = "cyan"
+"operator" = "light-gray"
+"punctuation" = "light-gray"
+"tag" = "red"
+"special" = "cyan"
+
+"markup.heading" = { fg = "light-red", modifiers = ["bold"] }
+"markup.list" = "red"
+"markup.bold" = { modifiers = ["bold"] }
+"markup.italic" = { modifiers = ["italic"] }
+"markup.strikethrough" = { modifiers = ["crossed_out"] }
+"markup.link.url" = { fg = "light-blue", modifiers = ["underlined"] }
+"markup.link.text" = "magenta"
+"markup.quote" = { fg = "light-gray", modifiers = ["italic"] }
+"markup.raw" = "green"
+
+"diff.plus" = "green"
+"diff.delta" = "yellow"
+"diff.minus" = "red"
+
+"error" = "red"
+"warning" = "yellow"
+"info" = "blue"
+"hint" = "cyan"
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "yellow", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.hint" = { underline = { color = "cyan", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }

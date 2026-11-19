@@ -2,7 +2,7 @@
 
 A modern, native Wayland status bar, notification center, and system widget suite built using **[Quickshell](https://quickshell.outfoxxed.me/)** (Qt Quick / QML) for **Niri** on NixOS.
 
-Uses the **Catppuccin** palettes, switched at runtime: **Mocha** in dark mode and **Latte** in light mode. It has a 3-section layout, native floating popups, and full hardware & notification integration.
+Uses a warm palette taken from the wallpapers (`config/wallpapers`), switched at runtime: **Ember** (charcoal and copper) in dark mode and **Dust** (cream and amber) in light mode. It has a 3-section layout, native floating popups, and full hardware & notification integration.
 
 ---
 
@@ -62,17 +62,18 @@ Uses the **Catppuccin** palettes, switched at runtime: **Mocha** in dark mode an
 
 All visual styles, colors, margins, radiuses, and fonts are centralized in **[`Theme.qml`](./Theme.qml)**.
 `Theme.isDark` follows `$XDG_STATE_HOME/theme/mode` (written by darkman via
-`theme-switcher`), and every color switches between Mocha and Latte without a
+`theme-switcher`), and every color switches between Ember and Dust without a
 restart.
 
 ```qml
 // Theme.qml highlights
-readonly property color colBg: isDark ? "#1e1e2e" : "#eff1f5"      // Base background
-readonly property color colGreen: isDark ? "#a6e3a1" : "#40a02b"   // Battery, Volume, BT
-readonly property color colRed: isDark ? "#f38ba8" : "#d20f39"     // Recording, Critical, Poweroff
-readonly property color colYellow: isDark ? "#f9e2af" : "#df8e1d"  // Notifications, Idle
-readonly property color colBlue: isDark ? "#89b4fa" : "#1e66f5"    // CPU, Bluetooth
-readonly property color colPink: isDark ? "#f5c2e7" : "#ea76cb"    // Network
+readonly property color colBg: isDark ? "#1a1715" : "#f5ede3"      // Base background
+readonly property color colGreen: isDark ? "#b3bd85" : "#5b7429"   // Battery, Volume, BT
+readonly property color colRed: isDark ? "#e57a6a" : "#b23a2c"     // Recording, Critical, Poweroff
+readonly property color colYellow: isDark ? "#ecc27a" : "#8a5f0a"  // Clock, Notifications, Idle
+readonly property color colOrange: isDark ? "#e8955e" : "#b0521a"  // Active workspace, Mic
+readonly property color colBlue: isDark ? "#93acc0" : "#3c6585"    // CPU, Bluetooth
+readonly property color colPink: isDark ? "#dba08c" : "#a14f4c"    // Network
 readonly property int popupTopMargin: 8    // Floating gap between top bar and menus
 readonly property int cardRadius: 12       // Corner radius for all popups and toasts
 readonly property string fontFamily: "JetBrainsMono Nerd Font"
@@ -88,7 +89,7 @@ To tweak any aspect of the UI, edit `Theme.qml`. Direct edits to the running con
 config/quickshell/
 ├── shell.qml                         # Root panel window & 3-section layout
 ├── qmldir                            # QML module & singleton registration
-├── Theme.qml                         # Catppuccin Mocha/Latte theme singleton (runtime switch)
+├── Theme.qml                         # Ember/Dust theme singleton (runtime switch)
 ├── Compositor.qml                    # Shared Niri IPC backend (workspaces, windows, focus)
 ├── NotifManager.qml                  # NotificationServer singleton & history
 ├── Dictation.qml                     # Handy recording state singleton (PipeWire)
